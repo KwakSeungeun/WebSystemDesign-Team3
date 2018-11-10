@@ -1,12 +1,16 @@
 <template>
   <div id="app">
-    <h1>웹 시스템 설계 3조</h1>
+    <side-nav></side-nav>
   </div>
 </template>
 
 <script>
+import SideNav from './components/SideNav.vue'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    SideNav
+  }
 }
 </script>
 
