@@ -19,4 +19,16 @@ var userSchema = new Schema({
   alarms: [alarmSchema] // 사용자가 진행중인 거래의 상태에 따른 알람
 });
 
+// find one user by using username
+userSchema.statics.findOneByEmail = function(email) {
+  return this.findOne({
+      email
+  }).exec()
+}
+
+// verify the password of the User documment
+userSchema.methods.verify = function(pw) {
+  return this.pw == pw
+}
+
 module.exports = mongoose.model('user',userSchema);

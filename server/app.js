@@ -11,8 +11,11 @@ var registerRouter = require('./routes/register');
 
 var app = express();
 
+const config = require('./config');
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.set('jwt-secret', config.secret)
 
 app.use(cors());
 app.use(logger('dev'));

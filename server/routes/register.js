@@ -4,10 +4,10 @@ var sha256 = require('sha256');
 var nodemailer = require('nodemailer');
 var mongoose = require('mongoose');
 var path = require('path');
+var User = require(path.resolve(__dirname, "../models/user_model"));
+const config = require('../config');
 
-var user = require(path.resolve(__dirname, "../models/user_model"));
-
-mongoose.connect('mongodb://localhost:27017');
+mongoose.connect(config.mongodbUri, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 
 var db = mongoose.connection;
@@ -52,7 +52,7 @@ router.post('/', function(req, res, next) {
             text: 'http://localhost:3000/register/authorization/' + etoken
         };
 
-        var user_obj = new user({
+        var user_obj = new User({
             name: "", // req.body.name
             email: req.body.email,
             pw: req.body.pw,
@@ -64,7 +64,7 @@ router.post('/', function(req, res, next) {
         });
 
 
-        user.find({email: req.body.email}, function(err, result) {
+        User.find({email: req.body.email}, function(err, result) {
             if (err) {
                 console.log(err);
                 res.status(500).send({success: "database_fail"});
@@ -91,7 +91,7 @@ router.post('/', function(req, res, next) {
                 else {
                     var query = {email: req.body.email};
                     var newvalues = {$set: {email_token: etoken, pw: req.body.pw}};
-                    user.update(query, newvalues, function (err) {
+                    User.update(query, newvalues, function (err) {
                         if (err) res.status(500).send({success: "database_fail"});
                         else {
                             transporter.sendMail(mailOptions, function(error, info){
@@ -115,7 +115,7 @@ router.get('/authorization/:authToken', function(req, res, next) {
 
     var etoken = req.params.authToken;
 
-    user.find({email_token: etoken}, function(err, result) {
+    User.find({email_token: etoken}, function(err, result) {
         if (err) {
             console.log(err);
             res.status(500).send("database error");
@@ -132,7 +132,7 @@ router.get('/authorization/:authToken', function(req, res, next) {
                 else {
                     var query = {email_token: etoken};
                     var newvalues = {$set: {email_token: "", auth: true}};
-                    user.update(query, newvalues, function (err) {
+                    User.update(query, newvalues, function (err) {
                         if (err) res.status(500).send("database_fail");
                         else res.send("인증 성공!");
                     });
