@@ -36,7 +36,7 @@ router.post('/', function(req, res, next) {
         var etoken = crypto.randomBytes(32).toString('hex');
         etoken = req.body.email + etoken;
         etoken = sha256(etoken);
-
+        
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
