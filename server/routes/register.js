@@ -4,7 +4,7 @@ var sha256 = require('sha256');
 var nodemailer = require('nodemailer');
 var mongoose = require('mongoose');
 var path = require('path');
-var User = require(path.resolve(__dirname, "../models/user_model"));
+var User = require(path.resolve(__dirname, "../models/users"));
 const config = require('../config');
 
 mongoose.connect(config.mongodbUri, { useNewUrlParser: true });
