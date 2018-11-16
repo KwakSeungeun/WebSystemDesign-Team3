@@ -1,6 +1,8 @@
 // Create user schema
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+const crypto = require('crypto');
+const config = require('../config');
 
 var alarmSchema = new Schema({
   auction_id: String,
@@ -28,7 +30,8 @@ userSchema.statics.findOneByEmail = function(email) {
 
 // verify the password of the User documment
 userSchema.methods.verify = function(pw) {
-  return this.pw == pw
+  const encrypted = crypto.createHmac('sha1',config.secret).update(pw).digest('base64');
+  return this.pw == encrypted;
 }
 
 module.exports = mongoose.model('user',userSchema);

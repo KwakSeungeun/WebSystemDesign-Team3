@@ -8,10 +8,10 @@ const mongoose = require('mongoose');
 const db = mongoose.connection;
 mongoose.connect(config.mongodbUri, { useNewUrlParser: true });
 
+// login api
 router.post('/',function(req,res,next){
   const {email, pw} = req.body;
   const secret = req.app.get('jwt-secret');
-  console.log("secrete : ",secret);
   
   // check exist user
   const check = function(user){
