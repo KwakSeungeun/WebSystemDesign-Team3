@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken')
 const User = require('../../models/users');
-const config = require('../../config');
+const config = require('./config');
 const mongoose = require('mongoose');
 
 const db = mongoose.connection;
@@ -15,10 +15,10 @@ router.post('/',function(req,res,next){
   
   // check exist user
   const check = function(user){
-    if(!user){
+    if(!user){  //유저 존재 안함
       throw new Error('login failed');
     } else {
-      if(user.verify(pw)){
+      if(user.verify(pw)){ //비밀번호 맞음
         const p = new Promise((resolve,reject)=>{
           jwt.sign({
             email: user.email
@@ -34,7 +34,7 @@ router.post('/',function(req,res,next){
         )
         });
         return p;
-      } else {
+      } else { //비밀번호 틀림
         throw new Error('login failed');
       }
     }

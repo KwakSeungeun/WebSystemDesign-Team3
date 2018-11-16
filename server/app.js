@@ -10,6 +10,7 @@ var usersRouter = require('./routes/api/login');
 var registerRouter = require('./routes/api/register');
 var checkRouter = require('./routes/api/check');
 var checkMiddle = require('./routes/middleware/auth');
+const config = require('./config');
 
 var app = express();
 

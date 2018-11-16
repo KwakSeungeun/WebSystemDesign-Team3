@@ -16,5 +16,5 @@ var auctionSchema = new Schema({
     state: Number, // 책의 보존 상태
     buyers:[buyerSchema] //구매자들
 });
-
+t
 module.exports = mongoose.model('auction',auctionSchema);
