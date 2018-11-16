@@ -1,6 +1,6 @@
 var express = require('express');
 var crypto = require('crypto');
-var sha256 = require('sha256');
+var sha512 = require('sha512');
 var nodemailer = require('nodemailer');
 var mongoose = require('mongoose');
 var path = require('path');
@@ -35,7 +35,7 @@ router.post('/', function(req, res, next) {
 
         var etoken = crypto.randomBytes(32).toString('hex');
         etoken = req.body.email + etoken;
-        etoken = sha256(etoken);
+        etoken = sha512(etoken);
         
         var transporter = nodemailer.createTransport({
             service: 'gmail',
