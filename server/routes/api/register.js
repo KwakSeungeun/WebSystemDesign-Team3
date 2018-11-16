@@ -40,8 +40,8 @@ router.post('/', function(req, res, next) {
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'your_mail@gmail.com',
-                pass: 'your_password'
+                user: 'your_email@gmail.com',
+                pass: 'your_pass'
             }
         });
 
@@ -49,7 +49,7 @@ router.post('/', function(req, res, next) {
             from: 'AjouBookAuction <no-reply@gmail.com>',
             to: req.body.email,
             subject: '아주 북 옥션 이메일 인증입니다.',
-            text: 'http://localhost:3000/register/authorization/' + etoken
+            text: 'http://localhost:3000/auth/register/authorization/' + etoken
         };
 
         var user_obj = new User({
