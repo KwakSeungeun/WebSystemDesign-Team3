@@ -30,8 +30,7 @@ userSchema.statics.findOneByEmail = function(email) {
 
 // verify the password of the User documment
 userSchema.methods.verify = function(pw) {
-  const encrypted = crypto.createHmac('sha1',config.secret).update(pw).digest('base64');
-  return this.pw == encrypted;
+  return this.pw === pw;
 }
 
 module.exports = mongoose.model('user',userSchema);
