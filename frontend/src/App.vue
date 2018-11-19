@@ -1,17 +1,39 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <top-nav></top-nav>
+    <!-- desktop and pad --> 
+    <div v-responsive.lg.xl.md class="large-container">
+      <side-nav style="flex:1;"></side-nav>
+      <main style="flex:10;"></main>
+    </div>
+    
+    <!-- smartphone -->
+    <div v-responsive.sm.xs>
+      <b-btn v-b-toggle.phone class="side-nav-container">메뉴</b-btn>
+      <b-collapse id="phone">
+        <side-nav></side-nav>
+      </b-collapse>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import TopNav from './components/nav/TopNav'
+import SideNav from './components/nav/SideNav'
+import Main from './components/contents/Main'
+
+Vue.use(BootstrapVue);
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    TopNav,
+    SideNav,
+    Main
   }
 }
 </script>
@@ -19,10 +41,16 @@ export default {
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  word-break:keep-all;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  background: yellowgreen;
+  margin: 0px;
+}
+
+.large-container{
+  background: yellow;
+  display: flex;
+  flex-direction: row;
 }
 </style>
