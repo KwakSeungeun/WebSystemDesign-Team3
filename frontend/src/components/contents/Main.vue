@@ -1,9 +1,12 @@
 <template>
     <div id="main">
-        <h1>MAIN</h1>
-        <h1>MAIN</h1>
-        <h1>MAIN</h1>
-        <h1>MAIN</h1>
+        <b-card border-variant="primary"
+            header="Primary"
+            header-bg-variant="primary"
+            header-text-variant="white"
+            align="center">
+            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </b-card>
     </div>
 </template>
 

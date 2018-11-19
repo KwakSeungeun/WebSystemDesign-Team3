@@ -11,7 +11,7 @@
             <b-nav-item>test2</b-nav-item>
             <b-nav-item>test3</b-nav-item>
         </b-nav>
-        <b-modal no-close-on-backdrop centered
+        <b-modal no-close-on-backdrop centered ref="loginRef"
                 size="lg" title="로그인" hide-footer id="loginModal">
             <login-form></login-form>
         </b-modal>
@@ -26,7 +26,6 @@
 import LoginForm from '../modal/LoginForm'
 import RegisterForm from '../modal/RegisterForm'
 
-// let menu = [];
 export default {
     name: "side-nav",
     components:{
@@ -37,8 +36,11 @@ export default {
 
     }),
     methods: {
-        onClose: (event)=>{
+        onClose: ()=>{
             alert('회원가입을 중지했습니다');
+        },
+        hideModal:()=>{
+            this.$refs.loginRef.hide()
         }
     }
 }
