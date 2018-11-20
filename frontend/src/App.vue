@@ -1,12 +1,16 @@
 <template>
   <div id="app">
-    <top-nav></top-nav>
-    <!-- desktop and pad --> 
-    <div v-responsive.lg.xl.md class="large-container">
-      <side-nav style="flex:1;"></side-nav>
-      <main style="flex:10;"></main>
-    </div>
-    
+    <top-nav style="margin-bottom:1vh;"></top-nav>
+    <b-container fluid v-responsive.lg.xl.md>
+      <b-row >
+        <b-col cols="2">
+          <side-nav></side-nav>
+        </b-col>
+        <b-col cols="10">
+          <main-contents></main-contents>
+        </b-col>
+      </b-row>
+    </b-container>
     <!-- smartphone -->
     <div v-responsive.sm.xs>
       <b-btn v-b-toggle.phone class="side-nav-container">메뉴</b-btn>
@@ -14,26 +18,49 @@
         <side-nav></side-nav>
       </b-collapse>
     </div>
+    <!-- modals -->
+    <b-modal no-close-on-backdrop centered ref="loginRef"
+                size="lg" title="로그인" hide-footer id="loginModal">
+      <login-form></login-form>
+    </b-modal>
+    <b-modal no-close-on-backdrop centered
+        size="lg" title="회원가입" hide-footer id="registerModal">
+      <register-form></register-form>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
+import vueResponsive from 'vue-responsive'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import TopNav from './components/nav/TopNav'
 import SideNav from './components/nav/SideNav'
-import Main from './components/contents/Main'
+import MainContents from './components/contents/MainContents'
+import LoginForm from './components/modal/LoginForm'
+import RegisterForm from './components/modal/RegisterForm'
 
 Vue.use(BootstrapVue);
+Vue.directive('responsive', vueResponsive)
 
 export default {
   name: 'app',
   components: {
     TopNav,
     SideNav,
-    Main
+    MainContents,
+    LoginForm,
+    RegisterForm
+  },
+  created(){
+    this.$EventBus.$on('login',(data)=>{
+      //data is login info
+      //here is connect login api
+      this.$refs.loginRef.hide() //if success login
+      console.log("DATA :",data);
+    });
   }
 }
 </script>
@@ -42,18 +69,8 @@ export default {
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   word-break:keep-all;
-  overflow: hidden;
+  overflow-y: hidden;
   background: yellowgreen;
-  margin: 0px;
-  padding: 0px;
-  width: 100%;
-  height: 100%;
-}
-
-.large-container{
-  background: yellow;
-  display: flex;
-  flex-direction: row;
-  width: 100%;
+  height: 100vh;
 }
 </style>

@@ -1,25 +1,25 @@
 <template>
   <div id="top-nav">
-    <b-jumbotron>
-      <template slot="header">아주대 중고 책 장터</template>
-      <div v-responsive.lg.xl.md slot="lead">
-        아주대 학생들의 중고책 전공 서적 및 교양책 등 책 거래 장터 입니다!
-      </div>
-      <!-- <hr class="my-4"> -->
-    </b-jumbotron>
+      <b-navbar variant="primary">
+        <b-navbar-brand tag="h1">아주대 중고책 거래 장터</b-navbar-brand>
+        <b-nav-form>
+          <b-input v-model="searchText" type="text" placeholder="원하는 책을 검색해 보세요!"></b-input>
+          <b-btn @click="onSearch" variant="success">검색</b-btn>
+        </b-nav-form>
+      </b-navbar>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import vueResponsive from 'vue-responsive'
-
-Vue.directive('responsive', vueResponsive)
-
 export default {
   name:"top-nav",
-  components: {
-    
+  data : ()=>({
+    searchText: '',
+  }),
+  methods: {
+    onSearch:()=>{
+      alert('serch')
+    }
   }
 }
 </script>
