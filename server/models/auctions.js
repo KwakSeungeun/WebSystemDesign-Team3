@@ -10,7 +10,7 @@ var buyerSchema = new Schema({
 var auctionSchema = new Schema({
     book_id: String,
     seller_id: String, //판매자
-    img_url: String, //책 이미지
+    img_url: [String], //책 이미지
     tag: String, //교수님 이름, 과목 등 태그
     comment: String, // 판매자가 남기고 싶은 말
     state: Number, // 책의 보존 상태
