@@ -15,7 +15,7 @@
                 size="lg" title="로그인" hide-footer id="loginModal">
             <login-form></login-form>
         </b-modal>
-        <b-modal @hide="onClose" no-close-on-backdrop centered
+        <b-modal no-close-on-backdrop centered
                 size="lg" title="회원가입" hide-footer id="registerModal">
             <register-form></register-form>
         </b-modal>
@@ -36,12 +36,14 @@ export default {
 
     }),
     methods: {
-        onClose: ()=>{
-            alert('회원가입을 중지했습니다');
-        },
-        hideModal:()=>{
-            this.$refs.loginRef.hide()
-        }
+    },
+    created(){
+        this.$EventBus.$on('login',(data)=>{
+            //data is login info
+            //here is connect login api
+            this.$refs.loginRef.hide() //if success login
+            console.log("DATA :",data);
+        });
     }
 }
 </script>

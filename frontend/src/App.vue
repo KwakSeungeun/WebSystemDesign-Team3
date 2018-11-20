@@ -42,15 +42,18 @@ export default {
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   word-break:keep-all;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow: hidden;
   background: yellowgreen;
   margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
 }
 
 .large-container{
   background: yellow;
   display: flex;
   flex-direction: row;
+  width: 100%;
 }
 </style>

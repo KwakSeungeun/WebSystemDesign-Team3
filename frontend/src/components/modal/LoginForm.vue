@@ -16,7 +16,7 @@
                       placeholder="패스워드를 입력하세요">
         </b-form-input>
       </b-form-group>
-      <b-button type="submit" variant="primary">Submit</b-button>
+      <b-button type="submit" variant="primary">로그인</b-button>
     </b-form>
   </div>
 </template>
@@ -30,9 +30,9 @@ export default {
     }
   }),
   methods: {
-    onLogin(evt) {
-      evt.preventDefault();
-      alert(JSON.stringify(this.form));
+    onLogin(Event) {
+      this.$EventBus.$emit('login',this.form)
+      event.preventDefault(); //prevent reload page
     }
   }
 }

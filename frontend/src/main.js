@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App'
+Vue.prototype.$EventBus = new Vue;
 
 Vue.config.productionTip = false
 
