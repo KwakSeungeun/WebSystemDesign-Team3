@@ -16,12 +16,14 @@
                       placeholder="패스워드를 입력하세요">
         </b-form-input>
       </b-form-group>
-      <b-button type="submit" variant="primary">로그인</b-button>
+      <b-button class="float-right" type="submit" variant="primary">로그인</b-button>
     </b-form>
   </div>
 </template>
 
 <script>
+import sha512 from'sha512'
+
 export default {
   data : ()=>({
     form: {
@@ -31,11 +33,10 @@ export default {
   }),
   methods: {
     onLogin(Event) {
-      this.$EventBus.$emit('login',this.form)
+      this.form.pw = sha512(this.form.pw);
+      this.$EventBus.$emit('login',this.form);
       event.preventDefault(); //prevent reload page
     }
   }
 }
 </script>
-
-<!-- b-form-1.vue -->

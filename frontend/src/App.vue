@@ -20,11 +20,11 @@
     </div>
     <!-- modals -->
     <b-modal no-close-on-backdrop centered ref="loginRef"
-                size="lg" title="로그인" hide-footer id="loginModal">
+                size="md" title="로그인" hide-footer id="loginModal">
       <login-form></login-form>
     </b-modal>
-    <b-modal no-close-on-backdrop centered
-        size="lg" title="회원가입" hide-footer id="registerModal">
+    <b-modal no-close-on-backdrop centered ref="registerRef"
+        size="md" title="회원가입" hide-footer id="registerModal">
       <register-form></register-form>
     </b-modal>
   </div>
@@ -61,7 +61,14 @@ export default {
       this.$refs.loginRef.hide() //if success login
       console.log("DATA :",data);
     });
-  }
+    
+    this.$EventBus.$on('register',(data)=>{
+      //data is register info
+      //here is connect register api
+      this.$refs.registerRef.hide() //if success login
+      console.log("DATA :",data);
+    });
+    }
 }
 </script>
 
