@@ -1,22 +1,11 @@
 <template>
   <div id="app">
-    <top-nav style="margin-bottom:1vh;"></top-nav>
-    <b-container fluid v-responsive.lg.xl.md>
-      <b-row >
-        <b-col cols="2">
-          <side-nav></side-nav>
-        </b-col>
-        <b-col cols="10">
-          <main-contents></main-contents>
-        </b-col>
-      </b-row>
-    </b-container>
-    <!-- smartphone -->
-    <div v-responsive.sm.xs>
-      <b-btn v-b-toggle.phone class="side-nav-container">메뉴</b-btn>
-      <b-collapse id="phone">
-        <side-nav></side-nav>
-      </b-collapse>
+    <div v-responsive.lg.xl.md class="header">
+      <h1 class="pt-5">아주대 중고책장터 이미지 같은거 넣기</h1>
+    </div>
+    <top-nav></top-nav>
+    <div id="contents">
+      <router-view></router-view>
     </div>
     <!-- modals -->
     <b-modal no-close-on-backdrop centered ref="loginRef"
@@ -37,10 +26,10 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import TopNav from './components/nav/TopNav'
-import SideNav from './components/nav/SideNav'
 import MainContents from './components/contents/MainContents'
 import LoginForm from './components/modal/LoginForm'
 import RegisterForm from './components/modal/RegisterForm'
+import VueRouter from 'vue-router'
 
 Vue.use(BootstrapVue);
 Vue.directive('responsive', vueResponsive)
@@ -49,7 +38,6 @@ export default {
   name: 'app',
   components: {
     TopNav,
-    SideNav,
     MainContents,
     LoginForm,
     RegisterForm
@@ -79,5 +67,19 @@ export default {
   overflow-y: hidden;
   background: yellowgreen;
   height: 100vh;
+}
+.header{
+  background: #0277bd ;
+  color: whitesmoke;
+  margin-top: 0;
+  height: 150px;
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+#contents{
+  height: 70%;
+  overflow-y: scroll;
 }
 </style>

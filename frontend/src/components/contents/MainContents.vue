@@ -7,7 +7,5 @@
 <style>
 #main{
     background: cyan;
-    height: 90vh;
-    overflow-y: scroll;
 }
 </style>
