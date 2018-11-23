@@ -22,4 +22,4 @@ var tradeSchema = new Schema({
     time_stamp: Date
 });
 
-module.exports = mongoose.model('auction',auctionSchema);
+module.exports = mongoose.model('trade',tradeSchema);

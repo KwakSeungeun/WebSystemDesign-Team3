@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const config = require('../config');
 
 var alarmSchema = new Schema({
-  auction_id: String,
+  trade_id: String,
   contents: String, //알림 내용
   read: Boolean // 알람 읽음 여부
 });

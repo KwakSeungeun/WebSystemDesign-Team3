@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 var path = require('path');
 
-var Auction = require(path.resolve(__dirname, "../../models/auctions"));
+var Trade = require(path.resolve(__dirname, "../../models/trades"));
 
 const config = require('../../config');
 
@@ -23,7 +23,7 @@ router.use(bodyParser.urlencoded({
 router.post('/', function(req, res, next) {
     db.on('error', console.error);
 
-    Auction.deleteOne({_id: req.body._id}, function(err) {
+    Trade.deleteOne({_id: req.body._id}, function(err) {
         if(err) {
             res.status(500).send({success: "fail"});
         }

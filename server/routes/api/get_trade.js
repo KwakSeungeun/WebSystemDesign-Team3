@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 var path = require('path');
 
-var Auction = require(path.resolve(__dirname, "../../models/auctions"));
+var Trade = require(path.resolve(__dirname, "../../models/tradens"));
 
 const config = require('../../config');
 
@@ -23,7 +23,7 @@ router.use(bodyParser.urlencoded({
 router.get('/', function(req, res, next) {
     db.on('error', console.error);
 
-    Auction.find({}).select({ "_id": 1, "book_id" : 1, "seller_id": 0, "img_url": 1, "tag": 1, "comment": 1, "state": 1, "buyers": 1}).exec(function(err, result){
+    Trade.find({}).select({ "_id": 1, "book_id" : 1, "seller_id": 0, "img_url": 1, "tag": 1, "comment": 1, "state": 1, "buyers": 1}).exec(function(err, result){
         if(err) {
             res.status(500).send({success: "fail"});
         }
@@ -33,10 +33,10 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/my_auction_list/:mail', function(req, res, next) {
+router.get('/my_trade_list/:mail', function(req, res, next) {
     db.on('error', console.error);
 
-    Auction.find({"seller_id": req.params.mail}).select({ "_id": 1, "book_id" : 1, "seller_id": 0, "img_url": 1, "tag": 1, "comment": 1, "state": 1, "buyers": 1}).exec(function(err, result){
+    Trade.find({"seller_id": req.params.mail}).select({ "_id": 1, "book_id" : 1, "seller_id": 0, "img_url": 1, "tag": 1, "comment": 1, "state": 1, "buyers": 1}).exec(function(err, result){
         if(err) {
             res.status(500).send({success: "fail"});
         }
