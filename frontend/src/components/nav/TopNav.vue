@@ -17,8 +17,8 @@ export default {
     searchText: '',
   }),
   methods: {
-    onSearch:()=>{
-      alert('serch')
+    onSearch(){
+      alert('serch : ',this.searchText);
     }
   }
 }

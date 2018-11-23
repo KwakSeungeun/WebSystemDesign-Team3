@@ -23,6 +23,7 @@
 
 <script>
 import sha512 from'sha512'
+import _ from 'lodash'
 
 export default {
   data : ()=>({
@@ -36,6 +37,12 @@ export default {
       this.form.pw = sha512(this.form.pw);
       this.$EventBus.$emit('login',this.form);
       event.preventDefault(); //prevent reload page
+      this.clear()
+    },
+    clear(){
+      _.forEach(this.form,(value,key)=>{
+        this.form[key] = '';
+      });
     }
   }
 }

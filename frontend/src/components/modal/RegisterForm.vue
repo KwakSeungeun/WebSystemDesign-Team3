@@ -46,6 +46,7 @@
 
 <script>
 import sha512 from 'sha512'
+import _ from 'lodash'
 
 export default {
     data:()=>({
@@ -59,7 +60,7 @@ export default {
         }
     }),
     methods:{
-        onRegister: (event)=>{
+        onRegister(event){
             event.preventDefault(); //prevent reload page
             if(this.pwCheckText!=this.form.pw){
                 this.$refs.pwCheckRef.focus();
@@ -67,7 +68,15 @@ export default {
             }
             this.form.pw = sha512(this.form.pw);
             this.$EventBus.$emit('register',this.form);
+            // clear 
+            this.clear()
         },
+        clear(){
+            _.forEach(this.form,(value,key)=>{
+                this.form[key] = '';
+            });
+            this.pwCheckText = '';
+        }
     },
 }
 </script>
