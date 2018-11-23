@@ -6,6 +6,7 @@
           <b-input v-model="searchText" type="text" placeholder="원하는 책을 검색해 보세요!"></b-input>
           <b-btn @click="onSearch" variant="success">검색</b-btn>
         </b-nav-form>
+        <b-btn @click="testVuex" variant="success">Vuex테스트</b-btn>
       </b-navbar>
   </div>
 </template>
@@ -18,7 +19,11 @@ export default {
   }),
   methods: {
     onSearch(){
-      alert('serch : ',this.searchText);
+      alert('serch:'+this.searchText);
+    },
+    testVuex(){
+      console.log(this.$store.state.token)
+      alert("Call token test :"+this.$store.state.token)
     }
   }
 }
