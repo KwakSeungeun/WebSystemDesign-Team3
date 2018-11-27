@@ -29,10 +29,6 @@ export default {
   methods: {
     onSearch(){
       alert('serch:'+this.searchText);
-    },
-    testVuex(){
-      console.log(this.$store.state.token)
-      alert("Call token test :"+this.$store.state.token)
     }
   }
 }
