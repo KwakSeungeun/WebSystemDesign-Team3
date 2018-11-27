@@ -1,4 +1,4 @@
-// Create auction schema
+// Create trade schema
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -7,7 +7,7 @@ var buyerSchema = new Schema({
     price: Number, //구매자가 원하는 가격
     location: String //구매자가 원하는 희망 장소
 });
-var auctionSchema = new Schema({
+var tradeSchema = new Schema({
     book_id: String,
     seller_id: String, //판매자
     img_url: [String], //책 이미지
@@ -17,4 +17,4 @@ var auctionSchema = new Schema({
     buyers:[buyerSchema] //구매자들
 });
 
-module.exports = mongoose.model('auction',auctionSchema);
+module.exports = mongoose.model('trade',tradeSchema);

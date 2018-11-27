@@ -7,7 +7,7 @@ const async = require('async');
 
 var path = require('path');
 
-var Auction = require(path.resolve(__dirname, "../../models/auctions"));
+var Trade = require(path.resolve(__dirname, "../../models/trades"));
 
 const config = require('../../config');
 
@@ -53,7 +53,7 @@ router.post('/upload_trade', function(req, res, next) {
                 tmp.push(req.files[i].filename);
             }
 
-            var auction_info = new Auction({
+            var trade_info = new Trade({
                 book_id: req.body.book_id, // 나중에 수정
                 seller_id: req.body.seller_id, // 이메일로 해도 상관없을듯 하다. 구매자한테는 seller_id 만 쏙 빼서 날리면 되니
                 img_url: tmp, // 이미지 주소, 정확히는 file name
@@ -63,7 +63,7 @@ router.post('/upload_trade', function(req, res, next) {
                 buyers: [] // 최초 생성이니 빈 array
             });
 
-            auction_info.save(function (err) {
+            trade_info.save(function (err) {
                 if (err) {
                     async.each(tmp, function (i, callback) {
                         fs.unlink(path.resolve(__dirname, "../../public/Image") + '/' + tmp[i], function(err) {
@@ -92,7 +92,7 @@ router.post('/upload_trade', function(req, res, next) {
 router.get('/trade_list', function(req, res, next) {
     db.on('error', console.error);
 
-    Auction.find({}, { "seller_id": 0 }, function(err, result){
+    Trade.find({}, { "seller_id": 0 }, function(err, result){
         if(err) {
             res.status(500).send({success: "fail"});
         }
@@ -107,7 +107,7 @@ router.get('/my_trade_list/:seller_id', function(req, res, next) {
 
     const ObjectId = mongoose.Types.ObjectId;
 
-    Auction.find({"seller_id": ObjectId(req.params.seller_id)}, { "seller_id": 0 }, function(err, result){
+    Trade.find({"seller_id": ObjectId(req.params.seller_id)}, { "seller_id": 0 }, function(err, result){
         if(err) {
             res.status(500).send({success: "fail"});
         }
@@ -124,7 +124,7 @@ router.post('/delete', function(req, res, next) {
 
     const ObjectId = mongoose.Types.ObjectId;
 
-    Auction.deleteOne({_id: ObjectId(req.body._id), seller_id: ObjectId(req.body.seller_id)}, function(err) {
+    Trade.deleteOne({_id: ObjectId(req.body._id), seller_id: ObjectId(req.body.seller_id)}, function(err) {
         if(err) {
             res.status(500).send({success: "fail"});
         }
