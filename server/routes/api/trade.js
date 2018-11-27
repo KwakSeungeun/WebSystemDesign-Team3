@@ -21,9 +21,17 @@ var router = express.Router();
 
 const bodyParser = require('body-parser');
 
+const auth = require('../middleware/auth');
+
+router.use(auth); // trade 하는 모든 과정은 반드시 로그인 확인 여부가 필요하므로 middleware 를 가져다 씀
+
 router.use(bodyParser.urlencoded({
     extended: false
 }));
+
+router.use(function(req, res, next) { // 나중에 빈 문자열 혹은 각종 unvalid 한 데이터를 검사할 middleware. 몽고디비에 접근하는거 조차 막아버리면 퍼포먼스 + DDOS 공격을 어느정도 방어할 수 있다.
+    next();
+});
 
 
 var storage = multer.diskStorage({
@@ -46,6 +54,8 @@ router.post('/upload_trade', function(req, res, next) {
             return res.status(500).send({success:"fail"});
         }
         else {
+            // form-data 형식으로 보내기 때문에 middle-ware 로 처리가 불가능함, 나중에 if문 노가다 해야함
+
             db.on('error', console.error);
 
             let tmp = [];
@@ -53,6 +63,7 @@ router.post('/upload_trade', function(req, res, next) {
             for(let i = 0; i < req.files.length; i++) {
                 tmp.push(req.files[i].filename);
             }
+
 
             var trade_info = new Trade({
                 title: req.body.title, // 책 제목
