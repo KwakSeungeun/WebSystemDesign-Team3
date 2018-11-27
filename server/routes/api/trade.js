@@ -34,7 +34,7 @@ var storage = multer.diskStorage({
     }
 });
 
-var upload = multer({ storage: storage }).array('images', 5); // 개수제한 5, ******나중에 크기제한 10MB도 넣을것*****
+var upload = multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 } }).array('images', 5); // 개수제한 5, 크기제한 10MB
                                                               // images 라는 key 값에 append 해서 보내줄 것(front)
 
 router.post('/upload_trade', function(req, res, next) {
@@ -42,7 +42,7 @@ router.post('/upload_trade', function(req, res, next) {
         if (err) {
             console.log(err);
             console.log("error! " + path.resolve(__dirname, '../../public/Image'));
-            return res.status(500).send({success:"fail"}); // 실패시 옥션 업로드 자체를 막아버릴 것(front)
+            return res.status(500).send({success:"fail"});
         }
         else {
             db.on('error', console.error);
@@ -56,8 +56,8 @@ router.post('/upload_trade', function(req, res, next) {
             var trade_info = new Trade({
                 title: req.body.title, // 책 제목
                 author: req.body.author, // 책 저자
-                edition: req.body.edition, // 
-                seller_id: req.body.seller_id, // 이메일로 해도 상관없을듯 하다. 구매자한테는 seller_id 만 쏙 빼서 날리면 되니
+                edition: req.body.edition, // 책 판본
+                seller_id: req.body.seller_id, // _id가 토큰에 들어있다고 가정한다면 그냥 id 쓰면 될듯
                 img_url: tmp, // 이미지 주소, 정확히는 file name
                 tag: req.body.tag, //교수님 이름, 과목 등 태그
                 comment: req.body.comment, // 판매자가 남기고 싶은 말
@@ -134,6 +134,33 @@ router.post('/delete', function(req, res, next) {
         else {
             res.send({success: "success"});
         }
+    });
+});
+
+router.post('/suggest_price', function(req, res, next) {
+    const ObjectId = mongoose.Types.ObjectId;
+    Trade.find({_id: ObjectId(req.body.trade_id)}).then(function(result) {
+        if(result.length == 0) {
+            res.status(404).send({success: "there_is_no_trade_info"});
+            return error;
+        }
+        else {
+            console.log(result);
+            return Trade.update({_id: ObjectId(req.body.trade_id)}, { $push : { buyers: {
+                        buyer_id: req.body.buyer_id,
+                        price: req.body.price,
+                        location: req.body.location,
+                        buyer_contact: req.body.buyer_contact
+                    }
+                }
+            });
+        }
+    }).then(function(result) {
+        console.log(result);
+        res.send({success: "success"});
+    }).catch(function(err) {
+        console.log(err);
+        res.status(500).send({success: "fail"});
     });
 });
 
