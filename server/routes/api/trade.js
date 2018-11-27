@@ -8,6 +8,7 @@ const async = require('async');
 var path = require('path');
 
 var Trade = require(path.resolve(__dirname, "../../models/trade"));
+var Match = require(path.resolve(__dirname, "../../models/match"));
 
 const config = require('../../config');
 
@@ -58,12 +59,14 @@ router.post('/upload_trade', function(req, res, next) {
                 author: req.body.author, // 책 저자
                 edition: req.body.edition, // 책 판본
                 seller_id: req.body.seller_id, // _id가 토큰에 들어있다고 가정한다면 그냥 id 쓰면 될듯
+                seller_contact: req.body.seller_contact,
                 img_url: tmp, // 이미지 주소, 정확히는 file name
                 tag: req.body.tag, //교수님 이름, 과목 등 태그
                 comment: req.body.comment, // 판매자가 남기고 싶은 말
                 state: req.body.state, // 책의 보존 상태
                 price: req.body.price, // 판매자가 설정한 가격
-                buyers: [] // 최초 생성이니 빈 array
+                buyers: [], // 최초 생성이니 빈 array
+                time_stamp: Date.now()
             });
 
             trade_info.save(function (err) {
@@ -138,29 +141,91 @@ router.post('/delete', function(req, res, next) {
 });
 
 router.post('/suggest_price', function(req, res, next) {
+    let flag403 = false;
+    let flag404 = false;
     const ObjectId = mongoose.Types.ObjectId;
-    Trade.find({_id: ObjectId(req.body.trade_id)}).then(function(result) {
+
+    Match.find({trade_id: req.body.trade_id}).then(function(result) {
+        if(result.length > 0) {
+            res.status(403).send({success: "there_is_already_matched"});
+            flag403 = true;
+            throw new Error('403 error');
+        }
+        return Trade.find({_id: ObjectId(req.body.trade_id)});
+    }).then(function(result) {
         if(result.length == 0) {
+            flag404 = true;
             res.status(404).send({success: "there_is_no_trade_info"});
-            return error;
+            throw new Error('404 error');
         }
         else {
-            console.log(result);
-            return Trade.update({_id: ObjectId(req.body.trade_id)}, { $push : { buyers: {
-                        buyer_id: req.body.buyer_id,
-                        price: req.body.price,
-                        location: req.body.location,
-                        buyer_contact: req.body.buyer_contact
+            return Trade.update({_id: ObjectId(req.body.trade_id)}, { $pull : { buyers: {
+                        buyer_id: req.body.buyer_id
                     }
                 }
             });
         }
     }).then(function(result) {
-        console.log(result);
+        return Trade.update({_id: ObjectId(req.body.trade_id)}, { $push : { buyers: {
+                    buyer_id: req.body.buyer_id,
+                    price: req.body.price,
+                    location: req.body.location,
+                    buyer_contact: req.body.buyer_contact
+                }
+            }
+        });
+    }).then(function(result) {
         res.send({success: "success"});
     }).catch(function(err) {
         console.log(err);
-        res.status(500).send({success: "fail"});
+        if(!flag403 && !flag404) res.status(500).send({success: "fail"});
+    });
+});
+
+router.post('/match_buyer', function(req, res, next) {
+    let flag400 = false;
+    let flag403 = false;
+    let flag404 = false;
+    const ObjectId = mongoose.Types.ObjectId;
+    Match.find({trade_id: req.body.trade_id}).then(function(result) {
+        if(result.length > 0) {
+            res.status(403).send({success: "there_is_already_matched"});
+            flag403 = true;
+            throw new Error('403 error');
+        }
+        return Trade.find({_id: ObjectId(req.body.trade_id)});
+    }).then(function(result) {
+        if(result.length == 0) {
+            res.status(404).send({success: "there_is_no_trade_info"});
+            flag404 = true;
+            throw new Error('404 error');
+        }
+        else {
+            if(result[0].seller_id != req.body.seller_id) {
+                res.status(400).send({success:"seller_id_diffrents"});
+                flag400 = true;
+                throw new Error('400 error');
+            }
+
+            if(result[0].buyers.find(function(elem) {
+                return elem.buyer_id == req.body.buyer_id;
+            }) == undefined) {
+                res.status(404).send({success:"there_is_no_buyer"});
+                flag404 = true;
+                throw new Error('404 error');
+            }
+
+            return new Match({
+                trade_id:req.body.trade_id,
+                seller_id:req.body.seller_id,
+                buyer_id:req.body.buyer_id,
+            }).save();
+        }
+    }).then(function(result) {
+        res.send({success: "success"});
+    }).catch(function(err) {
+        console.log(err);
+        if(!flag400 && !flag403 && !flag404) res.status(500).send({success: "fail"});
     });
 });
 
