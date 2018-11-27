@@ -18,7 +18,8 @@ var tradeSchema = new Schema({
     tag: String, //교수님 이름, 과목 등 태그
     comment: String, // 판매자가 남기고 싶은 말
     state: Number, // 책의 보존 상태
-    buyers:[buyerSchema], //구매자들
+    buyers:[buyerSchema], //구매자들,
+    price: Number,
     time_stamp: Date
 });
 

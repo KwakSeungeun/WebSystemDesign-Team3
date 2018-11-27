@@ -7,7 +7,7 @@ const async = require('async');
 
 var path = require('path');
 
-var Trade = require(path.resolve(__dirname, "../../models/trades"));
+var Trade = require(path.resolve(__dirname, "../../models/trade"));
 
 const config = require('../../config');
 
@@ -54,12 +54,15 @@ router.post('/upload_trade', function(req, res, next) {
             }
 
             var trade_info = new Trade({
-                book_id: req.body.book_id, // 나중에 수정
+                title: req.body.title, // 책 제목
+                author: req.body.author, // 책 저자
+                edition: req.body.edition, // 
                 seller_id: req.body.seller_id, // 이메일로 해도 상관없을듯 하다. 구매자한테는 seller_id 만 쏙 빼서 날리면 되니
                 img_url: tmp, // 이미지 주소, 정확히는 file name
                 tag: req.body.tag, //교수님 이름, 과목 등 태그
                 comment: req.body.comment, // 판매자가 남기고 싶은 말
                 state: req.body.state, // 책의 보존 상태
+                price: req.body.price, // 판매자가 설정한 가격
                 buyers: [] // 최초 생성이니 빈 array
             });
 
