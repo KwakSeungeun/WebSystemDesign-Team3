@@ -87,4 +87,43 @@ router.post('/info_upload', function(req, res, next) {
     });
 });
 
+router.get('/auction_list', function(req, res, next) {
+    db.on('error', console.error);
+
+    Auction.find({}, { "seller_id": 0 }, function(err, result){
+        if(err) {
+            res.status(500).send({success: "fail"});
+        }
+        else {
+            res.send({success: "success", trade_list: result});
+        }
+    });
+});
+
+router.get('/my_auction_list/:seller_id', function(req, res, next) {
+    db.on('error', console.error);
+
+    Auction.find({"seller_id": req.params.seller_id}, { "seller_id": 0 }, function(err, result){
+        if(err) {
+            res.status(500).send({success: "fail"});
+        }
+        else {
+            res.send({success: "success", trade_list: result});
+        }
+    });
+});
+
+router.post('/delete', function(req, res, next) {
+    db.on('error', console.error);
+
+    Auction.deleteOne({_id: req.body._id, seller_id: req.body.seller_id}, function(err) {
+        if(err) {
+            res.status(500).send({success: "fail"});
+        }
+        else {
+            res.send({success: "success"});
+        }
+    });
+});
+
 module.exports = router;
