@@ -48,7 +48,7 @@ router.post('/', function(req, res, next) {
         var mailOptions = {
             from: 'AjouBookTrade <no-reply@gmail.com>',
             to: req.body.email,
-            subject: '아주 북 옥션 이메일 인증입니다.',
+            subject: '아주 북 트레이드 이메일 인증입니다.',
             text: 'http://localhost:3000/auth/register/authorization/' + etoken
         };
 
