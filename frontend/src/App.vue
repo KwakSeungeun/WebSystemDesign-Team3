@@ -80,6 +80,7 @@ export default {
 
 #contents{
   height: 70%;
+  width: 100%;
   overflow-y: scroll;
 }
 </style>
