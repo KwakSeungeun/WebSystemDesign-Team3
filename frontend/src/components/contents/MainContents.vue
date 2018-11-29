@@ -22,13 +22,12 @@ export default {
     }),
     methods:{
         cardClick: function(trade){
-            console.log("CARD CLICK!",trade)
+            console.log("CARD CLICK!",trade) //세부 페이지 router  /  여기서 경매 참여하기 modal
         },
         getBookList: function(){
             return new Promise(async(resolve, reject)=>{
                 await this.$http.get(`${url}trade/trade_list`)
                 .then(response=>{
-                    console.log("get TRADE RESULT :",response.data.trade_list);
                     resolve(response.data.trade_list)
                 })
                 .catch(err=>{
@@ -40,8 +39,8 @@ export default {
     created(){
         this.getBookList().then(result=>{
             console.log("CREATED! and get booklist",result);
-
-            this.filteringTrades = result; // 경매 진행중인 것만 filtering
+            this.$store.commit('setTrades',result);
+            this.filteringTrades = result; // 경매 진행중인 것만 filtering 하는 code update, status 이용해서 작업
         });
     },   
 }
