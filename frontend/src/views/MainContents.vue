@@ -6,9 +6,9 @@
                 <book-card :trade="trade"></book-card>
             </button>
         </div> -->
-        <div v-for="trade in filteringTrades" :key="trade.id" class="list-container">
+        <div   class="list-container">
             <router-link to='/details'>
-                <button class="card-container" @click="cardClick(trade)">
+                <button  v-for="trade in filteringTrades" :key="trade.id" class="card-container" @click="cardClick(trade)">
                     <book-card :trade="trade"></book-card>
                 </button>
             </router-link>
@@ -27,7 +27,7 @@ export default {
         BookCard
     },
     data:()=>({
-        filteringTrades: [] // 실제 화면에 보여질 list
+        filteringTrades: [{title:"안녕"},{title:"dd"},{title:"dd"},{title:"dd"}] // 실제 화면에 보여질 list
     }),
     methods:{
         cardClick: function(trade){
