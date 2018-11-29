@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import MainContents from './views/MainContents'
 import SellMyBook from './views/SellMyBook'
 import MySaleStatus from './views/MySaleStatus'
+import TradeDetails from './views/TradeDetails'
 
 Vue.use(Router)
 
@@ -21,6 +22,10 @@ export default new Router({
     {
       path: '/mysale',
       component: MySaleStatus
+    },
+    {
+      path: '/detail',
+      component: TradeDetails
     }
   ]
 })

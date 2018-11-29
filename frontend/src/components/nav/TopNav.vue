@@ -27,9 +27,6 @@ export default {
     searchText: '',
   }),
   methods: {
-    onSearch(){
-      alert('serch:'+this.searchText);
-    }
   }
 }
 </script>

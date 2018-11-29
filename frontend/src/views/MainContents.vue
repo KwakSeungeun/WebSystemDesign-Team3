@@ -1,9 +1,17 @@
 <template>
     <div id="main">
-        <div v-for="trade in filteringTrades" :key="trade.id" class="list-container">
+        <!-- test 용 -->
+        <!-- <div v-for="trade in 10" :key="trade" class="list-container">
             <button class="card-container" @click="cardClick(trade)">
                 <book-card :trade="trade"></book-card>
             </button>
+        </div> -->
+        <div v-for="trade in filteringTrades" :key="trade.id" class="list-container">
+            <router-link to='/details'>
+                <button class="card-container" @click="cardClick(trade)">
+                    <book-card :trade="trade"></book-card>
+                </button>
+            </router-link>
         </div>
     </div>
 </template>
@@ -14,6 +22,7 @@ import BookCard from '../components/card/BookCard'
 const url = 'http://localhost:3000/'
 
 export default {
+    name:'main-contents',
     components: {
         BookCard
     },
@@ -54,8 +63,8 @@ export default {
 }
 .list-container{
     background: yellow;
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 /* smart phone */
  @media only screen and (max-width : 320px){

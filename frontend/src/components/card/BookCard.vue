@@ -10,7 +10,7 @@
                 Edition : {{trade.edition}}<br>
                 Author: {{trade.author}}<br>
                 price: {{trade.price}}원<br> <!-- computed 사용해서 ,찍어서 보여주기 -->
-                State : {{trade.state}}<br> <!-- 별 그래픽으로 보여주기 -->
+                <!-- State : {{trade.state}}<br> 별 그래픽으로 보여주기 -->
                 tag : {{trade.tag}} <!-- computed 사용해서 좀 더 보기 좋게 만들기 -->
             </p>
         </div>
@@ -19,7 +19,11 @@
 
 <script>
 export default {
-    props:['trade']
+    props:['trade'],
+    name: 'book-card',
+    components:{
+        
+    }
 }
 </script>
 

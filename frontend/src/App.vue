@@ -3,7 +3,7 @@
     <div v-responsive.lg.xl.md class="header">
       <h1 class="pt-5">아주대 중고책장터 이미지 같은거 넣기</h1>
     </div>
-    <top-nav></top-nav>
+    <top-nav></top-nav> <!-- 시간 되면 animation 넣기 -->
     <div id="contents">
       <router-view></router-view>
     </div>
