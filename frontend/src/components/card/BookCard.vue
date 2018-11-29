@@ -6,19 +6,23 @@
         <hr>
         <div class="info-container">
             <p>
-                Title : 제목 / Edition : 판 
-                <br>
-                Author: 작가
-                <br>
-                price: 10,000원
-                <br>
-                State : 1~5점으로 상태
-                <br>
-                tag : ~~교수님, ~~강의
+                Title : {{trade.title}}<br>
+                Edition : {{trade.edition}}<br>
+                Author: {{trade.author}}<br>
+                price: {{trade.price}}원<br> <!-- computed 사용해서 ,찍어서 보여주기 -->
+                State : {{trade.state}}<br> <!-- 별 그래픽으로 보여주기 -->
+                tag : {{trade.tag}} <!-- computed 사용해서 좀 더 보기 좋게 만들기 -->
             </p>
         </div>
     </div>
 </template>
+
+<script>
+export default {
+    props:['trade']
+}
+</script>
+
 
 <style>
 #card{
@@ -37,6 +41,7 @@
 .info-container{
     margin-top: 10px;
     background: burlywood;
-    height: calc(40% - 20px)
+    height: calc(40% - 20px);
+    text-overflow: ellipsis;
 }
 </style>

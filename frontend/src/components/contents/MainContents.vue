@@ -1,8 +1,8 @@
 <template>
     <div id="main">
-        <div v-for="i in 10" :key="i" class="list-container">
-            <button class="card-container" @click="cardClick(i)">
-                <book-card></book-card>
+        <div v-for="trade in filteringTrades" :key="trade.id" class="list-container">
+            <button class="card-container" @click="cardClick(trade)">
+                <book-card :trade="trade"></book-card>
             </button>
         </div>
     </div>
@@ -10,16 +10,40 @@
 
 <script>
 import BookCard from '../card/BookCard'
+// cofig.js 에서 서버 url 저장해 둔 뒤, 붙여서 사용하기
+const url = 'http://localhost:3000/'
 
 export default {
     components: {
         BookCard
     },
+    data:()=>({
+        filteringTrades: [] // 실제 화면에 보여질 list
+    }),
     methods:{
         cardClick: function(trade){
             console.log("CARD CLICK!",trade)
+        },
+        getBookList: function(){
+            return new Promise(async(resolve, reject)=>{
+                await this.$http.get(`${url}trade/trade_list`)
+                .then(response=>{
+                    console.log("get TRADE RESULT :",response.data.trade_list);
+                    resolve(response.data.trade_list)
+                })
+                .catch(err=>{
+                    reject(err);
+                });
+            });
         }
-    }
+    },
+    created(){
+        this.getBookList().then(result=>{
+            console.log("CREATED! and get booklist",result);
+
+            this.filteringTrades = result; // 경매 진행중인 것만 filtering
+        });
+    },   
 }
 </script>
 
@@ -42,7 +66,7 @@ export default {
         outline: 0;
         margin: auto;
         width: calc(100% - 40px);
-        height: 400px;
+        height: 450px;
         margin: 10px;
     }
  }
@@ -54,7 +78,7 @@ export default {
         outline: 0;
         margin: auto;
         width: calc(100%/2 - 40px);
-        height: 400px;
+        height: 450px;
         margin: 10px;
     }
  }
@@ -66,7 +90,7 @@ export default {
         outline: 0;
         margin: auto;
         width: calc(100%/3 - 40px);
-        height: 400px;
+        height: 450px;
         margin: 10px;
     }
  }
