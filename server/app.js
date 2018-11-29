@@ -11,6 +11,10 @@ var registerRouter = require('./routes/api/register');
 var tradeRouter = require('./routes/api/trade');
 var checkRouter = require('./routes/api/check');
 var checkMiddle = require('./routes/middleware/auth');
+var updateUser= require('./routes/api/user')
+var getBook= require('./routes/api/getBook')
+
+
 
 var app = express();
 
@@ -31,6 +35,8 @@ app.use('/', indexRouter);
 app.use('/auth/login', usersRouter);
 app.use('/auth/register', registerRouter);
 app.use('/trade', tradeRouter);
+app.use('/user/update', updateUser);
+app.use('/getBook', getBook);
 
 app.use('/auth/check',checkMiddle)
 app.use('/auth/check',checkRouter)
