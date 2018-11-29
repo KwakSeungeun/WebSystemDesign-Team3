@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import BookCard from '../card/BookCard'
+import BookCard from '../components/card/BookCard'
 // cofig.js 에서 서버 url 저장해 둔 뒤, 붙여서 사용하기
 const url = 'http://localhost:3000/'
 

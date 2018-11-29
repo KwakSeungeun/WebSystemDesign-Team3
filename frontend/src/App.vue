@@ -26,7 +26,6 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import TopNav from './components/nav/TopNav'
-import MainContents from './components/contents/MainContents'
 import LoginForm from './components/modal/LoginForm'
 import RegisterForm from './components/modal/RegisterForm'
 import VueRouter from 'vue-router'
@@ -38,7 +37,6 @@ export default {
   name: 'app',
   components: {
     TopNav,
-    MainContents,
     LoginForm,
     RegisterForm
   },
