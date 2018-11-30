@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const config = require('../config');
 
 var alarmSchema = new Schema({
-  auction_id: String,
+  trade_id: String,
   contents: String, //알림 내용
   read: Boolean // 알람 읽음 여부
 });
@@ -18,7 +18,8 @@ var userSchema = new Schema({
   preference: String, // 선호하는 판매장소
   email_token: String, // 이메일 인증 토큰
   auth: Boolean, // 허가 여부
-  alarms: [alarmSchema] // 사용자가 진행중인 거래의 상태에 따른 알람
+  alarms: [alarmSchema], // 사용자가 진행중인 거래의 상태에 따른 알람
+  trade_id: [String]
 });
 
 // find one user by using username
