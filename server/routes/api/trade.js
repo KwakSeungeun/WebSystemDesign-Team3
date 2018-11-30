@@ -84,7 +84,7 @@ router.post('/upload_trade', function(req, res, next) {
             trade_info.save(function (err) {
                 if (err) {
                     async.each(tmp, function (i, callback) {
-                        fs.unlink(path.resolve(__dirname, "../../public/Image") + '/' + tmp[i], function(err) {
+                        fs.unlink(path.resolve(__dirname, "../../public/Image") + '/' + i, function(err) {
                             if(err) {
                                 console.log(tmp + " can't be deleted");
                                 callback(new Error("can't delete"));
