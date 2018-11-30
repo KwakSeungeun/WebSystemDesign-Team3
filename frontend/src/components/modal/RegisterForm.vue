@@ -9,13 +9,13 @@
             <hr>
             <div class="d-flex flex-row mb-3">
                 <label class="pt-2">비밀번호</label>
-                <b-form-input v-model="form.pw" type="text" required
+                <b-form-input v-model="form.pw" type="password" required
                     placeholder="8자 이상 입력하세요"></b-form-input>
             </div>
             <hr>
             <div class="d-flex flex-row">
                 <label class="pt-2">비밀번호확인</label>
-                <b-form-input v-model="pwCheckText" type="text" required ref="pwCheckRef"
+                <b-form-input v-model="pwCheckText" type="password" required ref="pwCheckRef"
                     placeholder="비밀번호를 다시 한 번 입력해주세요"></b-form-input>
             </div>
             <div class="mb-3" v-if="pwCheckText">
@@ -59,6 +59,9 @@ export default {
             preference: ['','',''],
         }
     }),
+    mounted(){
+        this.clear()
+    },
     methods:{
         onRegister(event){
             event.preventDefault(); //prevent reload page
@@ -68,8 +71,6 @@ export default {
             }
             this.form.pw = sha512(this.form.pw);
             this.$EventBus.$emit('register',this.form);
-            // clear 
-            this.clear()
         },
         clear(){
             _.forEach(this.form,(value,key)=>{
