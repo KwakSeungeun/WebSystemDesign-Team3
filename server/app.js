@@ -8,7 +8,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/api/login');
 var registerRouter = require('./routes/api/register');
-var post_tradeRouter = require('./routes/api/post_trade');
+var tradeRouter = require('./routes/api/trade');
 var checkRouter = require('./routes/api/check');
 var checkMiddle = require('./routes/middleware/auth');
 var getBook = require('./routes/api/getBook');
@@ -32,7 +32,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/auth/login', usersRouter);
 app.use('/auth/register', registerRouter);
-app.use('/upload/post_trade', post_tradeRouter);
+app.use('/trade', tradeRouter);
+app.use('/user/update', updateUser);
+app.use('/getBook', getBook);
 
 app.use('/auth/check',checkMiddle)
 app.use('/auth/check',checkRouter)
