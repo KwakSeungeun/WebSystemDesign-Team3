@@ -44,7 +44,7 @@ var storage = multer.diskStorage({
     }
 });
 
-var upload = multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 } }).array('images', 5); // 개수제한 5, 크기제한 10MB
+var upload = multer({ storage: storage }).array('images', 5); // 개수제한 5, 크기제한 10MB
                                                               // images 라는 key 값에 append 해서 보내줄 것(front)
 
 router.post('/upload_trade', function(req, res, next) {
@@ -87,7 +87,7 @@ router.post('/upload_trade', function(req, res, next) {
                         fs.unlink(path.resolve(__dirname, "../../public/Image") + '/' + tmp[i], function(err) {
                             if(err) {
                                 console.log(tmp + " can't be deleted");
-                                callback(error);
+                                callback(new Error("can't delete"));
                             }
                             else {
                                 callback(null);
