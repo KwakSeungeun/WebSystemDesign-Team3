@@ -1,0 +1,18 @@
+{
+  "name": "daemon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "expire_checker.js",
+  "dependencies": {
+    "async": "^2.6.1",
+    "fs": "0.0.1-security",
+    "mongoose": "^5.3.14",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
