@@ -1,7 +1,7 @@
 <template>
     <div id="card">
         <div class="image">
-            <b-img src="https://picsum.photos/1024/400/?image=41" fluid alt="Responsive image"/>
+            <b-img src="https://picsum.photos/1024/400/?image=41"  fluid-grow alt="Responsive image"/>
         </div>
         <hr>
         <div class="info-container">

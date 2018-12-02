@@ -9,8 +9,8 @@ export const store = new Vuex.Store({
       trades: []
   },
   mutations:{
-    setTrades: function(trades, value){
-      trades = value;
+    setTrades: function(state, value){
+      this.state.trades = value;
     }
   }
 });
