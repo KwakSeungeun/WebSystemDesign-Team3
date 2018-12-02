@@ -44,8 +44,18 @@ export default {
     this.$EventBus.$on('login',(data)=>{
       //data is login info
       //here is connect login api
-      this.$refs.loginRef.hide() //if success login
       console.log("DATA :",data);
+      const uemail=data.email
+      const upw=data.pw
+
+      this.$http.post('http://localhost:3000/auth/login',{
+        email:uemail,
+        pw:upw
+      })
+
+      this.$refs.loginRef.hide() //if success login
+
+
     });
     
     this.$EventBus.$on('register',(data)=>{
