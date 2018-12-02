@@ -24,7 +24,8 @@ export default new Router({
       component: MySaleStatus
     },
     {
-      path: '/detail',
+      path: '/details/:id',
+      name: "trade-details",
       component: TradeDetails
     }
   ]

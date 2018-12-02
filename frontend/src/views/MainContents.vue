@@ -1,41 +1,49 @@
 <template>
-    <div id="main">
-        <!-- test 용 -->
-        <!-- <div v-for="trade in 10" :key="trade" class="list-container">
-            <button class="card-container" @click="cardClick(trade)">
-                <book-card :trade="trade"></book-card>
-            </button>
-        </div> -->
-        <div   class="list-container">
-            <router-link to='/details'>
-                <button  v-for="trade in filteringTrades" :key="trade.id" class="card-container" @click="cardClick(trade)">
+    <div id="main" ref="main">
+        <button class="floating-btn" @click="scrollToTop"></button>
+        <b-container class="mt-3 mb-3" style="margin-left: 3%;">
+            <b-row>
+                <b-col sm="7">
+                    <b-form-input v-model="searchText" placeholder="찾고 싶은 책을 검색해 보세요!"></b-form-input>
+                </b-col>
+                <b-col sm="3">
+                    <b-button @click="onSearch">검색</b-button>
+                </b-col>
+            </b-row>
+        </b-container>
+        <div class="list-container">
+            <button  v-for="trade in filteringTrades" :key="trade.id" class="card-container">
+                <router-link :to="{name: 'trade-details', params:{id: trade._id}}">
                     <book-card :trade="trade"></book-card>
-                </button>
-            </router-link>
+                </router-link>
+            </button>
         </div>
     </div>
 </template>
 
 <script>
 import BookCard from '../components/card/BookCard'
-// cofig.js 에서 서버 url 저장해 둔 뒤, 붙여서 사용하기
-const url = 'http://localhost:3000/'
+import config from '../config'
+import _ from 'lodash'
 
 export default {
     name:'main-contents',
     components: {
-        BookCard
+        BookCard,
     },
-    data:()=>({
-        filteringTrades: [{title:"안녕"},{title:"dd"},{title:"dd"},{title:"dd"}] // 실제 화면에 보여질 list
-    }),
+    data: function(){
+        return{
+            searchText: '',
+            filteringTrades: []
+        }
+    },
     methods:{
-        cardClick: function(trade){
-            console.log("CARD CLICK!",trade) //세부 페이지 router  /  여기서 경매 참여하기 modal
+        scrollToTop: function(){
+            this.$refs.main.scrollTop = 0;
         },
         getBookList: function(){
             return new Promise(async(resolve, reject)=>{
-                await this.$http.get(`${url}trade/trade_list`)
+                await this.$http.get(`${config.serverUri}trade/trade_list`)
                 .then(response=>{
                     resolve(response.data.trade_list)
                 })
@@ -43,11 +51,13 @@ export default {
                     reject(err);
                 });
             });
+        },
+        onSearch: function(){
+            console.log(this.searchText);
         }
     },
     created(){
         this.getBookList().then(result=>{
-            console.log("CREATED! and get booklist",result);
             this.$store.commit('setTrades',result);
             this.filteringTrades = result; // 경매 진행중인 것만 filtering 하는 code update, status 이용해서 작업
         });
@@ -62,18 +72,16 @@ export default {
     width: 100%;
 }
 .list-container{
-    background: yellow;
-    margin-left: 2%;
-    margin-right: 2%;
+    margin: 2%;
 }
 /* smart phone */
  @media only screen and (max-width : 320px){
      .card-container{
-        background: gray;
+        background: white;
         border: 0;
         outline: 0;
         margin: auto;
-        width: calc(100% - 40px);
+        width: calc(100% - 20px);
         height: 450px;
         margin: 10px;
     }
@@ -81,11 +89,11 @@ export default {
 /* pad */
  @media only screen and (min-device-width : 768px) and (max-device-width : 1024px){
      .card-container{
-        background: gray;
+        background: white;
         border: 0;
         outline: 0;
         margin: auto;
-        width: calc(100%/2 - 40px);
+        width: calc(100%/2 - 20px);
         height: 450px;
         margin: 10px;
     }
@@ -93,13 +101,23 @@ export default {
 /* desktop */
  @media only screen and (min-width : 1224px){
      .card-container{
-        background: gray;
+        background: white;
         border: 0;
         outline: 0;
         margin: auto;
-        width: calc(100%/3 - 40px);
+        width: calc(100%/3 - 20px);
         height: 450px;
         margin: 10px;
     }
  }
+.floating-btn{
+  background: url( "../../public/images/topIcon.png" ) no-repeat;
+  background-size: cover;
+  border: none;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+}
 </style>
