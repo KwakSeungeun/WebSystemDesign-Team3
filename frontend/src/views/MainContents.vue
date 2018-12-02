@@ -1,13 +1,19 @@
 <template>
     <div id="main" ref="main">
         <button class="floating-btn" @click="scrollToTop"></button>
-        <b-container class="mt-3 mb-3" style="margin-left: 3%;">
+        <b-container class="mx-auto mb-3 mt-3">
             <b-row>
                 <b-col sm="7">
                     <b-form-input v-model="searchText" placeholder="찾고 싶은 책을 검색해 보세요!"></b-form-input>
                 </b-col>
-                <b-col sm="3">
+                <b-col sm="1">
                     <b-button @click="onSearch">검색</b-button>
+                </b-col>
+                <b-col sm="4">
+                    <b-dropdown id="filter" text="필터">
+                        <b-dropdown-item-button @click="filtering('total')">전체</b-dropdown-item-button>
+                        <b-dropdown-item-button @click="filtering('price')">가격순</b-dropdown-item-button>
+                    </b-dropdown>
                 </b-col>
             </b-row>
         </b-container>
@@ -54,6 +60,9 @@ export default {
         },
         onSearch: function(){
             console.log(this.searchText);
+        },
+        filtering: function(mode){
+            console.log("Filter :", mode);
         }
     },
     created(){
