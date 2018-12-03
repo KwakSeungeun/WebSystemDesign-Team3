@@ -27,6 +27,7 @@ function ValidateEmail(mail)  {
     return false;
 }
 router.post('/', function(req, res, next) {
+    console.log('들어옴',req.body)
     if(ValidateEmail(req.body.email) == false) {
         res.send({success: "email_valid_fail"});
     }
