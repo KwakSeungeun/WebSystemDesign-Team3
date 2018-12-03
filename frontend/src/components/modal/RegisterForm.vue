@@ -46,6 +46,7 @@
 
 <script>
 import sha512 from 'sha512'
+import crypto from 'crypto'
 import _ from 'lodash'
 
 export default {
@@ -64,13 +65,16 @@ export default {
     },
     methods:{
         onRegister(event){
-            event.preventDefault(); //prevent reload page
             if(this.pwCheckText!=this.form.pw){
                 this.$refs.pwCheckRef.focus();
                 return;
             }
-            this.form.pw = sha512(this.form.pw);
+            // console.log('크립토',crypto.createHash('sha512').update(`${this.form.pw}`).digest('base64'));
+            // this.form.pw = sha512(this.form.pw);
+            this.form.pw=crypto.createHash('sha512').update(`${this.form.pw}`).digest('base64')
+            console.log('회원가입 할때',this.form.pw)
             this.$EventBus.$emit('register',this.form);
+            event.preventDefault(); //prevent reload page
         },
         clear(){
             _.forEach(this.form,(value,key)=>{
