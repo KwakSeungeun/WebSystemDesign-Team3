@@ -16,9 +16,9 @@
         <b-modal no-close-on-backdrop hide-footer centered ref="buyModal" title="거래 참여하기">
             <p>원하는 가격과 장소를 입력해 주세요!</p>
             <div class="row-align">
-                <b-form-input style="flex:1" type="number" placeholder="가격" v-model="buyer.price"></b-form-input>
+                <b-form-input required style="flex:1" type="number" placeholder="가격" v-model="buyer.price"></b-form-input>
                 <p>원</p>
-                <b-form-input style="flex:1; margin-left: 10px;" 
+                <b-form-input required style="flex:1; margin-left: 10px;" 
                     type="text" placeholder="장소" v-model="buyer.location"></b-form-input>
             </div>
             <hr>
@@ -71,7 +71,15 @@ export default {
             }
         },
         tradeSubmit: function(){
-            // 성공시
+            if(!this.buyer.price || this.buyer.location){
+                return;
+            }
+            let createBuyerObj = {
+                trade_id: this.trade._id,
+                buyer_id: "", //로그인 되어 있는 정보 이용
+                location: this.location,
+                buyer_contact: "" 
+            }
             this.$refs.buyModal.hide();
         }
     },
