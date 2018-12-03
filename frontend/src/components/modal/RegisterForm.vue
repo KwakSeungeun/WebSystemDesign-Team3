@@ -65,7 +65,6 @@ export default {
     },
     methods:{
         onRegister(event){
-            event.preventDefault(); //prevent reload page
             if(this.pwCheckText!=this.form.pw){
                 this.$refs.pwCheckRef.focus();
                 return;
@@ -75,6 +74,7 @@ export default {
             this.form.pw=crypto.createHash('sha512').update(`${this.form.pw}`).digest('base64')
             console.log('회원가입 할때',this.form.pw)
             this.$EventBus.$emit('register',this.form);
+            event.preventDefault(); //prevent reload page
         },
         clear(){
             _.forEach(this.form,(value,key)=>{

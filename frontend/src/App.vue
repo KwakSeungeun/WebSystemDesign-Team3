@@ -62,13 +62,13 @@ export default {
       console.log("DATA :", data);
       const uemail = data.email;
       const upw = data.pw;
-      try{
-      await this.$http.post("http://localhost:3000/auth/login", {
-        email: uemail,
-        pw: upw
-      });
-      }catch(err){
-        console.log(err.response)
+      try {
+        var res = await this.$http.post("http://localhost:3000/auth/login", {
+          email: uemail,
+          pw: upw
+        });
+      } catch (err) {
+        console.log(err.response);
       }
       this.$refs.loginRef.hide(); //if success login
     });
@@ -77,7 +77,7 @@ export default {
       //data is register info
       //here is connect register api
       const email = data.email;
-      const pw =data.pw;
+      const pw = data.pw;
       const phone = data.phone;
       const preference = data.preference;
       const name = data.name;
@@ -93,7 +93,7 @@ export default {
       } catch (err) {
         console.log(err.response);
       }
-      this.$refs.registerRef.hide() //if success login
+      this.$refs.registerRef.hide(); //if success login
     });
   }
 };
@@ -114,7 +114,7 @@ export default {
   height: 150px;
   margin-top: 0;
   text-align: center;
-  opacity: 0.8!important;
+  opacity: 0.8 !important;
   color: rgb(0, 29, 53);
 }
 

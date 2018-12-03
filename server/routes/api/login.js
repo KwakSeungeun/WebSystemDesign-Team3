@@ -42,6 +42,7 @@ router.post('/',function(req,res,next){
 
   // return token
   const respond = function(token){
+    console.log(token)
     res.json({
       message: 'logged in successfully',
       token

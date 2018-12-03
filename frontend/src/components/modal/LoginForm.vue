@@ -24,6 +24,7 @@
 <script>
 import sha512 from'sha512'
 import _ from 'lodash'
+import crypto from 'crypto'
 
 export default {
   data : ()=>({
@@ -33,8 +34,9 @@ export default {
     }
   }),
   methods: {
-    onLogin(Event) {
-      this.form.pw = sha512(this.form.pw);
+    onLogin(event) {
+      // this.form.pw = sha512(this.form.pw);
+      this.form.pw=crypto.createHash('sha512').update(`${this.form.pw}`).digest('base64')
       this.$EventBus.$emit('login',this.form);
       event.preventDefault(); //prevent reload page
     },
