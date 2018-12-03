@@ -104,7 +104,7 @@ export default {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   word-break: keep-all;
   overflow-y: hidden;
-  background: yellowgreen;
+  background: white;
   height: 100vh;
 }
 .header {
@@ -112,9 +112,10 @@ export default {
   color: whitesmoke;
   margin-top: 0;
   height: 150px;
+  margin-top: 0;
   text-align: center;
-  margin-top: auto;
-  margin-bottom: auto;
+  opacity: 0.8!important;
+  color: rgb(0, 29, 53);
 }
 
 #contents {
