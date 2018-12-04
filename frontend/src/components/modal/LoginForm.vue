@@ -11,7 +11,7 @@
       </b-form-group>
       <b-form-group label="PASSWORD:">
         <b-form-input type="password"
-                      v-model="form.pw"
+                      v-model="inputPw"
                       required
                       placeholder="패스워드를 입력하세요">
         </b-form-input>
@@ -28,6 +28,7 @@ import crypto from 'crypto'
 
 export default {
   data : ()=>({
+    inputPw: '',
     form: {
         email: '',
         pw: '',
@@ -36,7 +37,7 @@ export default {
   methods: {
     onLogin(event) {
       // this.form.pw = sha512(this.form.pw);
-      this.form.pw=crypto.createHash('sha512').update(`${this.form.pw}`).digest('base64')
+      this.form.pw=crypto.createHash('sha512').update(`${this.inputPw}`).digest('base64')
       this.$EventBus.$emit('login',this.form);
       event.preventDefault(); //prevent reload page
     },
