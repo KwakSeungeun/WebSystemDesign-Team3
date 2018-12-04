@@ -20,6 +20,7 @@ var tradeSchema = new Schema({
     state: Number, // 책의 보존 상태
     buyers:[buyerSchema], //구매자들,
     price: Number,
+    status: Number, // 거래의 상태 표시 0: 거래중 , 1: 시간완료(1주일), 2: 성공, 3. 실패
     time_stamp: Date
 });
 

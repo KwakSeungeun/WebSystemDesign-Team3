@@ -1,8 +1,8 @@
 <template>
   <div id="top-nav">
-    <b-navbar toggleable="md" type="dark" variant="info">
+    <b-navbar toggleable="md">
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-      <b-navbar-brand href="#">아주대 중고책 장터</b-navbar-brand>
+      <b-navbar-brand href="/">아주대 중고책 장터</b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">          
         <b-navbar-nav>
           <b-nav-item><router-link to="/">책 장터</router-link></b-nav-item>
