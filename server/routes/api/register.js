@@ -54,11 +54,11 @@ router.post('/', function(req, res, next) {
         };
 
         var user_obj = new User({
-            name: "", // req.body.name
+            name: req.body.name,
             email: req.body.email,
             pw: req.body.pw,
-            phone: "", // req.body.phone
-            preference: "", // req.body.preference
+            phone: req.body.phone,
+            preference: req.body.preference,
             email_token: etoken,
             auth: false,
             alarms: [ ] // empty array
