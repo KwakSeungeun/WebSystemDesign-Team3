@@ -6,6 +6,7 @@ const async = require('async');
 var path = require('path');
 
 var Trade = require(path.resolve(__dirname, "./models/trade"));
+var User = require(path.resolve(__dirname, "./models/user"));
 
 const config = require('./config');
 
