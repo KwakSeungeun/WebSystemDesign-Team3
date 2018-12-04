@@ -9,7 +9,7 @@
             <hr>
             <div class="d-flex flex-row mb-3">
                 <label class="pt-2">비밀번호</label>
-                <b-form-input v-model="form.pw" type="password" required
+                <b-form-input v-model="inputPw" type="password" required
                     placeholder="8자 이상 입력하세요"></b-form-input>
             </div>
             <hr>
@@ -19,8 +19,8 @@
                     placeholder="비밀번호를 다시 한 번 입력해주세요"></b-form-input>
             </div>
             <div class="mb-3" v-if="pwCheckText">
-                <p v-if="pwCheckText!=form.pw" style="color: red;">비밀번호가 다릅니다</p>
-                <p v-if="pwCheckText==form.pw" style="color: green;">비밀번호가 일치합니다</p>
+                <p v-if="pwCheckText!=inputPw" style="color: red;">비밀번호가 다릅니다</p>
+                <p v-if="pwCheckText==inputPw" style="color: green;">비밀번호가 일치합니다</p>
             </div>
             <hr>
             <div class="d-flex flex-row mb-3">
@@ -52,6 +52,7 @@ import _ from 'lodash'
 export default {
     data:()=>({
         pwCheckText: '',
+        inputPw: '',
         form:{
             email: '',
             pw: '',
@@ -65,13 +66,13 @@ export default {
     },
     methods:{
         onRegister(event){
-            if(this.pwCheckText!=this.form.pw){
+            if(this.pwCheckText!=this.inputPw){
                 this.$refs.pwCheckRef.focus();
                 return;
             }
             // console.log('크립토',crypto.createHash('sha512').update(`${this.form.pw}`).digest('base64'));
             // this.form.pw = sha512(this.form.pw);
-            this.form.pw=crypto.createHash('sha512').update(`${this.form.pw}`).digest('base64')
+            this.form.pw=crypto.createHash('sha512').update(`${this.inputPw}`).digest('base64')
             console.log('회원가입 할때',this.form.pw)
             this.$EventBus.$emit('register',this.form);
             event.preventDefault(); //prevent reload page
