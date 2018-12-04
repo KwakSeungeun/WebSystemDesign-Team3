@@ -18,15 +18,47 @@ var db = mongoose.connection;
 db.on('error', console.error);
 
 funct = function() {
+    const ObjectId = mongoose.Types.ObjectId;
+
     return new Promise((resolve, reject) => {
         setTimeout(function () {
             Trade.find({}).then(function(result) {
                 async.each(result, function (i, callback) {
                     if(i.time_stamp != undefined) {
                         if(Date.now() - i.time_stamp >= 604800000) {
-                            Trade.deleteOne({_id: i._id}).then(function(result) {
+                            Trade.deleteOne({_id: i._id}).then(function(result) { // 나중에 update로 고치기
                                 console.log(result);
-                                callback(null);
+                                User.update({_id: ObjectId(i.seller_id)}, {$push: { alarms: {
+                                            trade_id: i.trade_id,
+                                            contents: "매칭 시간이 종료되었습니다!",
+                                            read: false
+                                        }
+                                    }
+                                }).then(function(result) {
+                                    console.log(result);
+
+                                    async.each(i.buyers, function(j, callback) {
+                                        User.update({_id: ObjectId(j.buyer_id)}, {$push: { alarms: {
+                                                    trade_id: i.trade_id,
+                                                    contents: "매칭 시간이 종료되었습니다!",
+                                                    read: false
+                                                }
+                                            }
+                                        }).then(function(result) {
+                                            console.log(result);
+                                            callback(null);
+                                        }).catch(function(err) {
+                                            console.log(err);
+                                            callback(null);
+                                        });
+                                    }, function(err) {
+                                        if (err) console.log(err);
+                                        callback(null);
+                                    });
+                                }).catch(function(err) {
+                                    console.log(err);
+                                    callback(null);
+                                });
                             }).catch(function(err) {
                                 console.log(err);
                                 callback(null);
@@ -53,7 +85,6 @@ funct = function() {
 async function main() {
     while(1) {
         await funct();
-        console.log("world");
     }
 }
 
