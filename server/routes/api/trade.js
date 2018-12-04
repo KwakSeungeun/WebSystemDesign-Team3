@@ -7,6 +7,7 @@ const async = require('async');
 
 var path = require('path');
 
+var Users = require(path.resolve(__dirname, "../../models/users"));
 var Trade = require(path.resolve(__dirname, "../../models/trade"));
 var Match = require(path.resolve(__dirname, "../../models/match"));
 
@@ -24,7 +25,7 @@ const bodyParser = require('body-parser');
 const auth = require('../middleware/auth');
 
 // Test data를 넣기 위해 잠시 comment처리
-// router.use(auth); // trade 하는 모든 과정은 반드시 로그인 확인 여부가 필요하므로 middleware 를 가져다 씀
+router.use(auth); // trade 하는 모든 과정은 반드시 로그인 확인 여부가 필요하므로 middleware 를 가져다 씀
 
 router.use(bodyParser.urlencoded({
     extended: false
@@ -198,6 +199,7 @@ router.post('/match_buyer', function(req, res, next) {
     let flag400 = false;
     let flag403 = false;
     let flag404 = false;
+    let tmp;
     const ObjectId = mongoose.Types.ObjectId;
     Match.find({trade_id: req.body.trade_id}).then(function(result) {
         if(result.length > 0) {
@@ -227,6 +229,8 @@ router.post('/match_buyer', function(req, res, next) {
                 throw new Error('404 error');
             }
 
+            tmp = result[0].buyers;
+
             return new Match({
                 trade_id:req.body.trade_id,
                 seller_id:req.body.seller_id,
@@ -234,7 +238,41 @@ router.post('/match_buyer', function(req, res, next) {
             }).save();
         }
     }).then(function(result) {
-        res.send({success: "success"});
+        async.each(tmp, function(i, callback) {
+            if(i.buyer_id == ObjectId(req.body.buyer_id)) {
+                Users.update({_id: ObjectId(i.buyer_id)}, {$push: { alarms: {
+                            trade_id: req.body.trade_id,
+                            contents: "매칭에 성사되었습니다!",
+                            read: false
+                        }
+                    }
+                }).then(function(result) {
+                    console.log(result);
+                    callback(null);
+                }).catch(function(err) {
+                    console.log(err);
+                    callback(null);
+                });
+            }
+            else {
+                Users.update({_id: ObjectId(i.buyer_id)}, {$push: { alarms: {
+                            trade_id: req.body.trade_id,
+                            contents: "매칭이 종료되었습니다. 판매자가 다른 거래자를 선택했습니다.",
+                            read: false
+                        }
+                    }
+                }).then(function(result) {
+                    console.log(result);
+                    callback(null);
+                }).catch(function(err) {
+                    console.log(err);
+                    callback(null);
+                });
+            }
+        }, function(err) {
+            if(err) console.log(err);
+            res.send({success: "success"});
+        });
     }).catch(function(err) {
         console.log(err);
         if(!flag400 && !flag403 && !flag404) res.status(500).send({success: "fail"});
