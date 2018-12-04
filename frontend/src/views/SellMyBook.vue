@@ -170,10 +170,11 @@ export default {
         },
         createTrade: function(event){
             // 판매자 연락처 check를 통해 
+            console.log("FORM: ",this.form);
             event.preventDefault();
         },
         uploadImageSuccess(formData, index, fileList) {
-            console.log('data', formData, index, fileList)
+            console.log('UPLOAD', formData, index, fileList)
             // Upload image api
             // axios.post('http://your-url-upload', { data: formData }).then(response => {
             //   console.log(response)
@@ -184,14 +185,13 @@ export default {
             var r = confirm("remove image")
             if (r == true) {
                 done()
-            } else {
-        }
+            }
         },
         editImage (formData, index, fileList) {
             console.log('edit data', formData, index, fileList)
         },
         dataChange (data) {
-            console.log(data)
+            console.log("DATA CHANGE:",data)
         }
     }
 }
@@ -201,8 +201,7 @@ export default {
 <style>
 #sell-my-book{
     background: white;
-    margin-left: 5%;
-    margin-right: 5%;
+    margin: 5%;
     padding: 1%;
     overflow: hidden;
     border-radius: 5px;

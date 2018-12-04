@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <div v-responsive.lg.xl.md class="header">
-      <h1 class="pt-5">아주대 중고책장터 이미지 같은거 넣기</h1>
-    </div>
+    <div v-responsive.lg.xl.md class="header"></div>
     <top-nav></top-nav>
     <!-- 시간 되면 animation 넣기 -->
     <div id="contents">
@@ -108,14 +106,11 @@ export default {
   height: 100vh;
 }
 .header {
-  background: #0277bd;
-  color: whitesmoke;
+  background-image: url('../public/images/background.jpg'); 
+  background-size: cover;
   margin-top: 0;
   height: 150px;
-  margin-top: 0;
-  text-align: center;
   opacity: 0.8 !important;
-  color: rgb(0, 29, 53);
 }
 
 #contents {
