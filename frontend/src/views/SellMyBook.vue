@@ -27,8 +27,20 @@
             </b-form-group>
             <hr>
             <b-form-group label="팔고 싶은 책 정보(필수)">
-                <b-form-file class="row-100" v-model="form.img_url" required
-                            :state="Boolean(file)" placeholder="책 사진을 넣어주세요!"></b-form-file>
+                <vue-upload-multiple-image
+                    @upload-success="uploadImageSuccess"
+                    @before-remove="beforeRemove"
+                    @edit-image="editImage"
+                    @data-change="dataChange"
+                    :data-images="form.img_url"
+                    primaryText=""
+                    markIsPrimaryText=""
+                    dragText=""
+                    browseText="">
+                </vue-upload-multiple-image>
+                <!-- npm install vue-upload-multiple-image 사용해서 구현하기 -->
+                <!-- <b-form-file class="row-100" v-model="form.img_url" required
+                            :state="Boolean(file)" placeholder="책 사진을 넣어주세요!"></b-form-file> -->
                 <div class="mt-3">Selected file: {{form.img_url && form.img_url.name}}</div>
                 <div class="row-align">
                     <b-input-group class="row-item" prepend="책 상태">
@@ -94,8 +106,13 @@
 </template>
 
 <script>
+import VueUploadMultipleImage from 'vue-upload-multiple-image'
+
 export default {
     name: 'sell-my-book',
+    components:{
+        VueUploadMultipleImage
+    },
     data: function(){
         return{
             form:{
@@ -154,6 +171,27 @@ export default {
         createTrade: function(event){
             // 판매자 연락처 check를 통해 
             event.preventDefault();
+        },
+        uploadImageSuccess(formData, index, fileList) {
+            console.log('data', formData, index, fileList)
+            // Upload image api
+            // axios.post('http://your-url-upload', { data: formData }).then(response => {
+            //   console.log(response)
+            // })
+        },
+        beforeRemove (index, done, fileList) {
+            console.log('index', index, fileList)
+            var r = confirm("remove image")
+            if (r == true) {
+                done()
+            } else {
+        }
+        },
+        editImage (formData, index, fileList) {
+            console.log('edit data', formData, index, fileList)
+        },
+        dataChange (data) {
+            console.log(data)
         }
     }
 }
