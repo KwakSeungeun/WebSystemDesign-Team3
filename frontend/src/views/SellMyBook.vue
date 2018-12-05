@@ -30,8 +30,6 @@
                 <vue-upload-multiple-image
                     @upload-success="uploadImageSuccess"
                     @before-remove="beforeRemove"
-                    @edit-image="editImage"
-                    @data-change="dataChange"
                     :data-images="form.img_url"
                     primaryText=""
                     markIsPrimaryText=""
@@ -186,12 +184,6 @@ export default {
             if (r == true) {
                 done()
             }
-        },
-        editImage (formData, index, fileList) {
-            console.log('edit data', formData, index, fileList)
-        },
-        dataChange (data) {
-            console.log("DATA CHANGE:",data)
         }
     }
 }

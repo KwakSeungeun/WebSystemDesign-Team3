@@ -54,21 +54,11 @@ export default {
     RegisterForm
   },
   created() {
-    this.$EventBus.$on("login", async data => {
-      //data is login info
-      //here is connect login api
+    this.$EventBus.$on("login", async( data) => {
       console.log("DATA :", data);
       const uemail = data.email;
       const upw = data.pw;
-      try {
-        var res = await this.$http.post("http://localhost:3000/auth/login", {
-          email: uemail,
-          pw: upw
-        });
-      } catch (err) {
-        console.log(err.response);
-      }
-      this.$refs.loginRef.hide(); //if success login
+      
     });
 
     this.$EventBus.$on("register", async data => {
