@@ -1,31 +1,25 @@
-var express = require('express');
-var mongoose = require('mongoose');
-var multer = require('multer');
+const express = require('express');
+const mongoose = require('mongoose');
+const multer = require('multer');
 
 const fs = require('fs');
 const async = require('async');
 
-var path = require('path');
+const path = require('path');
 
-var Users = require(path.resolve(__dirname, "../../models/users"));
-var Trade = require(path.resolve(__dirname, "../../models/trade"));
-var Match = require(path.resolve(__dirname, "../../models/match"));
+const Users = require(path.resolve(__dirname, "../../models/users"));
+const Trade = require(path.resolve(__dirname, "../../models/trade"));
+const Match = require(path.resolve(__dirname, "../../models/match"));
 
 const config = require('../../config');
 
 mongoose.connect(config.mongodbUri, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 
-var db = mongoose.connection;
-
-var router = express.Router();
-
+const db = mongoose.connection;
+const router = express.Router();
 const bodyParser = require('body-parser');
-
 const auth = require('../middleware/auth');
-
-// Test data를 넣기 위해 잠시 comment처리
-router.use(auth); // trade 하는 모든 과정은 반드시 로그인 확인 여부가 필요하므로 middleware 를 가져다 씀
 
 router.use(bodyParser.urlencoded({
     extended: false
@@ -35,6 +29,21 @@ router.use(function(req, res, next) { // 나중에 빈 문자열 혹은 각종 u
     next();
 });
 
+router.get('/trade_list', function(req, res, next) {
+    db.on('error', console.error);
+
+    Trade.find({}, { "seller_id": 0 }, function(err, result){
+        if(err) {
+            res.status(500).send({success: "fail"});
+        }
+        else {
+            res.send({success: "success", trade_list: result});
+        }
+    });
+});
+
+// Test data를 넣기 위해 잠시 comment처리
+router.use(auth); // trade 하는 모든 과정은 반드시 로그인 확인 여부가 필요하므로 middleware 를 가져다 씀
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -104,19 +113,6 @@ router.post('/upload_trade', function(req, res, next) {
                     return res.send({success:"success"});
                 }
             });
-        }
-    });
-});
-
-router.get('/trade_list', function(req, res, next) {
-    db.on('error', console.error);
-
-    Trade.find({}, { "seller_id": 0 }, function(err, result){
-        if(err) {
-            res.status(500).send({success: "fail"});
-        }
-        else {
-            res.send({success: "success", trade_list: result});
         }
     });
 });

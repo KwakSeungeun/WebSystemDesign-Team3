@@ -36,9 +36,6 @@
                     dragText=""
                     browseText="">
                 </vue-upload-multiple-image>
-                <!-- npm install vue-upload-multiple-image 사용해서 구현하기 -->
-                <!-- <b-form-file class="row-100" v-model="form.img_url" required
-                            :state="Boolean(file)" placeholder="책 사진을 넣어주세요!"></b-form-file> -->
                 <div class="mt-3">Selected file: {{form.img_url && form.img_url.name}}</div>
                 <div class="row-align">
                     <b-input-group class="row-item" prepend="책 상태">
