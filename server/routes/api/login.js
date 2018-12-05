@@ -16,8 +16,12 @@ router.post('/',function(req,res,next){
   // check exist user
   const check = function(user){
     if(!user){
-      throw new Error('login failed');
+        throw new Error('login failed');
     } else {
+      // if(user.auth==false){              // auth 확인
+      //   throw new Error('please auth'); 
+      // }
+
       if(user.verify(pw)){
         const p = new Promise((resolve,reject)=>{
           jwt.sign({
