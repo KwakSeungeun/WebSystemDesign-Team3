@@ -87,15 +87,14 @@ export default {
     },
     onLogout: function(){
       this.$session.destroy();
-      this.$store.commit('setIsLogged',false);
+      this.$store.commit('setIsLogged',this.$session.exists());
       this.$refs.logoutModal.show();
     }
   },
   created: function(){
-    console.log("처음 session",this.$session.getAll())
     if (this.$session.exists()) {
       console.log("이미 로그인 되어 있다!")
-      this.$store.commit('setIsLogged',true);
+      this.$store.commit('setIsLogged',this.$session.exists());
     }
     this.$EventBus.$on("login", async(data) => {
       const uemail = data.email;
@@ -108,17 +107,16 @@ export default {
       }).then((res)=>{
         console.log('res',res)
         if(res.status == 200 && res.data.token != null) {
-          this.$session.start();
           this.$session.set('token', res.data.token);
           // Vue.http.headers.common['x-access-token'] = res.data.token;
-          this.$store.commit('setIsLogged',true);
+          this.$store.commit('setIsLogged',this.$session.exists());
         }
         this.$refs.loginRef.hide();
         this.loading = false;
       }).catch((err)=>{
         console.log("catch",err);
         alert("로그인에 실패했습니다. 다시 한 번 해주세요!")
-        this.$store.commit('setIsLogged',false);
+        this.$store.commit('setIsLogged',this.$session.has('token'));
       });
     });
     
