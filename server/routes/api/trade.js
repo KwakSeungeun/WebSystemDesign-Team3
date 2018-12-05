@@ -42,7 +42,6 @@ router.get('/trade_list', function(req, res, next) {
     });
 });
 
-// Test data를 넣기 위해 잠시 comment처리
 router.use(auth); // trade 하는 모든 과정은 반드시 로그인 확인 여부가 필요하므로 middleware 를 가져다 씀
 
 var storage = multer.diskStorage({

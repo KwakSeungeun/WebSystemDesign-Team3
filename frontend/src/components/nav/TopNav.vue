@@ -78,6 +78,7 @@ export default {
         pw : upw
       }).then((res)=>{
         console.log("res",res);
+        this.$store.commit('login',{token: res.data.token, email: uemail})
         this.$refs.loginRef.hide();
         this.loading = false;
       }).catch((err)=>{
@@ -96,7 +97,7 @@ export default {
       console.log("DATA!! :", pw);
       
       this.loading = true;
-      await this.$http.post(`${config.serverUri}auth/regiser`,{
+      await this.$http.post(`${config.serverUri}auth/register`,{
           email : email,
           pw: pw,
           phone: phone,
