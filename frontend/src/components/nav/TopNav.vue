@@ -42,6 +42,9 @@
       id="registerModal">
       <register-form></register-form>
     </b-modal>
+    <b-modal hide-footer ref="logoutModal" centered>
+      <p>로그아웃 되었습니다.</p>
+    </b-modal>
     <pulse-loader :loading="loading" class="center"></pulse-loader>
   </div>
 </template>
@@ -85,7 +88,7 @@ export default {
     onLogout: function(){
       this.$session.destroy();
       this.$store.commit('setIsLogged',false);
-      alert("로그아웃!")
+      this.$refs.logoutModal.show();
     }
   },
   created: function(){

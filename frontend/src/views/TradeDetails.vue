@@ -33,6 +33,9 @@
             <hr>
             <b-btn class="round-btn" style="float: right;" @click="tradeSubmit">등록하기</b-btn>
         </b-modal>
+        <b-modal hide-footer ref="notLoggedModal" centered>
+            <p>로그인시 이용가능한 서비스 입니다.</p>
+        </b-modal>
     </div>
 </template>
 
@@ -57,11 +60,15 @@ export default {
             ]
         }
     },
+    computed: {
+        isLogged: function(){
+        return this.$store.state.isLogged;
+        }
+    },
     methods:{
         openModal: function(){
-            console.log("구매")
-            if(!this.$store.state.token){
-                alert('로그인 시 이용할 수 있습니다.')
+            if(!this.isLogged){
+                this.$refs.notLoggedModal.show();
                 return;
             } else {
                 // clear
