@@ -22,7 +22,7 @@
                     <b-form-input class="row-item w-10" type="number" placeholder="판" readonly
                                 v-model="form.edition">
                     </b-form-input>
-                    <button class="round-btn blue row-item" @click="openSearchModal">책 검색</button>
+                    <button class="round-btn blue row-item" @click="openSearchModal">찾기</button>
                 </div>
             </b-form-group>
             <hr>

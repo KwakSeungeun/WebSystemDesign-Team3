@@ -6,29 +6,6 @@
     <div id="contents">
       <router-view></router-view>
     </div>
-    <!-- modals -->
-    <b-modal
-      no-close-on-backdrop
-      centered
-      ref="loginRef"
-      size="md"
-      title="로그인"
-      hide-footer
-      id="loginModal"
-    >
-      <login-form></login-form>
-    </b-modal>
-    <b-modal
-      no-close-on-backdrop
-      centered
-      ref="registerRef"
-      size="md"
-      title="회원가입"
-      hide-footer
-      id="registerModal"
-    >
-      <register-form></register-form>
-    </b-modal>
   </div>
 </template>
 
@@ -39,8 +16,6 @@ import BootstrapVue from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import TopNav from "./components/nav/TopNav";
-import LoginForm from "./components/modal/LoginForm";
-import RegisterForm from "./components/modal/RegisterForm";
 import VueRouter from "vue-router";
 
 Vue.use(BootstrapVue);
@@ -50,39 +25,8 @@ export default {
   name: "app",
   components: {
     TopNav,
-    LoginForm,
-    RegisterForm
   },
   created() {
-    this.$EventBus.$on("login", async( data) => {
-      console.log("DATA :", data);
-      const uemail = data.email;
-      const upw = data.pw;
-      
-    });
-
-    this.$EventBus.$on("register", async data => {
-      //data is register info
-      //here is connect register api
-      const email = data.email;
-      const pw = data.pw;
-      const phone = data.phone;
-      const preference = data.preference;
-      const name = data.name;
-      console.log("DATA!! :", pw);
-      try {
-        await this.$http.post("http://localhost:3000/auth/register", {
-          email,
-          pw: pw,
-          phone,
-          preference,
-          name
-        });
-      } catch (err) {
-        console.log(err.response);
-      }
-      this.$refs.registerRef.hide(); //if success login
-    });
   }
 };
 </script>

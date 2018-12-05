@@ -11,28 +11,123 @@
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
           <b-button-group size="sm" class="mb-auto">
-            <b-btn v-b-modal.loginModal>로그인</b-btn>
-            <b-btn v-b-modal.registerModal>회원가입</b-btn>
+            <b-btn @click="openLoginModal">로그인</b-btn>
+            <b-btn @click="openRegisterModal">회원가입</b-btn>
           </b-button-group>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
+    <b-modal
+      no-close-on-backdrop
+      centered
+      ref="loginRef"
+      size="md"
+      title="로그인"
+      hide-footer
+      id="loginModal">
+      <login-form></login-form>
+    </b-modal>
+    <b-modal
+      no-close-on-backdrop
+      centered
+      ref="registerRef"
+      size="md"
+      title="회원가입"
+      hide-footer
+      id="registerModal">
+      <register-form></register-form>
+    </b-modal>
+    <pulse-loader :loading="loading" class="center"></pulse-loader>
   </div>
 </template>
 
 <script>
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+import LoginForm from "../modal/LoginForm"
+import RegisterForm from "../modal/RegisterForm";
+import config from "../../config"
+
 export default {
   name:"top-nav",
   data : ()=>({
     searchText: '',
+    loading: false,
   }),
+  components:{
+    LoginForm,
+    RegisterForm,
+    PulseLoader
+  },
   methods: {
+    openLoginModal: function(){
+      this.$refs.loginRef.show();
+    },
+    openRegisterModal: function(){
+      this.$refs.registerRef.show();
+    }
+  },
+  created: function(){
+    this.$EventBus.$on("login", async(data) => {
+      console.log("DATA :", data);
+      const uemail = data.email;
+      const upw = data.pw;
+      
+      this.loading = true;
+      await this.$http.post(`${config.serverUri}auth/login`,{
+        email: uemail,
+        pw : upw
+      }).then((res)=>{
+        console.log("res",res);
+        this.$refs.loginRef.hide();
+        this.loading = false;
+      }).catch((err)=>{
+        console.log("catch",err.response);
+        alert("로그인에 실패했습니다. 다시 한 번 해주세요!")
+        this.loading = false;
+      });
+    });
+    
+    this.$EventBus.$on("register", async data => {
+      const email = data.email;
+      const pw = data.pw;
+      const phone = data.phone;
+      const preference = data.preference;
+      const name = data.name;
+      console.log("DATA!! :", pw);
+      
+      this.loading = true;
+      await this.$http.post(`${config.serverUri}auth/regiser`,{
+          email : email,
+          pw: pw,
+          phone: phone,
+          preference: preference,
+          name: name
+      }).then((res)=>{
+        console.log("res",res);
+        this.$refs.registerRef.hide(); 
+        this.loading = false;
+      }).catch((err)=>{
+        console.log("catch",err.response);
+        alert("회원가입에 실패했습니다. 다시 한 번 해주세요!")
+        this.loading = false;
+      });
+    });
+  },
+  beforeDestroy: function(){
+    this.$EventBus.$off("login");
+    this.$EventBus.$off("register");
   }
 }
 </script>
 
 <style>
 #top-nav{
-  text-align: center;
+  text-align: left;
+}
+.center{
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 1000000;
 }
 </style>
