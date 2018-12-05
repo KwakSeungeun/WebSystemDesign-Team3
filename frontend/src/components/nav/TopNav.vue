@@ -77,12 +77,13 @@ export default {
         email: uemail,
         pw : upw
       }).then((res)=>{
-        console.log("res",res);
-        this.$store.commit('login',{token: res.data.token, email: uemail})
+        this.$session.set('token', res.data.token);
+        console.log("세션 존재하는지!", this.$session.exists('token'));
+        this.$store.commit('setUser',uemail);
         this.$refs.loginRef.hide();
         this.loading = false;
       }).catch((err)=>{
-        console.log("catch",err.response);
+        console.log("catch",err);
         alert("로그인에 실패했습니다. 다시 한 번 해주세요!")
         this.loading = false;
       });
