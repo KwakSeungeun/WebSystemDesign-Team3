@@ -41,6 +41,7 @@
 
 <script>
 import _ from 'lodash'
+import config from '../config'
 
 export default {
     name: 'trade-details',
@@ -78,15 +79,22 @@ export default {
             }
         },
         tradeSubmit: function(){
-            if(!this.buyer.price || this.buyer.location){
+            if(!this.buyer.price || !this.buyer.location){
                 return;
             }
             let createBuyerObj = {
                 trade_id: this.trade._id,
-                buyer_id: "", //로그인 되어 있는 정보 이용
+                buyer_id: "", //로그인 되어 있는 정보 이용 vuex에 user에 저장 해둠
                 location: this.location,
-                buyer_contact: "" 
+                buyer_contact: ""  // selected되어 있는 것에 따라 
             }
+            
+            this.$http.post(`${config.serverUri}trade/suggest_price`,createBuyerObj)
+            .then((res)=>{
+                console.log("가격제시 성공",res);
+            }).catch(err=>{
+                console.log("에러\n",err.response);
+            });
             this.$refs.buyModal.hide();
         }
     },
