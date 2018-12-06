@@ -1,19 +1,23 @@
 <template>
   <div class="pl-10" id="whole">
-    <b-form-radio-group
-      id="radios1"
-      v-model="selected"
-      :options="options"
-      name="radioOpenions"
-      class="wid-50"
-    ></b-form-radio-group>
-    <div class="mt-3">
+    <div v-if="isLogged">
+      <b-form-radio-group
+        id="radios1"
+        v-model="selected"
+        :options="options"
+        name="radioOpenions"
+        class="wid-50"
+      ></b-form-radio-group>
+      <div class="mt-3">
+      </div>
+      <div class="list-container">
+        <button v-for="trade in computedList" :key="trade.id" class="card-container">
+          <book-card :trade="trade"></book-card>
+        </button>
+      </div>
     </div>
-
-    <div class="list-container">
-      <button v-for="trade in computedList" :key="trade.id" class="card-container">
-        <book-card :trade="trade"></book-card>
-      </button>
+    <div v-else-if="!isLogged">
+      <h1>로그인 필요</h1>
     </div>
   </div>
 </template>
@@ -48,10 +52,13 @@ export default {
         }else{
             return _.filter(this.Trades, { 'status':this.selected });
         }
+    },
+    isLogged: function(){
+      return this.$store.state.isLogged;
     }
   },
   created() {
-    (this.Trades = this.$store.state.trades), console.log(this.Trades);
+    this.Trades = this.$store.state.trades;
   }
 };
 </script>

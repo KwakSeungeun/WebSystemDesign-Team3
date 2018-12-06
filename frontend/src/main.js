@@ -3,9 +3,11 @@ import App from './App'
 import {store} from './store'
 import axios from 'axios'
 import router from './router'
-import VueSessionStorage from 'vue-sessionstorage'
+import VueCookie from'vue-cookie';
+import VueSession from 'vue-session'
 
-Vue.use(VueSessionStorage)
+Vue.use(VueSession)
+Vue.use(VueCookie)
 
 Vue.prototype.$EventBus = new Vue;
 Vue.prototype.$http = axios;

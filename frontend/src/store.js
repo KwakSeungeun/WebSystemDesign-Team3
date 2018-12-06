@@ -6,24 +6,22 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
       email:'',
-      token: 'testToken',
+      isLogged: false, // 로그인 중인 여부 판단
       trades: []
   },
   mutations:{
     setTrades: function(state, value){
       this.state.trades = value;
     },
-    login(state, res){
-      this.state.token = res.token;
-      this.state.email = res.email;
-      // this.$session.start()
-      // this.$session.set('jwt', payload.token)
-      // Vue.http.headers.common['x-access-token'] = payload.token
+    setUser(state, email){
+      this.state.email = email;
+      console.log('VUEX setUser :',this.state.email);
     },
-    logout(){
-      this.token=null
-      this.email=''
-      this.$session.destroy()
+    setIsLogged(state, vale){
+      this.state.isLogged = vale;
+    },
+    removeUser(){
+      this.state.email=''
     }
   },
 });
