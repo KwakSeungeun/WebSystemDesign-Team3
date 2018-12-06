@@ -32,12 +32,12 @@ export default {
   data() {
     return {
       Trades: [],
-      selected: 4,
+      seller_trades:[],
+      buyer_trades:[],
+      selected: 0,
       options: [
-        { text: "전체보기", value: 4 },
-        { text: "장터중", value: 0 },
-        { text: "장터성공", value: 2 },
-        { text: "장터실패", value: 3 }
+        { text: "구매자", value: 0 },
+        { text: "판매자", value: 1 },
       ]
     };
   },
@@ -46,18 +46,24 @@ export default {
   },
   computed: {
     computedList() {
-        if(this.selected==4){
-            return this.Trades
+        if(this.selected==0){
+            return this.buyer_trades
         }else{
-            return _.filter(this.Trades, { 'status':this.selected });
+            return this.seller_trades
         }
     },
     isLogged: function(){
       return this.$store.state.isLogged;
     }
   },
-  created() {
+  async created() {
+    let user=this.$store.state.user.data
+    console.log('유저',user)
+    let seller= await this.$http.get(`${this.$config.serverUri}trade/my_trade_list`)
+    console.log('판매자',seller.data.trade_list)
+    this.seller_trades=seller.data.trade_list
     this.Trades = this.$store.state.trades;
+    console.log('트레이드!!',this.Trades)
   }
 };
 </script>
