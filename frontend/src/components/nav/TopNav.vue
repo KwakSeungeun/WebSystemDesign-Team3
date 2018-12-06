@@ -7,7 +7,8 @@
         <b-navbar-nav>
           <b-nav-item><router-link to="/">책 장터</router-link></b-nav-item>
           <b-nav-item><router-link to="/sell">내 책 팔기</router-link></b-nav-item>
-          <b-nav-item><router-link to="/mysale">내 거래 현황</router-link></b-nav-item>
+          <b-nav-item><router-link to="/select/buyer">구매자 선택</router-link></b-nav-item>
+          <b-nav-item><router-link to="/mysale">내 장터 현황</router-link></b-nav-item>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
           <b-button-group v-if="!isLogged" size="sm" class="mb-auto">
@@ -95,6 +96,7 @@ export default {
     if (this.$session.exists()) {
       console.log("이미 로그인 되어 있다!")
       this.$store.commit('setIsLogged',this.$session.exists());
+      this.$http.defaults.headers.common['x-access-token'] = this.$session.get('token');
     }
     this.$EventBus.$on("login", async(data) => {
       const uemail = data.email;

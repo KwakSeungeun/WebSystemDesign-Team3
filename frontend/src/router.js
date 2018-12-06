@@ -4,6 +4,7 @@ import MainContents from './views/MainContents'
 import SellMyBook from './views/SellMyBook'
 import MySaleStatus from './views/MySaleStatus'
 import TradeDetails from './views/TradeDetails'
+import SelectBuyer from './views/SelectBuyer'
 
 Vue.use(Router)
 
@@ -27,6 +28,11 @@ export default new Router({
       path: '/details/:id',
       name: "trade-details",
       component: TradeDetails
+    },
+    {
+      path: '/select/buyer',
+      name: "select-buyer",
+      component: SelectBuyer
     }
   ]
 })

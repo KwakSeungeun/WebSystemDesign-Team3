@@ -36,7 +36,6 @@ export default {
       options: [
         { text: "전체보기", value: 4 },
         { text: "장터중", value: 0 },
-        { text: "장터종료", value: 1 },
         { text: "장터성공", value: 2 },
         { text: "장터실패", value: 3 }
       ]
