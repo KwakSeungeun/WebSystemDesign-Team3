@@ -22,6 +22,7 @@
     "vue-session": "^1.0.0",
     "vue-sessionstorage": "^1.0.0",
     "vue-spinner": "^1.0.3",
+    "vue-star-rating": "^1.6.1",
     "vue-upload-multiple-image": "^1.1.2",
     "vuex": "^3.0.1"
   },

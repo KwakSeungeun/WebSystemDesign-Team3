@@ -110,8 +110,10 @@ export default {
         this.$store.commit('setIsLogged',this.$session.exists());
         this.loading = false;
       });
-      let user_obj = await this.getUser(uemail)
-      this.$store.commit('setUser',user_obj);
+      if(this.$session.exists()){
+        let user_obj = await this.getUser(uemail)
+        this.$store.commit('setUser',user_obj);
+      }
     },
     getUser: function(email){
       return new Promise((resolve, reject)=>{

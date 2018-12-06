@@ -5,12 +5,18 @@
         </div>
         <hr>
         <div class="info-container">
-            <p>
+            <star-rating v-model="trade.state" :show-rating=false :read-only=true
+                            v-bind:increment="1"
+                            v-bind:max-rating="5"
+                            v-bind:rounded-corners=true
+                            inactive-color="#808080"
+                            active-color="#E74C3C"
+                            v-bind:star-size="30"></star-rating> 
+            <p class="p-2">
                 Title : {{trade.title}}<br>
                 Edition : {{trade.edition}}<br>
                 Author: {{trade.author}}<br>
                 price: {{trade.price}}원<br> <!-- computed 사용해서 ,찍어서 보여주기 -->
-                State : {{trade.state}}<br> <!--별 그래픽으로 보여주기-->
                 tag : {{trade.tag}} <!-- computed 사용해서 좀 더 보기 좋게 만들기 -->
             </p>
         </div>
@@ -18,11 +24,12 @@
 </template>
 
 <script>
+import StarRating from 'vue-star-rating'
 export default {
     props:['trade'],
     name: 'book-card',
     components:{
-        
+        StarRating
     }
 }
 </script>
@@ -46,5 +53,8 @@ export default {
     margin-top: 10px;
     height: calc(40% - 20px);
     text-overflow: ellipsis;
+}
+p{
+    text-align: left;
 }
 </style>

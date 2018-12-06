@@ -37,17 +37,21 @@
                         dragText=""
                         browseText="">
                     </vue-upload-multiple-image>
-                    <div class="mt-3">Selected file: {{form.img_url && form.img_url.name}}</div>
-                    <div class="row-align">
-                        <b-input-group class="row-item" prepend="책 상태">
-                            <b-form-input required type="number" placeholder="0(사용흔적 많음)~5(거의 새 것)" 
-                                            v-model="form.state"></b-form-input>
-                        </b-input-group>
+                    <div class="mt-3 mb-3">Selected file: {{form.img_url && form.img_url.name}}</div>
+                    <div class="row-align">         
+                        <b-input-group class="row-item" style="width: 5%;" prepend="상태" ></b-input-group> 
+                        <star-rating v-model="form.state" :show-rating=false
+                            v-bind:increment="1"
+                            v-bind:max-rating="5"
+                            v-bind:rounded-corners=true
+                            inactive-color="#808080"
+                            active-color="#E74C3C"
+                            v-bind:star-size="50"></star-rating> 
+                    </div>
                         <b-input-group class="row-item" prepend="가격" append="원">
                             <b-form-input  required type="number" v-model="form.price"></b-form-input>
                         </b-input-group>
-                    </div>
-                </b-form-group>
+                    </b-form-group>
                 <hr>
                 <b-form-group label="책 상태 입력(선택사항)"
                                 description="자세하고 정확한 책 상태 설명이 책 장터에 더욱 도움이 됩니다!">
@@ -106,11 +110,13 @@
 
 <script>
 import VueUploadMultipleImage from 'vue-upload-multiple-image'
+import StarRating from 'vue-star-rating'
 
 export default {
     name: 'sell-my-book',
     components:{
-        VueUploadMultipleImage
+        VueUploadMultipleImage,
+        StarRating
     },
     data: function(){
         return{
@@ -123,7 +129,7 @@ export default {
                 img_url:[],
                 tag: '',
                 comment: '',
-                state: '',
+                state: 0, //0(상태 나쁨)~5(상태좋음)
                 buyers: [],
                 price: 0,
                 status: 0,
@@ -135,7 +141,7 @@ export default {
             contactOptions:[
                 {text: '이메일', value:'email'},
                 {text: '핸드폰', value:'phone'}
-            ]
+            ],
         }
     },
     computed: {
