@@ -25,7 +25,7 @@ router.post('/',function(req,res,next){
       if(user.verify(pw)){
         const p = new Promise((resolve,reject)=>{
           jwt.sign({
-            email: user.email
+            _id: user._id
           },
           secret,
           {

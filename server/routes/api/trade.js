@@ -79,7 +79,7 @@ router.post('/upload_trade', function(req, res, next) {
                 title: req.body.title, // 책 제목
                 author: req.body.author, // 책 저자
                 edition: req.body.edition, // 책 판본
-                seller_id: req.body.seller_id, // _id가 토큰에 들어있다고 가정한다면 그냥 id 쓰면 될듯
+                seller_id: req.decoded._id, // _id가 토큰에 들어있다고 가정한다면 그냥 id 쓰면 될듯
                 seller_contact: req.body.seller_contact,
                 img_url: tmp, // 이미지 주소, 정확히는 file name
                 tag: req.body.tag, //교수님 이름, 과목 등 태그
@@ -116,12 +116,12 @@ router.post('/upload_trade', function(req, res, next) {
     });
 });
 
-router.get('/my_trade_list/:seller_id', function(req, res, next) {
+router.get('/my_trade_list', function(req, res, next) {
     db.on('error', console.error);
 
     const ObjectId = mongoose.Types.ObjectId;
 
-    Trade.find({"seller_id": ObjectId(req.params.seller_id)}, { "seller_id": 0 }, function(err, result){
+    Trade.find({"seller_id": ObjectId(req.decoded._id)}, { "seller_id": 0 }, function(err, result){
         if(err) {
             res.status(500).send({success: "fail"});
         }
@@ -138,9 +138,9 @@ router.post('/delete', function(req, res, next) {
 
     const ObjectId = mongoose.Types.ObjectId;
 
-    Trade.deleteOne({_id: ObjectId(req.body._id), seller_id: ObjectId(req.body.seller_id)}, function(err) {
+    Trade.deleteOne({_id: ObjectId(req.body.trade_id), seller_id: ObjectId(req.decoded._id)}, function(err) {
         if(err) {
-            res.status(500).send({success: "fail"});
+            res.status(403).send({success: "fail"});
         }
         else {
             res.send({success: "success"});
@@ -167,7 +167,7 @@ router.post('/suggest_price', function(req, res, next) {
             res.status(404).send({success: "there_is_no_trade_info"});
             throw new Error('404 error');
         }
-        else if(result[0].seller_id == req.buyer_id) {
+        else if(result[0].seller_id == req.decoded._id) {
             res.status(403).send({success: "seller_can_not_request_own_trade"});
             flag403 = true;
             throw new Error('403 error');
@@ -175,14 +175,14 @@ router.post('/suggest_price', function(req, res, next) {
         else {
             tmp = result[0].seller_id;
             return Trade.update({_id: ObjectId(req.body.trade_id)}, { $pull : { buyers: {
-                        buyer_id: req.body.buyer_id
+                        buyer_id: req.decoded._id
                     }
                 }
             });
         }
     }).then(function(result) {
         return Trade.update({_id: ObjectId(req.body.trade_id)}, { $push : { buyers: {
-                    buyer_id: req.body.buyer_id,
+                    buyer_id: req.decoded._id,
                     price: req.body.price,
                     location: req.body.location,
                     buyer_contact: req.body.buyer_contact
@@ -229,7 +229,7 @@ router.post('/match_buyer', function(req, res, next) {
             throw new Error('404 error');
         }
         else {
-            if(result[0].seller_id != req.body.seller_id) {
+            if(result[0].seller_id != req.decoded._id) {
                 res.status(400).send({success:"seller_id_diffrents"});
                 flag400 = true;
                 throw new Error('400 error');
@@ -247,7 +247,7 @@ router.post('/match_buyer', function(req, res, next) {
 
             return new Match({
                 trade_id:req.body.trade_id,
-                seller_id:req.body.seller_id,
+                seller_id:req.decoded._id,
                 buyer_id:req.body.buyer_id,
             }).save();
         }
@@ -285,7 +285,7 @@ router.post('/match_buyer', function(req, res, next) {
             }
         }, function(err) {
             if(err) console.log(err);
-            Users.update({_id: ObjectId(req.body.seller_id)}, {$push: { alarms: {
+            Users.update({_id: ObjectId(req.decoded._id)}, {$push: { alarms: {
                         trade_id: req.body.trade_id,
                         contents: "매칭이 성사되었습니다!",
                         read: false
@@ -302,6 +302,82 @@ router.post('/match_buyer', function(req, res, next) {
     }).catch(function(err) {
         console.log(err);
         if(!flag400 && !flag403 && !flag404) res.status(500).send({success: "fail"});
+    });
+});
+
+router.get('/matched/:id/:who', function(req, res, next) {
+    const ObjectId = mongoose.Types.ObjectId;
+
+    let flag403 = false;
+    let flag404 = false;
+    let tmpid;
+    let tmpcontact;
+    Match.find({trade_id: req.params.id}).then(function(result) {
+        if(result.length == 0) {
+            flag404 = true;
+            res.status(404).send("not found");
+            throw new Error("404 error");
+        }
+        if(req.params.who == '0') {
+            if(result[0].seller_id != req.decoded._id) {
+                flag403 = true;
+                res.status(403).send("bad request");
+                throw new Error("403 error");
+            }
+
+            tmpid = result[0].buyer_id;
+        }
+        else {
+            if(result[0].buyer_id != req.decoded._id) {
+                flag403 = true;
+                res.status(403).send("bad request");
+                throw new Error("403 error");
+            }
+
+            tmpid = result[0].seller_id;
+        }
+
+        return Trade.find({_id: ObjectId(req.params.id)});
+    }).then(function(result) {
+        if(result.length == 0) {
+            flag404 = true;
+            res.status(404).send("not found");
+            throw new Error("404 error");
+        }
+
+        if(req.params.who == '0') {
+            let obj = result[0].buyers.find(function(x) {
+                return x.buyer_id == tmpid;
+            });
+            if(obj == undefined) {
+                flag404 = true;
+                res.status(404).send("not found");
+                throw new Error("404 error");
+            }
+
+            tmpcontact = obj.buyer_contact;
+        }
+        else {
+            tmpcontact = result[0].seller_contact;
+        }
+
+        return Users.find({_id: ObjectId(tmpid)});
+    }).then(function(result) {
+        if(result.length == 0) {
+            flag404 = true;
+            res.status(404).send("not found");
+            throw new Error("404 error");
+        }
+
+        if(tmpcontact == 0) {
+            res.send(result[0].email);
+        }
+        else {
+            res.send(result[0].phone);
+        }
+    }).catch(function(err) {
+        console.log(err);
+        if(!flag404) res.status(500).send("server error");
     });
 });
 

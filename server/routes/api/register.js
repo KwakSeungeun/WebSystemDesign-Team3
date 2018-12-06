@@ -29,7 +29,7 @@ function ValidateEmail(mail)  {
 router.post('/', function(req, res, next) {
     console.log('들어옴',req.body)
     if(ValidateEmail(req.body.email) == false) {
-        res.send({success: "email_valid_fail"});
+        res.status(403).send({success: "email_valid_fail"});
     }
     else {
         db.on('error', console.error);
@@ -41,8 +41,8 @@ router.post('/', function(req, res, next) {
         var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: '',
-                pass: ''
+                user: 'sbctest2018@gmail.com',
+                pass: 'tjqudcks1,'
             }
         });
 
@@ -50,7 +50,7 @@ router.post('/', function(req, res, next) {
             from: 'AjouBookTrade <no-reply@gmail.com>',
             to: req.body.email,
             subject: '아주 북 트레이드 이메일 인증입니다.',
-            text: 'http://localhost:3000/auth/register/authorization/' + etoken
+            text: 'http://192.168.7.255:3000/auth/register/authorization/' + etoken
         };
 
         var user_obj = new User({
