@@ -67,7 +67,7 @@ export default {
     created(){
         this.getBookList().then(result=>{
             this.$store.commit('setTrades',result);
-            this.filteringTrades = result; // 경매 진행중인 것만 filtering 하는 code update, status 이용해서 작업
+            this.filteringTrades = _.filter(this.$store.state.trades, { 'status': 0 }); //expire 된 거 보여주기
         });
     },   
 }
