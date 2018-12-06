@@ -8,7 +8,22 @@ const mongoose = require('mongoose');
 const db = mongoose.connection;
 mongoose.connect(config.mongodbUri, { useNewUrlParser: true });
 
-router.put('/',(req,res)=>{
+
+router.get('/:email',async (req,res)=>{
+    let uemail=req.params.email
+    let user=await User.findOneByEmail(uemail)
+    let _id=user._id
+    let trade_id=user.trade_id
+    let name=user.name
+    let email=user.email
+    let phone=user.phone
+    let preference=user.preference
+    let alarms=user.alarms
+    res.send({_id,trade_id,name,email,phone,preference,alarms})
+})
+
+
+router.put('/update',(req,res)=>{
     console.log('들어왔당')
     console.log(req.body)
 
