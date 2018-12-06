@@ -305,4 +305,80 @@ router.post('/match_buyer', function(req, res, next) {
     });
 });
 
+router.get('/matched/:id/:who', function(req, res, next) {
+    const ObjectId = mongoose.Types.ObjectId;
+
+    let flag403 = false;
+    let flag404 = false;
+    let tmpid;
+    let tmpcontact;
+    Match.find({trade_id: req.params.id}).then(function(result) {
+        if(result.length == 0) {
+            flag404 = true;
+            res.status(404).send("not found");
+            throw new Error("404 error");
+        }
+        if(req.params.who == '0') {
+            if(result[0].seller_id != req.decoded._id) {
+                flag403 = true;
+                res.status(403).send("bad request");
+                throw new Error("403 error");
+            }
+
+            tmpid = result[0].buyer_id;
+        }
+        else {
+            if(result[0].buyer_id != req.decoded._id) {
+                flag403 = true;
+                res.status(403).send("bad request");
+                throw new Error("403 error");
+            }
+
+            tmpid = result[0].seller_id;
+        }
+
+        return Trade.find({_id: ObjectId(req.params.id)});
+    }).then(function(result) {
+        if(result.length == 0) {
+            flag404 = true;
+            res.status(404).send("not found");
+            throw new Error("404 error");
+        }
+
+        if(req.params.who == '0') {
+            let obj = result[0].buyers.find(function(x) {
+                return x.buyer_id == tmpid;
+            });
+            if(obj == undefined) {
+                flag404 = true;
+                res.status(404).send("not found");
+                throw new Error("404 error");
+            }
+
+            tmpcontact = obj.buyer_contact;
+        }
+        else {
+            tmpcontact = result[0].seller_contact;
+        }
+
+        return Users.find({_id: ObjectId(tmpid)});
+    }).then(function(result) {
+        if(result.length == 0) {
+            flag404 = true;
+            res.status(404).send("not found");
+            throw new Error("404 error");
+        }
+
+        if(tmpcontact == 0) {
+            res.send(result[0].email);
+        }
+        else {
+            res.send(result[0].phone);
+        }
+    }).catch(function(err) {
+        console.log(err);
+        if(!flag404) res.status(500).send("server error");
+    });
+});
+
 module.exports = router;
