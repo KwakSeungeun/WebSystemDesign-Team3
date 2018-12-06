@@ -85,6 +85,9 @@
             </div>
             <div v-if="step==1">
                 <p>검색 결과 입니다. 원하는 책을 선택하세요.</p>
+                <div v-for="bookItem in bookItems">
+                    <div v-html="bookItem.title"></div>
+                </div>
                 <button style="width: 100%;" class="round-btn blue" @click="userDirectWrite">직접 입력하기</button>
             </div>
             <div v-if="step==2">
@@ -136,6 +139,7 @@ export default {
             },
             step: 0, // 책 기본 정보 검색 , 0: 초기 검색, 1: 검색 성공, 2: 검색 실패(직접 입력)
             searchText: '',
+            bookItems: [],
             selected:'email',
             contactOptions:[
                 {text: '이메일', value:'email'},
@@ -164,7 +168,13 @@ export default {
         },
         onSearchBook: function(){
             this.step = 1;
-            // book api 호출 
+            // book api 호출
+            this.$http.post(`${this.$config.serverUri}getBook`, { query: this.searchText}).then(result => {
+                this.bookItems = result.data.items;
+            }).catch(function(err) {
+                console.log(err);
+                alert("검색에 실패했습니다!");
+            });
         },
         userDirectWrite: function(){
             this.step = 2;
