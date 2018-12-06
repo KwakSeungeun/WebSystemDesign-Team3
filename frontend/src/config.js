@@ -1,4 +1,4 @@
 // local environment
-module.exports = {
+export default {
     'serverUri' : 'http://localhost:3000/'
 }

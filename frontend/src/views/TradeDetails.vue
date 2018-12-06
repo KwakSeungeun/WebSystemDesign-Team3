@@ -41,7 +41,6 @@
 
 <script>
 import _ from 'lodash'
-import config from '../config'
 
 export default {
     name: 'trade-details',
@@ -89,7 +88,7 @@ export default {
                 buyer_contact: ""  // selected되어 있는 것에 따라 
             }
             
-            this.$http.post(`${config.serverUri}trade/suggest_price`,createBuyerObj)
+            this.$http.post(`${this.$config.serverUri}trade/suggest_price`,createBuyerObj)
             .then((res)=>{
                 console.log("가격제시 성공",res);
             }).catch(err=>{

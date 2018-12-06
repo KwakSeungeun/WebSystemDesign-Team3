@@ -5,10 +5,12 @@ import axios from 'axios'
 import router from './router'
 import VueCookie from'vue-cookie';
 import VueSession from 'vue-session'
+import config from './config'
 
 Vue.use(VueSession)
 Vue.use(VueCookie)
 
+Vue.prototype.$config = config;
 Vue.prototype.$EventBus = new Vue;
 Vue.prototype.$http = axios;
 

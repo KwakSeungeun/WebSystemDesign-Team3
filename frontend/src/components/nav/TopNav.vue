@@ -54,7 +54,6 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import LoginForm from "../modal/LoginForm"
 import RegisterForm from "../modal/RegisterForm";
-import config from "../../config"
 import Vue from 'vue'
 
 export default {
@@ -92,7 +91,7 @@ export default {
       this.$refs.logoutModal.show();
     },
     login: async function(uemail, upw){
-      await this.$http.post(`${config.serverUri}auth/login`,{
+      await this.$http.post(`${this.$config.serverUri}auth/login`,{
         email: uemail,
         pw : upw
       }).then(async(res)=>{
@@ -118,7 +117,7 @@ export default {
     getUser: function(email){
       return new Promise((resolve, reject)=>{
         console.log("EAMIL:",email)
-        this.$http.get(`${config.serverUri}user/${email}`)
+        this.$http.get(`${this.$config.serverUri}user/${email}`)
         .then(res=>{
           console.log("유저 받아옴:",res)
           resolve(res)
@@ -150,7 +149,7 @@ export default {
       console.log("DATA!! :", pw);
       
       this.loading = true;
-      await this.$http.post(`${config.serverUri}auth/register`,{
+      await this.$http.post(`${this.$config.serverUri}auth/register`,{
           email : email,
           pw: pw,
           phone: phone,

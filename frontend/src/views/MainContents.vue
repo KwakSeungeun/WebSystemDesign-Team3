@@ -29,7 +29,6 @@
 
 <script>
 import BookCard from '../components/card/BookCard'
-import config from '../config'
 import _ from 'lodash'
 
 export default {
@@ -49,7 +48,7 @@ export default {
         },
         getBookList: function(){
             return new Promise(async(resolve, reject)=>{
-                await this.$http.get(`${config.serverUri}trade/trade_list`)
+                await this.$http.get(`${this.$config.serverUri}trade/trade_list`)
                 .then(response=>{
                     resolve(response.data.trade_list)
                 })
