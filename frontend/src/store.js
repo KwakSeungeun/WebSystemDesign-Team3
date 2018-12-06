@@ -5,7 +5,7 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
-      email:'',
+      user:{},
       isLogged: false, // 로그인 중인 여부 판단
       trades: []
   },
@@ -13,15 +13,15 @@ export const store = new Vuex.Store({
     setTrades: function(state, value){
       this.state.trades = value;
     },
-    setUser(state, email){
-      this.state.email = email;
-      console.log('VUEX setUser :',this.state.email);
+    setUser(state, user){
+      this.state.user = user
+      console.log('VUEX setUser :',this.state.user);
     },
-    setIsLogged(state, vale){
-      this.state.isLogged = vale;
+    setIsLogged(state, value){
+      this.state.isLogged = value;
     },
     removeUser(){
-      this.state.email=''
+      this.state.user = {}
     }
   },
 });

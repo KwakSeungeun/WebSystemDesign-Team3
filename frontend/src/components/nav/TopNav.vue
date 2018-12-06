@@ -16,7 +16,7 @@
             <b-btn @click="openRegisterModal">회원가입</b-btn>
           </b-button-group>
           <b-button-group v-if="isLogged" size="sm" class="mb-auto">
-            <b-btn @click="onLogout">로그아웃</b-btn>
+            <b-btn type="submit" @click="onLogout">로그아웃</b-btn>
             <b-btn @click="openUpdateModal">내 정보</b-btn>
             <b-btn @click="openAlarmModal">알람</b-btn>
           </b-button-group>
@@ -90,23 +90,12 @@ export default {
       this.$session.destroy();
       this.$store.commit('setIsLogged',this.$session.exists());
       this.$refs.logoutModal.show();
-    }
-  },
-  created: function(){
-    if (this.$session.exists()) {
-      console.log("이미 로그인 되어 있다!")
-      this.$store.commit('setIsLogged',this.$session.exists());
-      this.$http.defaults.headers.common['x-access-token'] = this.$session.get('token');
-    }
-    this.$EventBus.$on("login", async(data) => {
-      const uemail = data.email;
-      const upw = data.pw;
-      
-      this.loading = true;
+    },
+    login: async function(uemail, upw){
       await this.$http.post(`${config.serverUri}auth/login`,{
         email: uemail,
         pw : upw
-      }).then((res)=>{
+      }).then(async(res)=>{
         console.log('res',res)
         if(res.status == 200 && res.data.token != null) {
           this.$session.set('token', res.data.token);
@@ -116,10 +105,38 @@ export default {
         this.$refs.loginRef.hide();
         this.loading = false;
       }).catch((err)=>{
-        console.log("catch",err);
+        console.log("catch",err.response);
         alert("로그인에 실패했습니다. 다시 한 번 해주세요!")
-        this.$store.commit('setIsLogged',this.$session.has('token'));
+        this.$store.commit('setIsLogged',this.$session.exists());
+        this.loading = false;
       });
+      let user_obj = await this.getUser(uemail)
+      this.$store.commit('setUser',user_obj);
+    },
+    getUser: function(email){
+      return new Promise((resolve, reject)=>{
+        console.log("EAMIL:",email)
+        this.$http.get(`${config.serverUri}user/${email}`)
+        .then(res=>{
+          console.log("유저 받아옴:",res)
+          resolve(res)
+        })
+        .catch(err=>{
+          console.log("유저 받아오는데 오류",err.response)
+          reject(err)
+          });
+      });
+    }
+  },
+  created: function(){
+    if (this.$session.exists()) {
+      console.log("이미 로그인 되어 있다!")
+      this.$store.commit('setIsLogged',this.$session.exists());
+      this.$http.defaults.headers.common['x-access-token'] = this.$session.get('token');
+    }
+    this.$EventBus.$on("login", async(data) => {
+      this.login(data.email, data.pw)
+      this.loading = true;
     });
     
     this.$EventBus.$on("register", async data => {

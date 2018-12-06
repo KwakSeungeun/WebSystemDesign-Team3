@@ -89,7 +89,6 @@ export default {
         background: white;
         border: 0;
         outline: 0;
-        margin: auto;
         width: calc(100% - 20px);
         height: 450px;
         margin: 10px;
@@ -101,7 +100,6 @@ export default {
         background: white;
         border: 0;
         outline: 0;
-        margin: auto;
         width: calc(100%/2 - 20px);
         height: 450px;
         margin: 10px;
@@ -113,7 +111,6 @@ export default {
         background: white;
         border: 0;
         outline: 0;
-        margin: auto;
         width: calc(100%/3 - 20px);
         height: 450px;
         margin: 10px;
