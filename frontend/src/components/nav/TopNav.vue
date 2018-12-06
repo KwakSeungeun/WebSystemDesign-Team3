@@ -108,7 +108,7 @@ export default {
         console.log('res',res)
         if(res.status == 200 && res.data.token != null) {
           this.$session.set('token', res.data.token);
-          // Vue.http.headers.common['x-access-token'] = res.data.token;
+          this.$http.defaults.headers.common['x-access-token'] = res.data.token;
           this.$store.commit('setIsLogged',this.$session.exists());
         }
         this.$refs.loginRef.hide();
