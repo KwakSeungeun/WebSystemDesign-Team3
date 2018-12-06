@@ -74,7 +74,6 @@ router.post('/upload_trade', function(req, res, next) {
                 tmp.push(req.files[i].filename);
             }
 
-
             var trade_info = new Trade({
                 title: req.body.title, // 책 제목
                 author: req.body.author, // 책 저자
@@ -87,6 +86,7 @@ router.post('/upload_trade', function(req, res, next) {
                 state: req.body.state, // 책의 보존 상태
                 price: req.body.price, // 판매자가 설정한 가격
                 buyers: [], // 최초 생성이니 빈 array
+                status: 0,
                 time_stamp: Date.now()
             });
 
@@ -173,6 +173,22 @@ router.post('/suggest_price', function(req, res, next) {
             throw new Error('403 error');
         }
         else {
+            if(result[0].status == 1) {
+                res.status(403).send({success: "expired"});
+                flag403 = true;
+                throw new Error('403 error');
+            }
+            if(result[0].status == 2) {
+                res.status(403).send({success: "there_is_already_end_success"});
+                flag403 = true;
+                throw new Error('403 error');
+            }
+            if(result[0].status == 3) {
+                res.status(403).send({success: "there_is_already_end_trade"});
+                flag403 = true;
+                throw new Error('403 error');
+            }
+
             tmp = result[0].seller_id;
             return Trade.update({_id: ObjectId(req.body.trade_id)}, { $pull : { buyers: {
                         buyer_id: req.decoded._id
@@ -234,6 +250,21 @@ router.post('/match_buyer', function(req, res, next) {
                 flag400 = true;
                 throw new Error('400 error');
             }
+            if(result[0].status == 1) {
+                res.status(403).send({success: "expired"});
+                flag403 = true;
+                throw new Error('403 error');
+            }
+            if(result[0].status == 2) {
+                res.status(403).send({success: "there_is_already_end_success"});
+                flag403 = true;
+                throw new Error('403 error');
+            }
+            if(result[0].status == 3) {
+                res.status(403).send({success: "there_is_already_end_trade"});
+                flag403 = true;
+                throw new Error('403 error');
+            }
 
             if(result[0].buyers.find(function(elem) {
                 return elem.buyer_id == req.body.buyer_id;
@@ -251,6 +282,8 @@ router.post('/match_buyer', function(req, res, next) {
                 buyer_id:req.body.buyer_id,
             }).save();
         }
+    }).then(function(result) {
+        return Trade.update({_id: ObjectId(req.body.trade_id)}, {$set: {status: 2}});
     }).then(function(result) {
         async.each(tmp, function(i, callback) {
             if(i.buyer_id == ObjectId(req.body.buyer_id)) {
