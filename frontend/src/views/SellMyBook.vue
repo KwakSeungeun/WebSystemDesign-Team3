@@ -31,6 +31,7 @@
                     <vue-upload-multiple-image
                         @upload-success="uploadImageSuccess"
                         @before-remove="beforeRemove"
+                        @edit-image="editImage"
                         :data-images="form.img_url"
                         primaryText=""
                         markIsPrimaryText=""
@@ -67,7 +68,7 @@
                     </b-input-group>
                 </b-form-group>
                 <hr>
-                <button style="width: 100%; height: 50px;" class="round-btn" type="submit">내 책 장터 열기</button>
+                <button style="width: 100%; height: 50px;" class="round-btn" type="submit" @click="submit">내 책 장터 열기</button>
             </b-form>
         </div>
         <div v-if="!isLogged"> 
@@ -125,14 +126,12 @@ export default {
                 author: '',
                 edition: '',
                 seller_id: '',
-                seller_contact: '',
-                img_url:[],
+                seller_contact: 0,
+                images:[],
                 tag: '',
                 comment: '',
                 state: 0, //0(상태 나쁨)~5(상태좋음)
-                buyers: [],
                 price: 0,
-                status: 0,
                 time_stamp: ''
             },
             step: 0, // 책 기본 정보 검색 , 0: 초기 검색, 1: 검색 성공, 2: 검색 실패(직접 입력)
@@ -184,18 +183,48 @@ export default {
             event.preventDefault();
         },
         uploadImageSuccess(formData, index, fileList) {
-            console.log('UPLOAD', formData, index, fileList)
+            this.form.images.push(formData.get("file"));
+            console.log(this.form.images);
             // Upload image api
             // axios.post('http://your-url-upload', { data: formData }).then(response => {
             //   console.log(response)
             // })
         },
         beforeRemove (index, done, fileList) {
-            console.log('index', index, fileList)
             var r = confirm("remove image")
             if (r == true) {
+                this.form.images.splice(index, 1);
+                console.log(this.form.images);
                 done()
             }
+        },
+        editImage (formData, index, fileList) {
+            this.form.images.splice(index, 1, formData.get('file'));
+            console.log(this.form.images);
+        },
+        submit() {
+            if(this.selected == 'email') this.form.seller_contact = 0;
+            else this.form.seller_contact = 1;
+
+            let formData = new FormData();
+            for(let key of Object.keys(this.form)) {
+                if(key == "images") {
+                    for(let i = 0; i < this.form[key].length; i++) {
+                        formData.append(key, this.form[key][i]);
+                    }
+                }
+                else if(key == "state" || key == "price") formData.append(key, this.form[key].toString());
+                else formData.append(key, this.form[key]);
+            }
+
+            this.$http.post(`${this.$config.serverUri}trade/upload_trade`, formData).then(res => {
+                console.log(res.data);
+                alert('등록 되었습니다!');
+                this.clear();
+            }).catch(err => {
+                console.log(err);
+                alert('등록에 실패했습니다..');
+            });
         }
     }
 }
