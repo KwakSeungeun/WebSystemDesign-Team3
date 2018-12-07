@@ -18,7 +18,7 @@ router.post('/',function(req,res,next){
     if(!user){
         throw new Error('login failed');
     } else {
-      // if(user.auth==false){              // auth 확인
+      // if(user.auth==false){              // auth 확인 (이메일 인증 여부)
       //   throw new Error('please auth'); 
       // }
 
@@ -46,7 +46,6 @@ router.post('/',function(req,res,next){
 
   // return token
   const respond = function(token){
-    console.log(token)
     res.json({
       message: 'logged in successfully',
       token

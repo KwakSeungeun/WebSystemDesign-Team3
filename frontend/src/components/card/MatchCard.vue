@@ -16,7 +16,7 @@
                         제시한 가격 : {{buyer.buyer_price}}<br>
                         제시한 장소 : {{buyer.buyer_location}}
                     </p>
-                    <button class="round-btn row-item">MATCH!</button>
+                    <button class="round-btn blue row-item">MATCH!</button>
                 </div>
             </div>
         </div>

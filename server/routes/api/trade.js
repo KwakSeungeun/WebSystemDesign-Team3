@@ -65,10 +65,10 @@ function validate(req){
         return false;
     else if(req.body.seller_contact==null || req.body.seller_contact==undefined)
         return false;
-    else if(req.body.tag==null || req.body.tag==undefined)
-        return false;
-    else if(req.body.comment==null || req.body.comment==undefined)
-        return false;
+    // else if(req.body.tag==null || req.body.tag==undefined)
+    //     return false;
+    // else if(req.body.comment==null || req.body.comment==undefined)
+    //     return false;
     else if(req.body.state==null || req.body.state==undefined)
         return false;
     else if(req.body.price==null || req.body.price==undefined || req.body.price <0)
