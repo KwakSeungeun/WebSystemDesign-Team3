@@ -1,7 +1,7 @@
 <template>
     <div id="card">
         <div class="image">
-            <b-img src="https://picsum.photos/1024/400/?image=41"  fluid-grow alt="Responsive image"/>
+            <b-img src="http://localhost:3000/Image/"  fluid-grow alt="Responsive image"/>
         </div>
         <hr>
         <div class="info-container">
@@ -16,8 +16,9 @@
                 Title : {{trade.title}}<br>
                 Edition : {{trade.edition}}<br>
                 Author: {{trade.author}}<br>
-                price: {{trade.price}}원<br> <!-- computed 사용해서 ,찍어서 보여주기 -->
-                tag : {{trade.tag}} <!-- computed 사용해서 좀 더 보기 좋게 만들기 -->
+                price: {{price}}원<br> <!-- computed 사용해서 ,찍어서 보여주기 -->
+                tag : {{trade.tag}}<br>
+                Updated : {{date}}
             </p>
         </div>
     </div>
@@ -25,9 +26,28 @@
 
 <script>
 import StarRating from 'vue-star-rating'
+import _ from 'lodash'
+
 export default {
     props:['trade'],
     name: 'book-card',
+    computed: {
+        imageUrl: function(){
+            return this.$config.imageUrl;
+        },
+        date: function(){
+            return _.split(this.trade.time_stamp, 'T', 1).toString();
+        },
+        price: function(){
+            let toArrayPrice = _.split(this.trade.price, '',this.trade.price.length);
+            let result = ''
+            _.forEach(toArrayPrice, (value, key)=>{
+                if((toArrayPrice.length-key)%3 == 0) result += `,${value}`;
+                else result += value;
+            });
+            return result;
+        }
+    },
     components:{
         StarRating
     }

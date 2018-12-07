@@ -11,8 +11,9 @@
                 </b-col>
                 <b-col sm="4">
                     <b-dropdown id="filter" text="필터">
-                        <b-dropdown-item-button @click="filtering('total')">전체</b-dropdown-item-button>
-                        <b-dropdown-item-button @click="filtering('price')">가격순</b-dropdown-item-button>
+                        <b-dropdown-item-button @click="filtering('update')">업데이트 순</b-dropdown-item-button>
+                        <b-dropdown-item-button @click="filtering('price')">가격 낮은 순</b-dropdown-item-button>
+                        <b-dropdown-item-button @click="filtering('priceDesc')">가격 높은 순</b-dropdown-item-button>
                     </b-dropdown>
                 </b-col>
             </b-row>
@@ -61,13 +62,22 @@ export default {
             console.log(this.searchText);
         },
         filtering: function(mode){
-            console.log("Filter :", mode);
+            if(mode === 'update'){
+                this.filteringTrades = _.orderBy(this.filteringTrades, ['time_stamp'], ['desc']);
+            }
+            else if(mode === 'price'){
+                this.filteringTrades = _.orderBy(this.filteringTrades, ['price'], ['asc']);
+            }
+            else if(mode === 'priceDesc'){
+                this.filteringTrades = _.orderBy(this.filteringTrades, ['price'], ['desc']);
+            }
         }
     },
     created(){
         this.getBookList().then(result=>{
             this.$store.commit('setTrades',result);
             this.filteringTrades = _.filter(this.$store.state.trades, { 'status': 0 }); //expire 된 거 보여주기
+            this.filteringTrades = _.orderBy(this.filteringTrades, ['time_stamp'], ['desc']);
         });
     },   
 }
@@ -89,7 +99,7 @@ export default {
         border: 0;
         outline: 0;
         width: calc(100% - 20px);
-        height: 450px;
+        height: 800px;
         margin: 10px;
     }
  }
@@ -100,7 +110,7 @@ export default {
         border: 0;
         outline: 0;
         width: calc(100%/2 - 20px);
-        height: 450px;
+        height: 700px;
         margin: 10px;
     }
  }
@@ -111,7 +121,7 @@ export default {
         border: 0;
         outline: 0;
         width: calc(100%/3 - 20px);
-        height: 450px;
+        height: 600px;
         margin: 10px;
     }
  }
