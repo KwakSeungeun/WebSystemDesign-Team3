@@ -14,13 +14,13 @@
                 <b-form-group label="기본정보(필수)"
                                 description="검색을 통해 정확한 책 정보를 알 수 있습니다!">
                     <div class="row-align">
-                        <b-form-input class="row-item w-10" type="text" placeholder="제목" readonly
+                        <b-form-input ref="titleInput" class="row-item w-10" type="text" placeholder="제목" readonly required
                                 v-model="form.title">
                         </b-form-input>
-                        <b-form-input class="row-item w-10" type="text" placeholder="저자" readonly
+                        <b-form-input ref="authorInput" class="row-item w-10" type="text" placeholder="저자" readonly required
                                     v-model="form.author">
                         </b-form-input>
-                        <b-form-input class="row-item w-10" type="number" placeholder="판"
+                        <b-form-input ref="editionInput" class="row-item w-10" type="number" placeholder="판" required
                                     v-model="form.edition">
                         </b-form-input>
                         <button class="round-btn blue row-item" @click="openSearchModal">찾기</button>
@@ -40,7 +40,7 @@
                     </vue-upload-multiple-image>
                     <div class="mt-3 mb-3">Selected file: {{form.img_url && form.img_url.name}}</div>
                     <div class="row-align">         
-                        <b-input-group class="row-item" style="width: 5%;" prepend="상태" ></b-input-group> 
+                        <b-input-group class="row-item" style="width: 5%;" prepend="상태" required></b-input-group> 
                         <star-rating v-model="form.state" :show-rating=false
                             v-bind:increment="1"
                             v-bind:max-rating="5"
@@ -85,7 +85,7 @@
             </div>
             <div v-if="step==1">
                 <p>검색 결과 입니다. 원하는 책을 선택하세요.</p>
-                <div v-for="bookItem in bookItems">
+                <div v-for="bookItem in bookItems" :key="bookItem.id">
                     <div class="card w-75 card-margins">
                         <div class="card-body">
                             <h5 class="card-title">{{bookItem.title}}</h5>
@@ -114,6 +114,9 @@
                     </b-form-group>
                 </b-form>
             </div>
+        </b-modal>
+        <b-modal no-close-on-backdrop hide-footer>
+
         </b-modal>
     </div>
 </template>
@@ -249,14 +252,26 @@ export default {
                 else formData.append(key, this.form[key]);
             }
 
-            this.$http.post(`${this.$config.serverUri}trade/upload_trade`, formData).then(res => {
-                console.log(res.data);
-                alert('등록 되었습니다!');
-                this.clear();
-            }).catch(err => {
-                console.log(err);
-                alert('등록에 실패했습니다..');
-            });
+            if(!this.form.title){
+                this.$refs.titleInput.focus();
+            } else if(!this.form.author){
+                this.$refs.authorInput.focus();
+            } else if(!this.form.edition){
+                this.$refs.editionInput.focus();
+            } else if(this.form.images.length == 0){
+                alert("이미지 등록은 반드시 필요합니다!")
+            } else if(this.form.price > 1000 || !this.form.price){
+                alert("1000원 이상의 가격으로 등록해 주세요!")
+            } else {
+                this.$http.post(`${this.$config.serverUri}trade/upload_trade`, formData).then(res => {
+                    console.log(res.data);
+                    alert('등록 되었습니다!');
+                    this.clear();
+                }).catch(err => {
+                    console.log(err);
+                    alert('등록에 실패했습니다..');
+                });
+            }
         }
     }
 }

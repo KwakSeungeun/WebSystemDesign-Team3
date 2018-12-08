@@ -56,7 +56,7 @@ export default {
     created: async function(){
         if(this.$session.exists()){
             let User = this.$store.state.user;
-            await this.$http.get(`${this.$config.serverUri}trade/my_trade_list/${User._id}`)
+            await this.$http.get(`${this.$config.serverUri}trade/my_trade_list`)
             .then(res=>{
                 this.myTrades = res.data.trade_list;
                 console.log('결과:',this.myTrades);
