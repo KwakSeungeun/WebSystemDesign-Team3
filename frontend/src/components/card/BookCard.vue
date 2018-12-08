@@ -17,9 +17,14 @@
                 Edition : {{trade.edition}}<br>
                 Author: {{trade.author}}<br>
                 price: {{price}}원<br> <!-- computed 사용해서 ,찍어서 보여주기 -->
-                tag : {{trade.tag}}<br>
-                Updated : {{date}}
             </p>
+            <p>TAG : </p>
+            <div class="row-align" >
+                <div v-for="(tag,index) in tagsList" :key="index">
+                    <p><b>#</b>{{tag}}&nbsp;&nbsp;&nbsp;</p>
+                </div>
+            </div>
+            <p>Updated : {{date}}</p>
         </div>
     </div>
 </template>
@@ -46,6 +51,9 @@ export default {
                 else result += value;
             });
             return result;
+        },
+        tagsList: function(){
+            return _.split(this.trade.tag,',');
         }
     },
     components:{
