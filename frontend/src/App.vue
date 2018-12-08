@@ -25,6 +25,7 @@ export default {
   name: "app",
   components: {
     TopNav,
+
   },
   created() {
   }

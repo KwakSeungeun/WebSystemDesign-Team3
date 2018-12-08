@@ -20,7 +20,8 @@
         </b-container>
         <div class="list-container">
             <button  v-for="trade in filteringTrades" :key="trade.id" class="card-container">
-                <router-link :to="{name: 'trade-details', params:{id: trade._id}}">
+                <router-link style="text-decoration:none !important;" 
+                    :to="{name: 'trade-details', params:{id: trade._id}}">
                     <book-card :trade="trade"></book-card>
                 </router-link>
             </button>
@@ -95,39 +96,27 @@ export default {
 .list-container{
     margin: 2%;
 }
+.card-container{
+    background: white;
+    border: 0;
+    outline: 0;
+    margin: 10px;
+}
 /* smart phone */
  @media only screen and (max-width : 320px){
      .card-container{
-        background: white;
-        border: 0;
-        outline: 0;
         width: calc(100% - 20px);
         height: 800px;
-        margin: 10px;
     }
  }
-/* pad */
- @media only screen and (min-device-width : 768px) and (max-device-width : 1024px){
+/* pad and desktop */
+ @media only screen and (min-device-width : 768px){
      .card-container{
-        background: white;
-        border: 0;
-        outline: 0;
         width: calc(100%/2 - 20px);
         height: 700px;
-        margin: 10px;
     }
  }
-/* desktop */
- @media only screen and (min-width : 1224px){
-     .card-container{
-        background: white;
-        border: 0;
-        outline: 0;
-        width: calc(100%/3 - 20px);
-        height: 600px;
-        margin: 10px;
-    }
- }
+
 .floating-btn{
   background: url( "../../public/images/topIcon.png" ) no-repeat;
   background-size: cover;

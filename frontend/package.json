@@ -16,6 +16,7 @@
     "vue": "^2.5.17",
     "vue-cli": "^2.9.6",
     "vue-cookie": "^1.1.4",
+    "vue-headroom": "^0.9.0",
     "vue-loading-spinner": "^1.0.11",
     "vue-localstorage": "^0.6.2",
     "vue-responsive": "^1.0.2",
