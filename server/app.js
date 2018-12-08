@@ -13,6 +13,7 @@ var checkRouter = require('./routes/api/check');
 var checkMiddle = require('./routes/middleware/auth');
 var getBook = require('./routes/api/getBook');
 var User= require('./routes/api/user')
+var Match= require('./routes/api/match')
 
 
 var app = express();
@@ -36,6 +37,7 @@ app.use('/auth/register', registerRouter);
 app.use('/trade', tradeRouter);
 app.use('/user', User);
 app.use('/getBook', getBook);
+app.use('/match', Match);
 
 app.use('/auth/check',checkMiddle)
 app.use('/auth/check',checkRouter)

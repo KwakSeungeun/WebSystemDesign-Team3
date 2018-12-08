@@ -58,12 +58,10 @@ export default {
   },
   async created() {
     let user = this.$store.state.user;
-    if(!user){
+    if(user){
       console.log('유저',user)
-      let seller= await this.$http.get(`${this.$config.serverUri}trade/my_trade_list`)
-      console.log('판매자',seller.data.trade_list)
-      this.seller_trades=seller.data.trade_list
-      this.Trades = this.$store.state.trades;
+
+
       let buyer=_.filter(this.Trades,function(trd){
         for(var i=0;i<trd.buyers.length;i++){
           console.log(trd.buyers[i].buyer_id)
