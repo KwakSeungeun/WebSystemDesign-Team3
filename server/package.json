@@ -15,6 +15,7 @@
     "fs": "0.0.1-security",
     "http-errors": "~1.6.2",
     "jsonwebtoken": "^8.3.0",
+    "lodash": "^4.17.11",
     "mongoose": "^5.3.11",
     "morgan": "~1.9.0",
     "multer": "^1.4.1",
