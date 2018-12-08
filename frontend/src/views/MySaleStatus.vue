@@ -16,8 +16,8 @@
         </button>
       </div>
     </div>
-    <div v-else-if="!isLogged">
-      <h1>로그인 필요</h1>
+    <div v-else-if="!isLogged" class="outline">
+      <h4>로그인 시 이용하실 수 있는 서비스 입니다.</h4>
     </div>
   </div>
 </template>

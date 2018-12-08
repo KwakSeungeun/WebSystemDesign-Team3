@@ -1,7 +1,7 @@
 <template>
     <div id="card">
         <div class="image">
-            <!-- <b-img src="http://localhost:3000/Image/"  fluid-grow alt="Responsive image"/> -->
+            <b-img src="http://localhost:3000/Image/"  fluid-grow alt="Responsive image"/>
         </div>
         <hr>
         <div class="info-container">

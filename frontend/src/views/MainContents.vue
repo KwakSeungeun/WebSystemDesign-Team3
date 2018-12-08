@@ -25,6 +25,9 @@
                 </router-link>
             </button>
         </div>
+        <div class="outline" v-if="filteringTrades.length==0">
+            <h4>현재 등록된 책 장터가 없습니다!<br>지금 책을 등록해 보세요!</h4>
+        </div>
     </div>
 </template>
 

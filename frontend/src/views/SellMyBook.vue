@@ -1,6 +1,6 @@
 <template>
-    <div id="sell-my-book">
-        <div v-if="isLogged">
+    <div>
+        <div v-if="isLogged"  id="sell-my-book">
             <b-form @submit="createTrade">
                 <b-form-group label="판매자 연락처 정보(필수)" description="구매자가 연락이 쉬운 연락처로 선택 해 주세요!">
                     <div class="row-align">
@@ -71,8 +71,8 @@
                 <button style="width: 100%; height: 50px;" class="round-btn" type="submit" @click="submit">내 책 장터 열기</button>
             </b-form>
         </div>
-        <div v-if="!isLogged"> 
-            <h1>로그인해야함!</h1>
+        <div v-if="!isLogged" class="outline"> 
+            <h4>로그인 시 이용하실 수 있는 서비스 입니다.</h4>
         </div>
         <!-- modal -->
         <b-modal no-close-on-backdrop hide-footer @hidden="headerclose"
@@ -266,7 +266,7 @@ export default {
                 this.$http.post(`${this.$config.serverUri}trade/upload_trade`, formData).then(res => {
                     console.log(res.data);
                     alert('등록 되었습니다!');
-                    this.$router.push('')
+                    this.$router.replace('/');
                     this.clear();
                 }).catch(err => {
                     console.log(err);

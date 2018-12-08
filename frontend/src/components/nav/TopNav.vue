@@ -7,7 +7,7 @@
         <b-navbar-nav>
           <b-nav-item><router-link to="/">책 장터</router-link></b-nav-item>
           <b-nav-item><router-link to="/sell">내 책 팔기</router-link></b-nav-item>
-          <b-nav-item><router-link to="/select/buyer">구매자 선택</router-link></b-nav-item>
+          <b-nav-item><router-link to="/select/buyer">종료된 장터(구매자 선택)</router-link></b-nav-item>
           <b-nav-item><router-link to="/mysale">내 장터 현황</router-link></b-nav-item>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
@@ -46,6 +46,16 @@
     <b-modal hide-footer ref="logoutModal" centered>
       <p>로그아웃 되었습니다.</p>
     </b-modal>
+    <b-modal
+      no-close-on-backdrop
+      centered
+      ref="userInfoModal"
+      size="md"
+      title="회원 정보"
+      hide-footer
+      id="userInfoModal">
+      <p>유저 정보</p>
+    </b-modal>
     <pulse-loader :loading="loading" class="center"></pulse-loader>
   </div>
 </template>
@@ -80,7 +90,7 @@ export default {
       this.$refs.registerRef.show();
     },
     openUpdateModal: function(){
-      alert('내 정보 수정');
+      this.$refs.userInfoModal.show();
     },
     openAlarmModal: function(){
       alert('알람 정보 보기');
@@ -187,5 +197,8 @@ export default {
   left: 50%;
   top: 50%;
   z-index: 1000000;
+}
+router-link{
+  color: #E74C3C;
 }
 </style>

@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const ObjectId = mongoose.Types.ObjectId;
 
 const fs = require('fs');
 const async = require('async');
@@ -13,6 +14,7 @@ const Match = require(path.resolve(__dirname, "../../models/match"));
 
 const config = require('../../config');
 
+
 mongoose.connect(config.mongodbUri, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 
@@ -20,6 +22,7 @@ const db = mongoose.connection;
 const router = express.Router();
 const bodyParser = require('body-parser');
 const auth = require('../middleware/auth');
+const _ = require('lodash');
 
 router.use(bodyParser.urlencoded({
     extended: false
@@ -450,6 +453,39 @@ router.get('/matched/:id/:who', function(req, res, next) {
     }).catch(function(err) {
         console.log(err);
         if(!flag404) res.status(500).send("server error");
+    });
+});
+
+// close trade
+router.post('/close',function(req,res){
+    Trade.findById(req.body.trade_id, function(err, trade){
+        if(err) return res.status(500).json({ error: 'database failure' });
+        if(!trade) return res.status(404).json({ error: 'trade not found' });
+
+        trade.status = 3 // 실패로 상태 변경
+        trade.save(function(err){
+            if(err) res.status(500).json({error: 'failed to update trade'});
+            // res.json({success: 'trade updated'});
+        })
+    })
+    .then(()=>{
+        let pushAlarms = {
+            trade_id: req.body.trade_id,
+            contents: "판매자가 책 장터를 종료했습니다. 다른 장터에서 책을 구해보세요!",
+            read: false
+        }
+        let updateBuyers = []
+        _.forEach(req.body.buyers, (value, index)=>{
+            updateBuyers.push(ObjectId(value.buyer_id));
+        });
+        Users.updateMany(
+            { _id : {$in : updateBuyers}},
+            {$push : {"alarms" : pushAlarms}}
+        ).then(result=>{
+            res.json({success: 'trade updated and push alarms'});
+        }).catch(err=>{
+            res.status(500).json({error: 'failed to push alarms'});
+        })
     });
 });
 

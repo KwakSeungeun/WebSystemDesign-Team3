@@ -1,23 +1,23 @@
 <template>
     <div id="match-card" class="row-align">
         <!-- 책 정보 -->
-        <div class="row-item" style="width: 20%;  padding: 20px;">
+        <div class="row-item" style="width: 50%;  padding: 30px;">
             <p>
-                책 제목 : {{match.title}}<br><br>
-                저자 : {{match.author}} <br><br>
-                거래 등록일  : {{updateDate}} <!--한 번 보기-->
+                <b>책 제목</b><br> {{match.title}}<br><br>
+                <b>저자</b><br>{{match.author}} <br><br>
+                <b>거래 등록일</b><br>{{updateDate}} <!--한 번 보기-->
             </p>
         </div> 
         <!-- buyer 정보 -->
-        <div class="row-item" style="width: 100%; position: relative">
-            <div v-if="match.buyers.length == 0">
+        <div class="row-item buyer-list">
+            <div v-if="match.buyers.length == 0" >
                 <div class="buyer-card " style="height: 100%;">
                     <p style="text-align: center;">
                         거래를 요청한 구매자가 없습니다 ㅠㅠ
                     </p>
                 </div>
             </div>
-            <div v-for="buyer in match.buyers" :key="buyer._id">
+            <div v-for="buyer in match.buyers" :key="buyer._id" style="margin-bottom: 10px;">
                 <div class="buyer-card row-align">
                     <p class="row-item" style="width: 85%;">
                         제시한 가격 : {{buyer.price}}<br>
@@ -26,13 +26,13 @@
                     <button @click="matchBuyer(buyer._id)" class="round-btn blue row-item" style="width: 15%;">MATCH</button>
                 </div>
             </div>
-            <button  v-b-modal.closeTrade class="round-btn float-right bottom-align">장터 종료하기</button>
+            <button @click="openModal" class="round-btn float-right bottom-align">장터 종료하기</button>
         </div>
-        <b-modal id="closeTrade" ref="closeTrade" title="장터 종료하기" hide-footer centerd>
+        <b-modal id="closeTrade" ref="closeTradeRef" title="장터 종료하기" hide-footer centerd>
             <p>지금 장터를 종료하면 이 책을 선택한 다른 사용자들과의 거래가 불가능 합니다.</p>
             <div class="row-align">
-                <button @click="closeModal" style="width: 50%;" class="round-btn blue">취소</button>
-                <button @click="closeTrade" style="width: 50%;" class="round-btn">장터 종료하기</button>
+                <button @click="closeModal" style="width: 50%; margin: 5px;" class="round-btn blue">취소</button>
+                <button @click="closeTrade" style="width: 50%; margin: 5px;" class="round-btn">장터 종료하기</button>
             </div>
         </b-modal>
     </div>
@@ -53,17 +53,28 @@ export default {
 
     }, 
     methods: {
+        openModal: function(){
+            this.$refs.closeTradeRef.show();
+        },
         closeModal: function(){
-            this.$refs.closeTrade.hide();
+            this.$refs.closeTradeRef.hide();
         },
         closeTrade: function(){
-            // this.$axios.post(`${this.$config.serverUri}trade/close`)
-            // .then(res=>{
-
-            // })
-            // .catch(err=>{
-
-            // });
+            console.log('buyers : ',this.match.buyers);
+            let sendObj = {
+                trade_id : this.match._id,
+                buyers : this.match.buyers
+            }
+            this.$http.post(`${this.$config.serverUri}trade/close`,sendObj)
+            .then(res=>{
+                alert("장터를 종료했습니다.")
+                this.$router.replace('select/buyer')
+            })
+            .catch(err=>{
+                console.log("err\n",err);
+                alert("서버에 문제가 생겨 장터를 종료하지 못했습니다.")
+            }); 
+            this.$refs.closeTradeRef.hide(); 
         },
         matchBuyer: function(buyer_id){
             let sendObj = {
@@ -72,8 +83,8 @@ export default {
             };
             this.$http.post(`${this.$config.serverUri}trade/match_buyer`,sendObj)
             .then(res=>{
-                console.log("성공\n", res)
-                this.$EventBus.$emit('successMatching');
+                alert("성공적으로 매칭이 완료되었습니다!\n내 장터 현황에서 구매자의 연락처를 확인해 보세요!")
+                this.$router.replace('/mysale');
             })
             .catch(err=>{
                 console.log('err\n',err.response);
@@ -91,6 +102,7 @@ export default {
     margin: 2%;
     border-radius: 10px;
     border: 1px solid gray;
+    height: auto;
 }
 .buyer-card{
     margin: 5px;
@@ -99,8 +111,14 @@ export default {
     border: 1px solid grey;
 }
 .bottom-align{
-    width: 100%; margin-top:10px; padding:5px;
+    width: 100%; 
+    padding:8px;
     position: absolute;
     bottom: 0;
+}
+.buyer-list{
+    width: 100%; 
+    position: relative;
+    /* overflow-y: scroll; */
 }
 </style>
