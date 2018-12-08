@@ -93,6 +93,7 @@ export default {
             this.$http.post(`${this.$config.serverUri}trade/suggest_price`,createBuyerObj)
             .then((res)=>{
                 console.log("가격제시 성공",res);
+                alert("판매자에게 제시한 가격 정보가 갔습니다!");
             }).catch(err=>{
                 console.log("에러\n",err);
             });

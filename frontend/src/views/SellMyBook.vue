@@ -260,12 +260,13 @@ export default {
                 this.$refs.editionInput.focus();
             } else if(this.form.images.length == 0){
                 alert("이미지 등록은 반드시 필요합니다!")
-            } else if(this.form.price > 1000 || !this.form.price){
+            } else if(this.form.price < 1000 || !this.form.price){
                 alert("1000원 이상의 가격으로 등록해 주세요!")
             } else {
                 this.$http.post(`${this.$config.serverUri}trade/upload_trade`, formData).then(res => {
                     console.log(res.data);
                     alert('등록 되었습니다!');
+                    this.$router.push('')
                     this.clear();
                 }).catch(err => {
                     console.log(err);

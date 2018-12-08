@@ -289,11 +289,11 @@ router.post('/match_buyer', function(req, res, next) {
                 flag400 = true;
                 throw new Error('400 error');
             }
-            if(result[0].status == 1) {
-                res.status(403).send({success: "expired"});
-                flag403 = true;
-                throw new Error('403 error');
-            }
+            // if(result[0].status == 1) {
+            //     res.status(403).send({success: "expired"});
+            //     flag403 = true;
+            //     throw new Error('403 error');
+            // }
             if(result[0].status == 2) {
                 res.status(403).send({success: "there_is_already_end_success"});
                 flag403 = true;
@@ -305,13 +305,13 @@ router.post('/match_buyer', function(req, res, next) {
                 throw new Error('403 error');
             }
 
-            if(result[0].buyers.find(function(elem) {
-                return elem.buyer_id == req.body.buyer_id;
-            }) == undefined) {
-                res.status(404).send({success:"there_is_no_buyer"});
-                flag404 = true;
-                throw new Error('404 error');
-            }
+            // if(result[0].buyers.find(function(elem) {
+            //     return elem.buyer_id == req.body.buyer_id;
+            // }) == undefined) {
+            //     res.status(404).send({success:"there_is_no_buyer"});
+            //     flag404 = true;
+            //     throw new Error('404 error');
+            // }
 
             tmp = result[0].buyers;
 
