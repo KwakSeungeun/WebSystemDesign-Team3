@@ -6,7 +6,9 @@ import router from './router'
 import VueCookie from'vue-cookie';
 import VueSession from 'vue-session'
 import config from './config'
-
+import VueLocalStorage from 'vue-localstorage'
+ 
+Vue.use(VueLocalStorage)
 Vue.use(VueSession)
 Vue.use(VueCookie)
 

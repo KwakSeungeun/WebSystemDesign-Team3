@@ -78,13 +78,13 @@ export default {
             }
         },
         tradeSubmit: function(){
-            let User = this.$store.state.user
+            let User = this.$store.state.user;
             if(!this.buyer.price || !this.buyer.location){
                 return;
             }
             let createBuyerObj = {
                 trade_id: this.trade._id,
-                buyer_id: User.data._id,
+                buyer_id: User._id,
                 location: this.buyer.location,
                 price: this.buyer.price,
                 buyer_contact: ""  // selected되어 있는 것에 따라 

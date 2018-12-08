@@ -50,7 +50,7 @@ router.post('/', function(req, res, next) {
             from: 'AjouBookTrade <no-reply@gmail.com>',
             to: req.body.email,
             subject: '아주 북 트레이드 이메일 인증입니다.',
-            text: 'http://192.168.7.255:3000/auth/register/authorization/' + etoken
+            text: 'http://localhost:3000/auth/register/authorization/' + etoken
         };
 
         var user_obj = new User({

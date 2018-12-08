@@ -20,7 +20,7 @@
                         <b-form-input class="row-item w-10" type="text" placeholder="저자" readonly
                                     v-model="form.author">
                         </b-form-input>
-                        <b-form-input class="row-item w-10" type="number" placeholder="판" readonly
+                        <b-form-input class="row-item w-10" type="number" placeholder="판"
                                     v-model="form.edition">
                         </b-form-input>
                         <button class="round-btn blue row-item" @click="openSearchModal">찾기</button>
@@ -86,7 +86,13 @@
             <div v-if="step==1">
                 <p>검색 결과 입니다. 원하는 책을 선택하세요.</p>
                 <div v-for="bookItem in bookItems">
-                    <div v-html="bookItem.title"></div>
+                    <div class="card w-75 card-margins">
+                        <div class="card-body">
+                            <h5 class="card-title">{{bookItem.title}}</h5>
+                            <p class="card-text">{{bookItem.author}}</p>
+                            <a href="#" class="btn btn-primary" @click="onSellectBook(bookItem)">선택</a>
+                        </div>
+                    </div>
                 </div>
                 <button style="width: 100%;" class="round-btn blue" @click="userDirectWrite">직접 입력하기</button>
             </div>
@@ -156,6 +162,11 @@ export default {
         this.clear();
     },
     methods:{
+        onSellectBook: function(book) {
+            this.$refs.searchBook.hide();
+            this.form.title = book.title;
+            this.form.author = book.author;
+        },
         clear: function(){
             this.clearSearch();
         },
@@ -171,6 +182,17 @@ export default {
             // book api 호출
             this.$http.post(`${this.$config.serverUri}getBook`, { query: this.searchText}).then(result => {
                 this.bookItems = result.data.items;
+                for(let i = 0; i < this.bookItems.length; i++) {
+                    let tmp = this.bookItems[i].title.split(/<b>|<\/b>/);
+                    let xstr = '';
+                    for(let j = 0; j < tmp.length; j++) xstr += tmp[j];
+                    this.bookItems[i].title = xstr;
+
+                    tmp = this.bookItems[i].author.split(/<b>|<\/b>/);
+                    xstr = '';
+                    for(let j = 0; j < tmp.length; j++) xstr += tmp[j];
+                    this.bookItems[i].author = xstr;
+                }
             }).catch(function(err) {
                 console.log(err);
                 alert("검색에 실패했습니다!");
@@ -279,6 +301,13 @@ export default {
 .row-100{
     margin: 5px;
     width: calc(100% - 10px);
+}
+
+.card-margins {
+    margin-bottom: 4px;
+    margin-top: 4px;
+    display: inline-block;
+    vertical-align: top;
 }
 </style>
 

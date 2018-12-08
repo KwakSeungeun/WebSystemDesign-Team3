@@ -49,6 +49,9 @@ export default {
   },
   created(){
     this.clear();
+  },
+  mounted(){
+    this.clear();
   }
 }
 </script>

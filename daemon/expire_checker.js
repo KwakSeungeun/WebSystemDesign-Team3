@@ -6,7 +6,7 @@ const async = require('async');
 var path = require('path');
 
 var Trade = require(path.resolve(__dirname, "./models/trade"));
-var User = require(path.resolve(__dirname, "./models/user"));
+var User = require(path.resolve(__dirname, "./models/users"));
 
 const config = require('./config');
 
@@ -26,7 +26,8 @@ funct = function() {
                 async.each(result, function (i, callback) {
                     if(i.time_stamp != undefined) {
                         if(Date.now() - i.time_stamp >= 604800000) {
-                            Trade.deleteOne({_id: i._id}).then(function(result) { // 나중에 update로 고치기
+                            console.log(i._id);
+                            Trade.update({_id: ObjectId(i._id.toString())}, {$set: {status: 2}}).then(function(result) { // 나중에 update로 고치기
                                 console.log(result);
                                 User.update({_id: ObjectId(i.seller_id)}, {$push: { alarms: {
                                             trade_id: i.trade_id,

@@ -88,7 +88,10 @@ export default {
     onLogout: function(){
       this.$session.destroy();
       this.$store.commit('setIsLogged',this.$session.exists());
+      this.$store.commit('setUser',{});
+      this.$localStorage.remove('loginUser')
       this.$refs.logoutModal.show();
+      this.$router.push('/');
     },
     login: async function(uemail, upw){
       await this.$http.post(`${this.$config.serverUri}auth/login`,{
@@ -104,13 +107,15 @@ export default {
         this.$refs.loginRef.hide();
         this.loading = false;
       }).catch((err)=>{
+        // 이메일 인증 실패 처리 다르게 하기
         console.log("catch",err.response);
         alert("로그인에 실패했습니다. 다시 한 번 해주세요!")
         this.$store.commit('setIsLogged',this.$session.exists());
         this.loading = false;
       });
       if(this.$session.exists()){
-        let user_obj = await this.getUser(uemail)
+        let user_obj = await this.getUser(uemail);
+        this.$localStorage.set('loginUser', JSON.stringify(user_obj));
         this.$store.commit('setUser',user_obj);
       }
     },
@@ -119,8 +124,7 @@ export default {
         console.log("EAMIL:",email)
         this.$http.get(`${this.$config.serverUri}user/${email}`)
         .then(res=>{
-          console.log("유저 받아옴:",res)
-          resolve(res)
+          resolve(res.data)
         })
         .catch(err=>{
           console.log("유저 받아오는데 오류",err.response)
@@ -132,6 +136,7 @@ export default {
   created: function(){
     if (this.$session.exists()) {
       console.log("이미 로그인 되어 있다!")
+      this.$store.commit('setUser',JSON.parse(this.$localStorage.get('loginUser')));
       this.$store.commit('setIsLogged',this.$session.exists());
       this.$http.defaults.headers.common['x-access-token'] = this.$session.get('token');
     }

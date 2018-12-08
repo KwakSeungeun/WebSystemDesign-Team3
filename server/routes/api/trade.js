@@ -52,9 +52,27 @@ var storage = multer.diskStorage({
     }
 });
 
-var upload = multer({ storage: storage }).array('images', 5); // 개수제한 5, 크기제한 10MB
-                                                              // images 라는 key 값에 append 해서 보내줄 것(front)
-
+var upload = multer({ storage: storage }).array('images', 5); // 개수제한 5, 크기제한 10MB// images 라는 key 값에 append 해서 보내줄 것(front)
+function validate(req){
+    if(req.body.title==null || req.body.title==undefined)
+        return false;
+    else if(req.body.author==null || req.body.author==undefined)
+        return false;
+    else if(req.body.edition==null || req.body.edition==undefined || req.body.edition <=0)
+        return false;
+    else if(req.body.seller_id==null || req.body.seller_id==undefined)
+        return false;
+    else if(req.body.seller_contact==null || req.body.seller_contact==undefined)
+        return false;
+    // else if(req.body.tag==null || req.body.tag==undefined)
+    //     return false;
+    // else if(req.body.comment==null || req.body.comment==undefined)
+    //     return false;
+    else if(req.body.state==null || req.body.state==undefined)
+        return false;
+    else if(req.body.price==null || req.body.price==undefined || req.body.price <0)
+        return false;
+}
 router.post('/upload_trade', function(req, res, next) {
     upload(req, res, function (err) {
         if (err) {
@@ -63,8 +81,6 @@ router.post('/upload_trade', function(req, res, next) {
             return res.status(500).send({success:"fail"});
         }
         else {
-            // form-data 형식으로 보내기 때문에 middle-ware 로 처리가 불가능함, 나중에 if문 노가다 해야함
-
             db.on('error', console.error);
 
             let tmp = [];
@@ -72,7 +88,7 @@ router.post('/upload_trade', function(req, res, next) {
             for(let i = 0; i < req.files.length; i++) {
                 tmp.push(req.files[i].filename);
             }
-
+            if(!validate(req)) res.status(400).send("form data error in form validate process");
             var trade_info = new Trade({
                 title: req.body.title, // 책 제목
                 author: req.body.author, // 책 저자
@@ -129,6 +145,11 @@ router.get('/my_trade_list', function(req, res, next) {
         }
     });
 });
+router.use('/delete',function(req,res,next){
+    if(req.body.trade_id==null || req.body.trade_id==undefined)
+        res.status(400).send("trade_id error");
+    else next();
+});
 
 router.post('/delete', function(req, res, next) {
     db.on('error', console.error);
@@ -145,6 +166,19 @@ router.post('/delete', function(req, res, next) {
             res.send({success: "success"});
         }
     });
+});
+router.use('/suggest_price',function(req,res,next){
+    if(req.body.trade_id==null || req.body.trade_id==undefined)
+        res.status(400).send("trade_id error");
+    else if(req.body.price == null || req.body.price <= 0)
+        res.status(400).send("sell price error");
+    else if(req.body.location == null || req.body.location ==undefined)
+        res.status(400).send("location error");
+    else if(req.body.buyer_id == null || req.body.buyer_id == undefined)
+        res.status(400).send("buyer id error");
+    else if(req.body.buyer_contact == null || req.body.buyer_contact == undefined)
+        res.status(400).send("buyer_contact error");
+    else next();
 });
 
 router.post('/suggest_price', function(req, res, next) {
@@ -223,7 +257,13 @@ router.post('/suggest_price', function(req, res, next) {
         if(!flag403 && !flag404) res.status(500).send({success: "fail"});
     });
 });
-
+router.use('/match_buyer', function(req,res,next){
+    if(req.body.trade_id==null || req.body.trade_id==undefined)
+        res.status(400).send("trade_id error");
+    else if(req.body.buyer_id==null || req.body.buyer_id==undefined)
+        res.status(400).send("buyer_id error");
+    else next();
+});
 router.post('/match_buyer', function(req, res, next) {
     let flag400 = false;
     let flag403 = false;
