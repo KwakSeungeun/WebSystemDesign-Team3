@@ -88,7 +88,7 @@ router.post('/upload_trade', function(req, res, next) {
             for(let i = 0; i < req.files.length; i++) {
                 tmp.push(req.files[i].filename);
             }
-            if(!validate(req)) res.status(400).send("form data error in form validate process");
+            // if(!validate(req)) res.status(400).send("form data error in form validate process");
             var trade_info = new Trade({
                 title: req.body.title, // 책 제목
                 author: req.body.author, // 책 저자
