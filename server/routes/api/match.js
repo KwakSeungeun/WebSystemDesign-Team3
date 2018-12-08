@@ -14,22 +14,25 @@ router.post('/buyer',async (req,res)=>{
     console.log('매치리스트',matchList)
     let result = [];
     _.forEach(matchList, (value, index)=>{
-        result.push(value.seller_id)
+        result.push(ObjectId(value.seller_id))
     });
     console.log('리저트',result)
-    let tempList=await User.find({"_id":ObjectId("5c048721dac3221dbc7f64b5")})
+    let tempList=await User.find({"_id":{$in:result}})
     res.send(tempList)
 })
 
 router.post('/seller',async (req,res)=>{
     console.log(req)
     let seller = req.body.seller_id
-    let matchList=await Match.find({seller_id:seller})    
-
-
-
-    res.send(matchList)
-})
+    let matchList=await Match.find({seller_id:seller})
+    console.log('매치리스트',matchList)
+    let result = [];
+    _.forEach(matchList, (value, index)=>{
+        result.push(ObjectId(value.buyer_id))
+    });
+    console.log('리저트',result)
+    let tempList=await User.find({"_id":{$in:result}})
+    res.send(tempList)})
 
 
 
