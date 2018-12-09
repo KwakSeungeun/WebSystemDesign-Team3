@@ -4,10 +4,23 @@ const User = require('../../models/users');
 const config = require('../../config');
 const mongoose = require('mongoose');
 
+const auth = require('../middleware/auth');
+
 
 const db = mongoose.connection;
 mongoose.connect(config.mongodbUri, { useNewUrlParser: true });
 
+router.use('/alarms', auth);
+router.get('/alarms', function(req, res, next) {
+    const objectId = mongoose.Types.ObjectId;
+    User.find({_id: objectId(req.decoded._id)}).then(function(result) {
+        console.log(result[0].alarms);
+        res.send({success: "success", alarms: result[0].alarms});
+    }).catch(function(err) {
+        console.log(err.data);
+        res.status(403).send({success: "error"});
+    });
+});
 
 router.get('/:email',async (req,res)=>{
     let uemail=req.params.email
