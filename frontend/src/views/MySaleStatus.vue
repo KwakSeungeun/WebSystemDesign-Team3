@@ -10,11 +10,9 @@
       ></b-form-radio-group>
       <div class="mt-3">
       </div>
-      <div class="list-container">
-        <button v-for="trade in computedList" :key="trade.id" class="card-container">
-          <book-card :trade="trade"></book-card>
-        </button>
-      </div>
+        <!--구매자 경우에는 책 정보랑 판매자 정보 날짜 -->
+        {{computedList}}
+        <!--판매자 경우에는 책 정보랑 구매자 정보 날짜 -->
     </div>
     <div v-else-if="!isLogged">
       <h1>로그인 필요</h1>
@@ -23,9 +21,8 @@
 </template>
 
 <script>
-import BookCard from "../components/card/BookCard";
+import MatchCard from "../components/card/MatchCard";
 import _ from "lodash";
-
 //전체 0 1 2 3
 
 export default {
@@ -42,7 +39,7 @@ export default {
     };
   },
   components: {
-    BookCard
+    MatchCard
   },
   computed: {
     computedList() {
@@ -60,23 +57,17 @@ export default {
     let user = this.$store.state.user;
     if(user){
       console.log('유저',user)
-
-
-      let buyer=_.filter(this.Trades,function(trd){
-        for(var i=0;i<trd.buyers.length;i++){
-          console.log(trd.buyers[i].buyer_id)
-          if(trd.buyers[i].buyer_id==user._id)
-          {
-            return true
-          }  
-          else{
-            return false
-          }
-        }
+      let tmpBuyer=await this.$http.post(`${this.$config.serverUri}match/buyer`,{
+        buyer_id:user._id
       })
-      this.buyer_trades=buyer
-      console.log('바이어!!buyer',buyer)
-      console.log('트레이드!!',this.Trades)
+      this.buyer_trades=tmpBuyer.data
+
+      let tmpSeller=await this.$http.post(`${this.$config.serverUri}match/seller`,{
+        seller_id:user._id
+      })
+      this.seller_trades=tmpBuyer.data
+
+
     }
   }
 };

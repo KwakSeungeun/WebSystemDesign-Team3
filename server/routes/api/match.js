@@ -8,7 +8,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 
 router.post('/buyer',async (req,res)=>{
-    console.log(req)
+    console.log(req.body)
     let buyer = req.body.buyer_id
     let matchList=await Match.find({buyer_id:buyer})
     console.log('매치리스트',matchList)
