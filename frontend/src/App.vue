@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <div v-responsive.lg.xl.md class="header"></div>
-    <top-nav></top-nav>
     <!-- 시간 되면 animation 넣기 -->
     <div id="contents">
+      <top-nav></top-nav>
       <router-view></router-view>
     </div>
   </div>
@@ -25,6 +25,7 @@ export default {
   name: "app",
   components: {
     TopNav,
+
   },
   created() {
   }
@@ -46,9 +47,8 @@ export default {
   height: 150px;
   opacity: 0.8 !important;
 }
-
 #contents {
-  height: 70%;
+  height: calc(100vh - 150px);
   width: 100%;
   overflow-y: scroll;
 }

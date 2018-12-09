@@ -1,7 +1,7 @@
 <template>
     <div id="card">
         <div class="image">
-            <!-- <b-img src="http://localhost:3000/Image/"  fluid-grow alt="Responsive image"/> -->
+            <b-img src="http://localhost:3000/Image/"  fluid-grow alt="Responsive image"/>
         </div>
         <hr>
         <div class="info-container">
@@ -12,14 +12,19 @@
                             inactive-color="#808080"
                             active-color="#E74C3C"
                             v-bind:star-size="30"></star-rating> 
-            <p class="p-2">
-                Title : {{trade.title}}<br>
-                Edition : {{trade.edition}}<br>
-                Author: {{trade.author}}<br>
-                price: {{price}}원<br> <!-- computed 사용해서 ,찍어서 보여주기 -->
-                tag : {{trade.tag}}<br>
-                Updated : {{date}}
-            </p>
+            <div class="p-2">
+                <p>Title : {{trade.title}}</p>
+                <p>Edition : {{trade.edition}}</p>
+                <p>Author: {{trade.author}}</p>
+                <p>price: {{price}}원</p>
+                <p>TAG : </p>
+                <div class="row-align" >
+                    <div v-for="(tag,index) in tagsList" :key="index">
+                        <p><b>#</b>{{tag}}&nbsp;&nbsp;&nbsp;</p>
+                    </div>
+                </div>
+                <p>Updated : {{date}}</p>
+            </div>
         </div>
     </div>
 </template>
@@ -46,6 +51,9 @@ export default {
                 else result += value;
             });
             return result;
+        },
+        tagsList: function(){
+            return _.split(this.trade.tag,',');
         }
     },
     components:{
@@ -66,12 +74,13 @@ export default {
     color: #EBF5FB;
 }
 .image{
-    height: calc(60% - 20px);
+    height: calc(50% - 20px);
     background: #EBF5FB
 }
 .info-container{
     margin-top: 10px;
-    height: calc(40% - 20px);
+    height: calc(50% - 20px);
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 p{

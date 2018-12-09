@@ -1,6 +1,6 @@
 <template>
-    <div id="sell-my-book">
-        <div v-if="isLogged">
+    <div>
+        <div v-if="isLogged"  id="sell-my-book">
             <b-form @submit="createTrade">
                 <b-form-group label="판매자 연락처 정보(필수)" description="구매자가 연락이 쉬운 연락처로 선택 해 주세요!">
                     <div class="row-align">
@@ -57,10 +57,19 @@
                 <b-form-group label="책 상태 입력(선택사항)"
                                 description="자세하고 정확한 책 상태 설명이 책 장터에 더욱 도움이 됩니다!">
                     <div class="row-align">
-                        <b-input-group class="row-item" prepend="TAG">
+                        <b-input-group class="row-item" prepend="TAG" style="width: 40%;">
                             <b-form-input type="text" placeholder="교수님, 수업, 학과 등" 
-                                            v-model="form.tag"></b-form-input>
+                                            v-model="tagInput"></b-form-input>
+                            <button @click="addTags" class="round-btn blue" style="width: 10%;" type="button">추가</button>
                         </b-input-group>
+                    </div>
+                    <div class="row-align" style="margin-bottom: 20px;">
+                        <div v-for="(tag,index) in tags" :key="index" class="tag-container row-item">
+                            <div class="hidden-overflow-text">{{tag}}</div>
+                            <button class="no-bg-btn float-right" type="button" @click="removeTags(index)">
+                                <i class="fa fa-close"></i>
+                            </button>
+                        </div>
                     </div>
                     <b-input-group class="row-100" prepend="Comment">
                         <b-form-textarea :rows="2" :max-rows="2" placeholder="구매자에게 알리고 싶은 정보를 입력 해 주세요!" 
@@ -71,8 +80,8 @@
                 <button style="width: 100%; height: 50px;" class="round-btn" type="submit" @click="submit">내 책 장터 열기</button>
             </b-form>
         </div>
-        <div v-if="!isLogged"> 
-            <h1>로그인해야함!</h1>
+        <div v-if="!isLogged" class="outline"> 
+            <h4>로그인 시 이용하실 수 있는 서비스 입니다.</h4>
         </div>
         <!-- modal -->
         <b-modal no-close-on-backdrop hide-footer @hidden="headerclose"
@@ -124,6 +133,7 @@
 <script>
 import VueUploadMultipleImage from 'vue-upload-multiple-image'
 import StarRating from 'vue-star-rating'
+import _ from 'lodash'
 
 export default {
     name: 'sell-my-book',
@@ -154,6 +164,8 @@ export default {
                 {text: '이메일', value:'email'},
                 {text: '핸드폰', value:'phone'}
             ],
+            tags: [],
+            tagInput : ''
         }
     },
     computed: {
@@ -165,12 +177,32 @@ export default {
         this.clear();
     },
     methods:{
+        addTags: function(){
+            if(this.tags.length > 2){
+                alert('최대 3개까지 입력할 수 있습니다.');
+                return;
+            }
+            this.tags.push(this.tagInput);
+            this.tagInput = '';
+        },
+        removeTags: function(index){
+            this.tags.splice(index,1);
+            this.tags = this.tags;
+        },
         onSellectBook: function(book) {
             this.$refs.searchBook.hide();
             this.form.title = book.title;
             this.form.author = book.author;
         },
         clear: function(){
+            _.forEach(this.form, (value, key)=>{
+                if(typeof(value)=="string") this.value = '';
+                else if(typeof(value)=="number") this.value = 0;
+                else this.value = null;
+            });
+            this.selected='email';
+            this.tags = [];
+            this.tagInput = '';
             this.clearSearch();
         },
         clearSearch: function(){
@@ -237,7 +269,7 @@ export default {
             this.form.images.splice(index, 1, formData.get('file'));
             console.log(this.form.images);
         },
-        submit() {
+        submit: async function() {
             if(this.selected == 'email') this.form.seller_contact = 0;
             else this.form.seller_contact = 1;
 
@@ -251,6 +283,12 @@ export default {
                 else if(key == "state" || key == "price") formData.append(key, this.form[key].toString());
                 else formData.append(key, this.form[key]);
             }
+
+            
+            await _.forEach(this.tags,(value, index)=>{
+                if(index == this.tags.length-1) this.form.tag += value;
+                else this.form.tag += `${value},`;
+            });
 
             if(!this.form.title){
                 this.$refs.titleInput.focus();
@@ -266,7 +304,7 @@ export default {
                 this.$http.post(`${this.$config.serverUri}trade/upload_trade`, formData).then(res => {
                     console.log(res.data);
                     alert('등록 되었습니다!');
-                    this.$router.push('')
+                    this.$router.replace('/');
                     this.clear();
                 }).catch(err => {
                     console.log(err);
@@ -318,12 +356,31 @@ export default {
     margin: 5px;
     width: calc(100% - 10px);
 }
-
+.tag-container{
+    padding: 6px;
+    text-align: center;
+    width: 150px;
+    background: rgb(204, 204, 204);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: row;
+}
 .card-margins {
     margin-bottom: 4px;
     margin-top: 4px;
     display: inline-block;
     vertical-align: top;
+}
+.no-bg-btn{
+    background-color: transparent;
+    border: none;
+    color: black;
+    font-size: 14px;
+}
+.hidden-overflow-text{
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    flex:2;
 }
 </style>
 

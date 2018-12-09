@@ -82,12 +82,16 @@ export default {
             if(!this.buyer.price || !this.buyer.location){
                 return;
             }
+            let selectedContact = '';
+            if(this.selected=='eamil') selectedContact = this.$store.state.user.email;
+            else selectedContact = this.$store.state.user.phone;
+
             let createBuyerObj = {
                 trade_id: this.trade._id,
                 buyer_id: User._id,
                 location: this.buyer.location,
                 price: this.buyer.price,
-                buyer_contact: ""  // selected되어 있는 것에 따라 
+                buyer_contact: selectedContact 
             }
             console.log("create buyer object : \n", createBuyerObj);
             this.$http.post(`${this.$config.serverUri}trade/suggest_price`,createBuyerObj)
