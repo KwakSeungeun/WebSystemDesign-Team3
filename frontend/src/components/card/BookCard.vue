@@ -38,7 +38,6 @@ export default {
     name: 'book-card',
     computed: {
         imageUrl: function(){
-            console.log(this.$config.imageUrl + this.trade.img_url[0]);
             return this.$config.image + this.trade.img_url[0];
         },
         date: function(){
