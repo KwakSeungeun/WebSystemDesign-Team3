@@ -21,6 +21,24 @@ router.get('/alarms', function(req, res, next) {
     });
 });
 
+router.use('/alarms/read', auth);
+router.post('/alarms/read', function(req, res, next) {
+    if(req.body.read) {
+        res.send("already read");
+    }
+    else {
+        const objectId = mongoose.Types.ObjectId;
+        User.update({_id: objectId(req.decoded._id)}, {$pull: {alarms: {_id: objectId(req.body._id)}}}).then(function (result) {
+            return User.update({_id: objectId(req.decoded._id)}, {$push: {alarms:
+                        {trade_id: req.body.trade_id, contents: req.body.contents, read: true}}});
+        }).then(function(result) {
+            res.send("success");
+        }).catch(function (err) {
+            res.status(500).send("fail");
+        });
+    }
+});
+
 router.get('/:email',async (req,res)=>{
     let uemail=req.params.email
     let user=await User.findOneByEmail(uemail)
