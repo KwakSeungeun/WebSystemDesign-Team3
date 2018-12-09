@@ -64,7 +64,7 @@
       title="알람"
       hide-footer
       id="alarmDetails">
-      <alarm-details></alarm-details>
+      <alarm-details v-bind:alarm-list="alarmList"></alarm-details>
     </b-modal>
     <pulse-loader :loading="loading" class="center"></pulse-loader>
   </div>
@@ -80,8 +80,6 @@ import Vue from 'vue'
 export default {
   name:"top-nav",
   data : ()=>({
-    notice: 0,
-    alarmList: [],
     searchText: '',
     loading: false,
   }),
@@ -92,8 +90,14 @@ export default {
     PulseLoader
   },
   computed: {
-    isLogged: function(){
-      return this.$store.state.isLogged;
+    isLogged: function() {
+        return this.$store.state.isLogged;
+    },
+    notice: function() {
+        return this.$store.state.notice;
+    },
+    alarmList: function() {
+        return this.$store.state.alarmList;
     }
   },
   methods: {
@@ -166,16 +170,14 @@ export default {
     }
 
     this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
-      console.log("Hello");
-      this.alarmList = res.data.alarms;
+      this.$store.commit('setAlarms', res.data.alarms);
 
-      this.notice = 0;
-      console.log(this.notice);
+      this.$store.commit('setNoticeZero');
       for(let i = 0; i < this.alarmList.length; i++) {
-        if(!this.alarmList[i].read) this.notice++;
+        if(!this.alarmList[i].read) this.$store.commit('noticeIncrease');
       }
     }).catch(err => {
-      this.notice = 0;
+        this.$store.commit('setNoticeZero');
       console.log(err, " ", "alarm fail");
     });
 
