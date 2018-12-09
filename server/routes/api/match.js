@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Match = require('../../models/match');
 const User = require('../../models/users');
+const Trade = require('../../models/trade');
 const _ = require('lodash')
 const mongoose= require('mongoose')
 const ObjectId = mongoose.Types.ObjectId;
@@ -12,29 +13,46 @@ router.post('/buyer',async (req,res)=>{
     let buyer = req.body.buyer_id
     let matchList=await Match.find({buyer_id:buyer})
     console.log('매치리스트',matchList)
-    let result = [];
+    let result = []
+    let tempBook=[]
+    let bookName=[]
     _.forEach(matchList, (value, index)=>{
         result.push(ObjectId(value.seller_id))
+        tempBook.push(ObjectId(value.trade_id))
     });
-    console.log('리저트',result)
+    
     let tempList=await User.find({"_id":{$in:result}})
-    res.send(tempList)
+    let tempBooklist=await Trade.find({"_id":{$in:tempBook}})
+    _.forEach(tempBooklist,(value,index)=>{
+        bookName.push(value.title)
+    })
+    res.json({
+        user : tempList,
+        book : bookName
+    })
 })
 
 router.post('/seller',async (req,res)=>{
-    console.log(req)
+    console.log(req.body)
     let seller = req.body.seller_id
     let matchList=await Match.find({seller_id:seller})
     console.log('매치리스트',matchList)
     let result = [];
+    let tempBook=[]
+    let bookName=[]
     _.forEach(matchList, (value, index)=>{
         result.push(ObjectId(value.buyer_id))
+        tempBook.push(ObjectId(value.trade_id))
     });
-    console.log('리저트',result)
     let tempList=await User.find({"_id":{$in:result}})
-    res.send(tempList)})
-
-
-
+    let tempBooklist=await Trade.find({"_id":{$in:tempBook}})
+    _.forEach(tempBooklist,(value,index)=>{
+        bookName.push(value.title)
+    })
+    res.json({
+        user : tempList,
+        book : bookName
+    })
+})
 
 module.exports = router;

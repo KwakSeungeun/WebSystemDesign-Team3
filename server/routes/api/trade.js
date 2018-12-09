@@ -85,9 +85,7 @@ router.post('/upload_trade', function(req, res, next) {
         }
         else {
             db.on('error', console.error);
-
             let tmp = [];
-
             for(let i = 0; i < req.files.length; i++) {
                 tmp.push(req.files[i].filename);
             }
