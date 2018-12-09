@@ -21,8 +21,9 @@
         <tbody >
           <tr v-for="list in computedList" :key="list._id">
             <td>{{list.book}}</td >
-            <td>{{list.email}}</td>
-            <td>{{list.time_stamp}}1</td>
+            <td v-if="list.seller_contact==0">{{list.email}}</td>
+            <td v-else>{{list.phone}}</td>
+            <td>{{list.time_stamp}}</td>
           </tr>
         </tbody>
       </table>
