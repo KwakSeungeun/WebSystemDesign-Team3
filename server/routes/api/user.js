@@ -14,7 +14,6 @@ router.use('/alarms', auth);
 router.get('/alarms', function(req, res, next) {
     const objectId = mongoose.Types.ObjectId;
     User.find({_id: objectId(req.decoded._id)}).then(function(result) {
-        console.log(result[0].alarms);
         res.send({success: "success", alarms: result[0].alarms});
     }).catch(function(err) {
         console.log(err.data);
