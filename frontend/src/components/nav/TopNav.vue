@@ -18,7 +18,7 @@
           <b-button-group v-if="isLogged" size="sm" class="mb-auto">
             <b-btn type="submit" @click="onLogout">로그아웃</b-btn>
             <b-btn @click="openUpdateModal">내 정보</b-btn>
-            <b-btn @click="openAlarmModal">알람</b-btn>
+            <b-btn @click="openAlarmModal">알람 <b-badge variant="light" v-if="notice > 0">{{notice}}</b-badge></b-btn>
           </b-button-group>
         </b-navbar-nav>
       </b-collapse>
@@ -56,6 +56,16 @@
       id="userInfoModal">
       <p>유저 정보</p>
     </b-modal>
+    <b-modal
+      no-close-on-backdrop
+      centered
+      ref="alarmDetailsRef"
+      size="md"
+      title="알람"
+      hide-footer
+      id="alarmDetails">
+      <alarm-details></alarm-details>
+    </b-modal>
     <pulse-loader :loading="loading" class="center"></pulse-loader>
   </div>
 </template>
@@ -64,17 +74,21 @@
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import LoginForm from "../modal/LoginForm"
 import RegisterForm from "../modal/RegisterForm";
+import AlarmDetails from "../modal/AlarmDetails";
 import Vue from 'vue'
 
 export default {
   name:"top-nav",
   data : ()=>({
+    notice: 0,
+    alarmList: [],
     searchText: '',
     loading: false,
   }),
   components:{
     LoginForm,
     RegisterForm,
+    AlarmDetails,
     PulseLoader
   },
   computed: {
@@ -93,7 +107,7 @@ export default {
       this.$refs.userInfoModal.show();
     },
     openAlarmModal: function(){
-      alert('알람 정보 보기');
+      this.$refs.alarmDetailsRef.show();
     },
     onLogout: function(){
       this.$session.destroy();
@@ -150,6 +164,21 @@ export default {
       this.$store.commit('setIsLogged',this.$session.exists());
       this.$http.defaults.headers.common['x-access-token'] = this.$session.get('token');
     }
+
+    this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
+      console.log("Hello");
+      this.alarmList = res.data.alarms;
+
+      this.notice = 0;
+      console.log(this.notice);
+      for(let i = 0; i < this.alarmList.length; i++) {
+        if(!this.alarmList[i].read) this.notice++;
+      }
+    }).catch(err => {
+      this.notice = 0;
+      console.log(err, " ", "alarm fail");
+    });
+
     this.$EventBus.$on("login", async(data) => {
       this.login(data.email, data.pw)
       this.loading = true;
