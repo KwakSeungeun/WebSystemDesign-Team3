@@ -80,6 +80,7 @@ export default {
     created(){
         this.getBookList().then(result=>{
             this.$store.commit('setTrades',result);
+            this.$localStorage.set('trades', JSON.stringify(result));
             this.filteringTrades = _.filter(this.$store.state.trades, { 'status': 0 }); //expire 된 거 보여주기
             this.filteringTrades = _.orderBy(this.filteringTrades, ['time_stamp'], ['desc']);
         });

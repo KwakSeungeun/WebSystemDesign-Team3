@@ -28,6 +28,7 @@ export default {
 
   },
   created() {
+    this.$store.commit('setTrades',JSON.parse(this.$localStorage.get('trades')));
   }
 };
 </script>

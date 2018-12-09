@@ -2,12 +2,21 @@
     <div id="details">
         <b-button class="round-btn float-btn" @click="openModal">중고 거래장터 참여하기</b-button>
         <div class="contents">
+            
             <div class="info">
                 책 제목 : {{trade.title}} <br>
                 저자 : {{trade.author}} <br>
                 판: {{trade.edition}}<br>
-                책 상태: {{trade.state}}<br> <!--별로 표시하기 -->
-                가격 : {{trade.price}}원<br>
+                책 상태 : <star-rating v-model="trade.state" :show-rating=false :read-only=true
+                            v-bind:increment="1"
+                            v-bind:max-rating="5"
+                            v-bind:rounded-corners=true
+                            inactive-color="#808080"
+                            active-color="#E74C3C"
+                            v-bind:star-size="50"></star-rating> 
+                <div v-for="(tag,index) in tagsList" :key="index">
+                    <p><b>#</b>{{tag}}&nbsp;&nbsp;&nbsp;</p>
+                </div>
                 태그: #{{trade.tag}}<br>
                 판매자의 글:{{trade.comment}}<br> 
                 남은 판매 기간: !!계산하기<br> <!--momment.js 쓰면 쉽게 할 수 있음-->
@@ -41,9 +50,13 @@
 
 <script>
 import _ from 'lodash'
+import StarRating from 'vue-star-rating'
 
 export default {
     name: 'trade-details',
+    components:{
+        StarRating
+    },
     data: function(){
         return{
             trade_id: this.$route.params.id,
@@ -63,6 +76,9 @@ export default {
     computed: {
         isLogged: function(){
         return this.$store.state.isLogged;
+        },
+        tagsList: function(){
+            return _.split(this.trade.tag,',');
         }
     },
     methods:{
@@ -113,8 +129,7 @@ export default {
 <style>
 #details{
     background: brown;
-    margin-left: 2%;
-    margin-right: 2%;
+    margin: 0% 2% 0% 2%;
     overflow: hidden;
 }
 .round-btn{
@@ -134,9 +149,7 @@ export default {
 }
 .contents{
     background: yellowgreen;
-    width: 100%;
-    height: 100%;
-
+    padding: 50px;
 }
 .info{
     color: black;
