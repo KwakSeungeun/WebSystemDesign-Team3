@@ -1,7 +1,7 @@
 <template>
     <div id="card">
         <div class="image">
-            <b-img src="http://localhost:3000/Image/"  fluid-grow alt="Responsive image"/>
+            <b-img :src="imageUrl"  fluid-grow alt="Responsive image"/>
         </div>
         <hr>
         <div class="info-container">
@@ -38,7 +38,8 @@ export default {
     name: 'book-card',
     computed: {
         imageUrl: function(){
-            return this.$config.imageUrl;
+            console.log(this.$config.imageUrl + this.trade.img_url[0]);
+            return this.$config.image + this.trade.img_url[0];
         },
         date: function(){
             return _.split(this.trade.time_stamp, 'T', 1).toString();
