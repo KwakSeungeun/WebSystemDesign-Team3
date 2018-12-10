@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bootstrap-vue": "^2.0.0-rc.11",
+    "moment": "^2.22.2",
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "sha512": "0.0.1",
@@ -19,6 +20,8 @@
     "vue-headroom": "^0.9.0",
     "vue-loading-spinner": "^1.0.11",
     "vue-localstorage": "^0.6.2",
+    "vue-moment": "^4.0.0",
+    "vue-momentjs": "^0.1.2",
     "vue-responsive": "^1.0.2",
     "vue-router": "^3.0.1",
     "vue-session": "^1.0.0",

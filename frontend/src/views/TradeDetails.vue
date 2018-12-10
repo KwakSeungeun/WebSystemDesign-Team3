@@ -1,25 +1,41 @@
 <template>
     <div id="details">
         <b-button class="round-btn float-btn" @click="openModal">중고 거래장터 참여하기</b-button>
+        <div class="top">
+            <b style="font-size: 24px; margin-right: 20px;">
+                장터 마감까지 <span style="color: #E74C3C">{{dueDate}}</span> 일 남았습니다!</b>
+            <br><br>
+            <div class="row-align">
+                <div style="margin-right: 5%;">판매자 희망가격 : <b>{{price}}원</b></div>
+                책 상태 
+                <star-rating v-model="trade.state" :show-rating=false :read-only=true
+                    v-bind:max-rating="5" v-bind:rounded-corners=true inactive-color="#808080" active-color="#E74C3C"
+                    v-bind:star-size="30" style="height: 18px;"></star-rating>
+            </div>
+            <hr>
+        </div>
         <div class="contents">
-            
+            <div class="images">
+                Image
+            </div>
             <div class="info">
-                책 제목 : {{trade.title}} <br>
-                저자 : {{trade.author}} <br>
-                판: {{trade.edition}}<br>
-                책 상태 : <star-rating v-model="trade.state" :show-rating=false :read-only=true
-                            v-bind:increment="1"
-                            v-bind:max-rating="5"
-                            v-bind:rounded-corners=true
-                            inactive-color="#808080"
-                            active-color="#E74C3C"
-                            v-bind:star-size="50"></star-rating> 
-                <div v-for="(tag,index) in tagsList" :key="index">
-                    <p><b>#</b>{{tag}}&nbsp;&nbsp;&nbsp;</p>
+                <b>장터 종료일</b> : {{expireDate}}<br>
+                <br>
+                <b>제목</b> : {{trade.title}} <br>
+                <b>저자</b> : {{trade.author}} <br>
+                <b>판</b> : {{trade.edition}}판<br>
+                <br>
+                <b>TAG</b><br>
+                <div class="row-align" style="margin-bottom: 20px;">
+                    <div v-for="(tag,index) in tagsList" :key="index" class="tag-container row-item">
+                        <div class="hidden-overflow-text">#{{tag}}</div>
+                    </div>
                 </div>
-                태그: #{{trade.tag}}<br>
-                판매자의 글:{{trade.comment}}<br> 
-                남은 판매 기간: !!계산하기<br> <!--momment.js 쓰면 쉽게 할 수 있음-->
+                <b>COMMENT</b><br>
+                <div class="border">
+                    <span v-if="!this.trade.comment">...</span>
+                    {{trade.comment}}
+                </div>
             </div>
         </div>
         <b-modal no-close-on-backdrop hide-footer centered ref="buyModal" title="거래 참여하기">
@@ -79,6 +95,21 @@ export default {
         },
         tagsList: function(){
             return _.split(this.trade.tag,',');
+        },
+        expireDate: function(){
+            return this.$moment(this.trade.time_stamp).add(7, 'days').format('YYYY-MM-DD');
+        },
+        dueDate: function(){
+            return this.$moment(this.expireDate).diff(new Date(), 'days');
+        },
+        price: function(){
+            let toArrayPrice = _.split(this.trade.price, '',this.trade.price.length);
+            let result = ''
+            _.forEach(toArrayPrice, (value, key)=>{
+                if((toArrayPrice.length-key)%3 == 0) result += `,${value}`;
+                else result += value;
+            });
+            return result;
         }
     },
     methods:{
@@ -128,35 +159,37 @@ export default {
 
 <style>
 #details{
-    background: brown;
     margin: 0% 2% 0% 2%;
-    overflow: hidden;
-}
-.round-btn{
-    text-align: center;
-    background: #E74C3C;
-    color: white;
-    border-radius: 5px;
-    border: 0px solid #E74C3C;
 }
 .round-btn.float-btn{
     position: absolute;
     top: 250px;
     right: 50px;
 }
-.round-btn:hover{
-    background: #CB4335;
+.top {
+    padding: 10px;
+    font-size: 20px;
 }
 .contents{
-    background: yellowgreen;
-    padding: 50px;
+    display: flex;
+    flex-direction: row;
+}
+.images{
+    background: bisque;
+    flex: 1;
 }
 .info{
     color: black;
-    font-size: 24px;
+    padding: 10px;
+    flex: 1;
 }
 .row-align{
     display: flex;
     flex-direction: row;
+}
+.border{
+    border: 2px solid gray;
+    border-radius: 5px;
+    padding: 5px;
 }
 </style>

@@ -13,10 +13,9 @@
                             active-color="#E74C3C"
                             v-bind:star-size="30"></star-rating> 
             <div class="p-2">
-                <p>Title : {{trade.title}}</p>
-                <p>Edition : {{trade.edition}}</p>
-                <p>Author: {{trade.author}}</p>
-                <p>price: {{price}}원</p>
+                <p>제목 : {{trade.title}} / {{trade.edition}}판</p>
+                <p>저자: {{trade.author}}</p>
+                <p>판매자 희망가격: {{price}}원</p>
                 <p>TAG : </p>
                 <div class="row-align" >
                     <div v-for="(tag,index) in tagsList" :key="index">
