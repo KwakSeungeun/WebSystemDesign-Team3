@@ -273,6 +273,11 @@ export default {
             if(this.selected == 'email') this.form.seller_contact = 0;
             else this.form.seller_contact = 1;
 
+            await _.forEach(this.tags,(value, index)=>{
+                if(index == this.tags.length-1) this.form.tag += value;
+                else this.form.tag += `${value},`;
+            });
+
             let formData = new FormData();
             for(let key of Object.keys(this.form)) {
                 if(key == "images") {
@@ -283,12 +288,6 @@ export default {
                 else if(key == "state" || key == "price") formData.append(key, this.form[key].toString());
                 else formData.append(key, this.form[key]);
             }
-
-            
-            await _.forEach(this.tags,(value, index)=>{
-                if(index == this.tags.length-1) this.form.tag += value;
-                else this.form.tag += `${value},`;
-            });
 
             if(!this.form.title){
                 this.$refs.titleInput.focus();

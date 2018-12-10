@@ -9,8 +9,10 @@ import config from './config'
 import VueLocalStorage from 'vue-localstorage'
 import moment from 'moment'
 import VueMomentJS from 'vue-momentjs'
+import Notifications from 'vue-notification'
  
 Vue.use(VueMomentJS, moment)
+Vue.use(Notifications)
 Vue.use(VueLocalStorage)
 Vue.use(VueSession)
 Vue.use(VueCookie)

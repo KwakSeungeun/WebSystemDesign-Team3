@@ -30,7 +30,7 @@ funct = function() {
                             Trade.update({_id: ObjectId(i._id.toString())}, {$set: {status: 2}}).then(function(result) { // 나중에 update로 고치기
                                 console.log(result);
                                 User.update({_id: ObjectId(i.seller_id)}, {$push: { alarms: {
-                                            trade_id: i.trade_id,
+                                            trade_id: i._id,
                                             contents: "매칭 시간이 종료되었습니다!",
                                             read: false
                                         }
@@ -40,7 +40,7 @@ funct = function() {
 
                                     async.each(i.buyers, function(j, callback) {
                                         User.update({_id: ObjectId(j.buyer_id)}, {$push: { alarms: {
-                                                    trade_id: i.trade_id,
+                                                    trade_id: i._id,
                                                     contents: "매칭 시간이 종료되었습니다!",
                                                     read: false
                                                 }

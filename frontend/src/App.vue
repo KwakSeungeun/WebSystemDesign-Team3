@@ -6,6 +6,7 @@
       <top-nav></top-nav>
       <router-view></router-view>
     </div>
+    <notifications group="alarm_notice" position="bottom left"/>
   </div>
 </template>
 
