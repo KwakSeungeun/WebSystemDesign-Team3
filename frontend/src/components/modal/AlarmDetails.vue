@@ -20,7 +20,7 @@
                 </router-link>
 
                 <b-link href="#"
-                        class="card-link">삭제</b-link>
+                        class="card-link" @click="deleteAlarm(alarm)">삭제</b-link>
             </b-card>
         </div>
     </div>
@@ -50,14 +50,23 @@
                 console.log(alarm);
                 this.$http.post(`${this.$config.serverUri}user/alarms/read`, alarm).then(result => {
                     console.log(this)
-                    this.$store.commit('setReadAlarm', alarm._id);
                     this.$store.commit('noticeDecrease');
+                    this.$store.commit('setReadAlarm', alarm._id);
                 }).catch(err => {
                    alert('표시하는데 실패했습니다..');
                 });
             },
             closeThisModal: function() {
                 this.$emit('exit', true);
+            },
+            deleteAlarm: function(alarm) {
+                this.$http.post(`${this.$config.serverUri}user/alarms/delete`, alarm).then(result => {
+                    console.log(this)
+                    if(alarm.read == false) this.$store.commit('noticeDecrease');
+                    this.$store.commit('deleteAlarm', alarm._id);
+                }).catch(err => {
+                    alert('표시하는데 실패했습니다..');
+                });
             }
         }
     }

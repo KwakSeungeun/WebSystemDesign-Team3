@@ -29,6 +29,14 @@ export const store = new Vuex.Store({
         }
       }
     },
+    deleteAlarm: function(state, value) {
+      for(let i = 0; i < this.state.alarmList.length; i++) {
+        if(this.state.alarmList[i]._id == value) {
+          this.state.alarmList.splice(i, 1);
+          break;
+        }
+      }
+    },
     setAlarms: function(state, value) {
       this.state.alarmList = value;
     },
