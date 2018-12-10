@@ -10,7 +10,8 @@ const auth = require('../middleware/auth');
 const db = mongoose.connection;
 mongoose.connect(config.mongodbUri, { useNewUrlParser: true });
 
-router.use('/alarms', auth);
+router.use(auth);
+
 router.get('/alarms', function(req, res, next) {
     const objectId = mongoose.Types.ObjectId;
     User.find({_id: objectId(req.decoded._id)}).then(function(result) {
@@ -21,7 +22,6 @@ router.get('/alarms', function(req, res, next) {
     });
 });
 
-router.use('/alarms/read', auth);
 router.post('/alarms/read', function(req, res, next) {
     if(req.body.read) {
         res.send("already read");
@@ -36,7 +36,6 @@ router.post('/alarms/read', function(req, res, next) {
     }
 });
 
-router.use('/alarms/delete', auth);
 router.post('/alarms/delete', function(req, res, next) {
     const objectId = mongoose.Types.ObjectId;
     User.update({_id: objectId(req.decoded._id)}, {$pull: {alarms: {_id: objectId(req.body._id)}}}).then(function(result) {
@@ -50,14 +49,19 @@ router.post('/alarms/delete', function(req, res, next) {
 router.get('/:email',async (req,res)=>{
     let uemail=req.params.email
     let user=await User.findOneByEmail(uemail)
-    let _id=user._id
-    let trade_id=user.trade_id
-    let name=user.name
-    let email=user.email
-    let phone=user.phone
-    let preference=user.preference
-    let alarms=user.alarms
-    res.send({_id,trade_id,name,email,phone,preference,alarms})
+    if(req.decoded._id != user._id) {
+        res.status(403).send("please log in");
+    }
+    else {
+        let _id = user._id
+        let trade_id = user.trade_id
+        let name = user.name
+        let email = user.email
+        let phone = user.phone
+        let preference = user.preference
+        let alarms = user.alarms
+        res.send({_id, trade_id, name, email, phone, preference, alarms})
+    }
 })
 
 
