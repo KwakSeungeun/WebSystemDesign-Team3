@@ -49,7 +49,6 @@
             readAlarm: function(alarm) {
                 console.log(alarm);
                 this.$http.post(`${this.$config.serverUri}user/alarms/read`, alarm).then(result => {
-                    console.log(this)
                     this.$store.commit('noticeDecrease');
                     this.$store.commit('setReadAlarm', alarm._id);
                 }).catch(err => {
@@ -61,11 +60,10 @@
             },
             deleteAlarm: function(alarm) {
                 this.$http.post(`${this.$config.serverUri}user/alarms/delete`, alarm).then(result => {
-                    console.log(this)
                     if(alarm.read == false) this.$store.commit('noticeDecrease');
                     this.$store.commit('deleteAlarm', alarm._id);
                 }).catch(err => {
-                    alert('표시하는데 실패했습니다..');
+                    alert('삭제하는데 실패했습니다..');
                 });
             }
         }
