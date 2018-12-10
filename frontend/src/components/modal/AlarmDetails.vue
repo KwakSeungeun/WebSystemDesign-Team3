@@ -13,6 +13,12 @@
                 <a v-if="alarm.read == false" href="#"
                    class="card-link" @click="readAlarm(alarm)">읽음 으로 표시</a>
 
+                <router-link style="text-decoration:none !important;"
+                             :to="{name: 'trade-details', params:{id: alarm.trade_id}}"
+                             class="card-link">
+                    <span v-on:click="closeThisModal">거래 보기</span>
+                </router-link>
+
                 <b-link href="#"
                         class="card-link">삭제</b-link>
             </b-card>
@@ -49,6 +55,9 @@
                 }).catch(err => {
                    alert('표시하는데 실패했습니다..');
                 });
+            },
+            closeThisModal: function() {
+                this.$emit('exit', true);
             }
         }
     }

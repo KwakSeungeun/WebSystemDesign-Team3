@@ -64,7 +64,7 @@
       title="알람"
       hide-footer
       id="alarmDetails">
-      <alarm-details v-bind:alarm-list="alarmList"></alarm-details>
+      <alarm-details @exit="hideAlarmModal"></alarm-details>
     </b-modal>
     <pulse-loader :loading="loading" class="center"></pulse-loader>
   </div>
@@ -112,6 +112,9 @@ export default {
     },
     openAlarmModal: function(){
       this.$refs.alarmDetailsRef.show();
+    },
+    hideAlarmModal: function() {
+      this.$refs.alarmDetailsRef.hide();
     },
     onLogout: function(){
       this.$session.destroy();
