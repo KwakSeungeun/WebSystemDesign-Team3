@@ -28,15 +28,23 @@ router.post('/alarms/read', function(req, res, next) {
     }
     else {
         const objectId = mongoose.Types.ObjectId;
-        User.update({_id: objectId(req.decoded._id)}, {$pull: {alarms: {_id: objectId(req.body._id)}}}).then(function (result) {
-            return User.update({_id: objectId(req.decoded._id)}, {$push: {alarms:
-                        {trade_id: req.body.trade_id, contents: req.body.contents, read: true}}});
-        }).then(function(result) {
+        User.updateOne({_id: objectId(req.decoded._id), "alarms._id":objectId(req.body._id)}, {$set: {"alarms.$.read": true}}).then(function (result) {
             res.send("success");
         }).catch(function (err) {
             res.status(500).send("fail");
         });
     }
+});
+
+router.use('/alarms/delete', auth);
+router.post('/alarms/delete', function(req, res, next) {
+    const objectId = mongoose.Types.ObjectId;
+    User.update({_id: objectId(req.decoded._id)}, {$pull: {alarms: {_id: objectId(req.body._id)}}}).then(function(result) {
+        console.log(result);
+        res.send("success");
+    }).catch(function (err) {
+        res.status(500).send("fail");
+    });
 });
 
 router.get('/:email',async (req,res)=>{
