@@ -180,17 +180,21 @@ export default {
     setInterval(()=>{
       this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
         let dic = {};
+        let flag = false;
         for(let i = 0; i < this.alarmList.length; i++) dic[this.alarmList[i]._id] = 1;
         for(let i = 0; i < res.data.alarms.length; i++) {
         if(dic[res.data.alarms[i]._id] != 1) {
             this.$store.commit('addAlarm', res.data.alarms[i]);
             if(res.data.alarms[i].read == false) this.$store.commit('noticeIncrease');
-            this.$notify({
-              group: 'alarm_notice',
-              title: '새로운 알람이 도착했습니다!',
-              text: '알람을 확인해주세요.'
-            });
+            flag = true;
           }
+        }
+        if(flag) {
+            this.$notify({
+                group: 'alarm_notice',
+                title: '새로운 알람이 도착했습니다!',
+                text: '알람을 확인해주세요.'
+            });
         }
       }).catch(err => {
         console.log("error alarm");
