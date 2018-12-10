@@ -70,7 +70,10 @@ router.put('/update',(req,res)=>{
     console.log(req.body)
 
     User.findOne({email:req.body.email},(err,user)=>{
-        if(err){
+        if(user._id != req.decoded._id) {
+            res.status(403).send({message:"user id and login id are different"});
+        }
+        else if(err){
             return res.status(500).json({message:"cannot find email"})
         }else{
             console.log(user)
