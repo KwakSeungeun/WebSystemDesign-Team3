@@ -134,6 +134,11 @@ export default {
           this.$session.set('token', res.data.token);
           this.$http.defaults.headers.common['x-access-token'] = res.data.token;
           this.$store.commit('setIsLogged',this.$session.exists());
+
+          this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
+            this.$store.commit('setAlarms', res.data.alarms);
+          }).catch(err => {
+          });
         }
         this.$refs.loginRef.hide();
         this.loading = false;
@@ -171,6 +176,23 @@ export default {
       this.$store.commit('setIsLogged',this.$session.exists());
       this.$http.defaults.headers.common['x-access-token'] = this.$session.get('token');
     }
+
+    setInterval(()=>{
+      this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
+        console.log("Hello");
+        let dic = {};
+        for(let i = 0; i < this.alarmList.length; i++) dic[this.alarmList[i]._id] = 1;
+        for(let i = 0; i < res.data.alarms.length; i++) {
+        if(dic[res.data.alarms[i]._id] != 1) {
+            console.log("wow!");
+            this.$store.commit('addAlarm', res.data.alarms[i]);
+            if(res.data.alarms[i].read == false) this.$store.commit('noticeIncrease');
+          }
+        }
+      }).catch(err => {
+        console.log("error alarm");
+      });
+    }, 10000);
 
     this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
       this.$store.commit('setAlarms', res.data.alarms);

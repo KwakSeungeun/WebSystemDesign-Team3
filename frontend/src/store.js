@@ -37,6 +37,9 @@ export const store = new Vuex.Store({
         }
       }
     },
+    addAlarm: function(state, value) {
+      this.state.alarmList.push(value);
+    },
     setAlarms: function(state, value) {
       this.state.alarmList = value;
     },
