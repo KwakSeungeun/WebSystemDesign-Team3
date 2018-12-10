@@ -1,7 +1,7 @@
 <template>
     <div id="card">
         <div class="image">
-            <b-img :src="imageUrl"  fluid-grow alt="Responsive image"/>
+            <b-img :src="imageUrl" width="300" height="500" fluid alt="Responsive image"/>
         </div>
         <hr>
         <div class="info-container">
@@ -16,7 +16,7 @@
                 <p>제목 : {{trade.title}} / {{trade.edition}}판</p>
                 <p>저자: {{trade.author}}</p>
                 <p>판매자 희망가격: {{price}}원</p>
-                <p>TAG : </p>
+                <p>TAG</p>
                 <div class="row-align" >
                     <div v-for="(tag,index) in tagsList" :key="index">
                         <p><b>#</b>{{tag}}&nbsp;&nbsp;&nbsp;</p>

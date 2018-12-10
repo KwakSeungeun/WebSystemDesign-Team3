@@ -1,6 +1,6 @@
 <template>
     <div id="AlarmDetails">
-        <div v-for="alarm in sortedAlarmList">
+        <div v-for="alarm in sortedAlarmList" :key="alarm._id">
             <b-card class="alarmCard" title=""
                     sub-title="">
                 <p v-if="alarm.read == true" class="card-text">
