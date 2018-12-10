@@ -137,6 +137,10 @@ export default {
 
           this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
             this.$store.commit('setAlarms', res.data.alarms);
+            this.$store.commit('setNoticeZero');
+            for(let i = 0; i < this.alarmList.length; i++) {
+                if(this.alarmList[i].read == false) this.$store.commit('noticeIncrease');
+            }
           }).catch(err => {
           });
         }
@@ -175,6 +179,15 @@ export default {
       this.$store.commit('setUser',JSON.parse(this.$localStorage.get('loginUser')));
       this.$store.commit('setIsLogged',this.$session.exists());
       this.$http.defaults.headers.common['x-access-token'] = this.$session.get('token');
+
+      this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
+        this.$store.commit('setAlarms', res.data.alarms);
+        this.$store.commit('setNoticeZero');
+        for(let i = 0; i < this.alarmList.length; i++) {
+          if(this.alarmList[i].read == false) this.$store.commit('noticeIncrease');
+        }
+      }).catch(err => {
+      });
     }
 
     setInterval(()=>{
