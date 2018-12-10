@@ -179,7 +179,6 @@ export default {
 
     setInterval(()=>{
       this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
-        console.log("Hello");
         let dic = {};
         for(let i = 0; i < this.alarmList.length; i++) dic[this.alarmList[i]._id] = 1;
         for(let i = 0; i < res.data.alarms.length; i++) {
