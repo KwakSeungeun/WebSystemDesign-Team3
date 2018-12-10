@@ -77,6 +77,8 @@ import RegisterForm from "../modal/RegisterForm";
 import AlarmDetails from "../modal/AlarmDetails";
 import Vue from 'vue'
 
+const Push = require('push.js');
+
 export default {
   name:"top-nav",
   data : ()=>({
@@ -207,6 +209,15 @@ export default {
                 group: 'alarm_notice',
                 title: '새로운 알람이 도착했습니다!',
                 text: '알람을 확인해주세요.'
+            });
+
+            Push.create("새로운 알람이 도착했어요!!!", {
+                body: "알람을 확인해주세요!",
+                //icon: "",
+                timeout: 5000,
+                onClick: function() {
+                    console.log(this);
+                }
             });
         }
       }).catch(err => {
