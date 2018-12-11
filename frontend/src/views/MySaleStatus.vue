@@ -18,9 +18,9 @@
             <th scope="col">Handle</th>
           </tr>
         </thead>
-        <tbody >
+        <tbody>
           <tr v-for="list in computedList" :key="list._id">
-            <td>{{list.book}}</td >
+            <td>{{list.book}}</td>
             <td v-if="list.seller_contact==0">{{list.email}}</td>
             <td v-else>{{list.phone}}</td>
             <td>{{list.time_stamp}}</td>
