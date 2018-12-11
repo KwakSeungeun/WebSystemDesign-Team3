@@ -48,7 +48,6 @@ export const store = new Vuex.Store({
     },
     setUser(state, user){
       this.state.user = user
-      console.log('VUEX setUser :',this.state.user);
     },
     setIsLogged(state, value){
       this.state.isLogged = value;

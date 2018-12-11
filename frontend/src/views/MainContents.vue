@@ -1,23 +1,28 @@
 <template>
     <div id="main" ref="main">
         <button class="floating-btn" @click="scrollToTop"></button>
-        <b-container class="mx-auto mb-3 mt-3">
-            <b-row>
-                <b-col sm="7">
+        <div style="margin:2% 20% 2% 20%;">
+            <div class="row-align">
+                <div class="row-item" style="flex: 2;">
                     <b-form-input v-model="searchText" placeholder="찾고 싶은 책을 검색해 보세요!"></b-form-input>
-                </b-col>
-                <b-col sm="1">
+                </div>
+                <div class="row-item" >
                     <b-button @click="onSearch">검색</b-button>
-                </b-col>
-                <b-col sm="4">
-                    <b-dropdown id="filter" text="필터">
-                        <b-dropdown-item-button @click="filtering('update')">업데이트 순</b-dropdown-item-button>
-                        <b-dropdown-item-button @click="filtering('price')">가격 낮은 순</b-dropdown-item-button>
-                        <b-dropdown-item-button @click="filtering('priceDesc')">가격 높은 순</b-dropdown-item-button>
+                </div>
+                <div class="row-item">
+                    <b-dropdown id="filter" text="필터" style="width: 150px;">
+                        <b-dropdown-item-button @click="filtering('update','업데이트 순')">업데이트 순</b-dropdown-item-button>
+                        <b-dropdown-item-button @click="filtering('state','책 상태 순')">책 상태 순</b-dropdown-item-button>
+                        <b-dropdown-item-button @click="filtering('price', '최저가 순')">최저가 순</b-dropdown-item-button>
+                        <b-dropdown-item-button @click="filtering('priceDesc','최고가 순')">최고가 순</b-dropdown-item-button>
                     </b-dropdown>
-                </b-col>
-            </b-row>
-        </b-container>
+                </div>
+                <div v-if="filterMode" class="row-item" style="color: #1B4F72; padding-top: 10px;">
+                    <p><b>{{filterMode}}</b></p>
+                </div>
+                <br>
+            </div>
+        </div>
         <div class="list-container">
             <button  v-for="trade in filteringTrades" :key="trade.id" class="card-container">
                 <router-link style="text-decoration:none !important;" 
@@ -26,8 +31,11 @@
                 </router-link>
             </button>
         </div>
-        <div class="outline" v-if="filteringTrades.length==0">
+        <div class="outline" v-if="filteringTrades.length==0 && !noResult">
             <h4>현재 등록된 책 장터가 없습니다!<br>지금 책을 등록해 보세요!</h4>
+        </div>
+        <div class="outline" v-if="filteringTrades.length==0 && noResult">
+            <h4>검색 결과가 없습니다.</h4>
         </div>
     </div>
 </template>
@@ -44,7 +52,9 @@ export default {
     data: function(){
         return{
             searchText: '',
-            filteringTrades: []
+            filteringTrades: [],
+            noResult : false,
+            filterMode : ''
         }
     },
     methods:{
@@ -63,9 +73,15 @@ export default {
             });
         },
         onSearch: function(){
-            console.log(this.searchText);
+            this.filteringTrades = _.filter(this.filteringTrades, trade=>{
+                return trade.title.includes(this.searchText) 
+                        || trade.author.includes(this.searchText)   
+                        || trade.tag.includes(this.searchText);
+            });
+            if(!this.filteringTrades) this.noResult = true;
         },
-        filtering: function(mode){
+        filtering: function(mode, value){
+            this.filterMode = value;
             if(mode === 'update'){
                 this.filteringTrades = _.orderBy(this.filteringTrades, ['time_stamp'], ['desc']);
             }
@@ -74,16 +90,34 @@ export default {
             }
             else if(mode === 'priceDesc'){
                 this.filteringTrades = _.orderBy(this.filteringTrades, ['price'], ['desc']);
+            } 
+            else if(mode === 'state'){
+                this.filteringTrades = _.orderBy(this.filteringTrades,['state'],['desc']);
             }
         }
     },
     created(){
         this.getBookList().then(result=>{
             this.$store.commit('setTrades',result);
-            this.filteringTrades = _.filter(this.$store.state.trades, { 'status': 0 }); //expire 된 거 보여주기
-            this.filteringTrades = _.orderBy(this.filteringTrades, ['time_stamp'], ['desc']);
+            this.$localStorage.set('trades', JSON.stringify(result));
+            this.noResult = false;
+            if(!this.filteringTrades) {
+                return;
+            } else{
+                this.filteringTrades = _.filter(this.$store.state.trades, { 'status': 0 }); //expire 된 거 보여주기
+                this.filteringTrades = _.orderBy(this.filteringTrades, ['time_stamp'], ['desc']);
+            }
         });
-    },   
+    },  
+    watch: {
+        searchText: function(){
+            if(!this.searchText){
+                this.filteringTrades = _.filter(this.$store.state.trades, { 'status': 0 }); //expire 된 거 보여주기
+                this.filteringTrades = _.orderBy(this.filteringTrades, ['time_stamp'], ['desc']);
+                this.noResult = false;
+            }
+        }
+    } 
 }
 </script>
 
@@ -105,14 +139,14 @@ export default {
 /* smart phone */
  @media only screen and (max-width : 320px){
      .card-container{
-        width: calc(100% - 20px);
+        width: calc(100%/2 - 20px);
         height: 800px;
     }
  }
 /* pad and desktop */
  @media only screen and (min-device-width : 768px){
      .card-container{
-        width: calc(100%/2 - 20px);
+        width: calc(100%/3 - 20px);
         height: 700px;
     }
  }

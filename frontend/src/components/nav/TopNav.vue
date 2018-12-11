@@ -60,7 +60,7 @@
       no-close-on-backdrop
       centered
       ref="alarmDetailsRef"
-      size="md"
+      size="lg"
       title="알람"
       hide-footer
       id="alarmDetails">
@@ -177,7 +177,6 @@ export default {
   },
   created: function(){
     if (this.$session.exists()) {
-      console.log("이미 로그인 되어 있다!")
       this.$store.commit('setUser',JSON.parse(this.$localStorage.get('loginUser')));
       this.$store.commit('setIsLogged',this.$session.exists());
       this.$http.defaults.headers.common['x-access-token'] = this.$session.get('token');
@@ -248,7 +247,6 @@ export default {
       const phone = data.phone;
       const preference = data.preference;
       const name = data.name;
-      console.log("DATA!! :", pw);
       
       this.loading = true;
       await this.$http.post(`${this.$config.serverUri}auth/register`,{
@@ -278,6 +276,7 @@ export default {
 <style>
 #top-nav{
   text-align: left;
+  background: rgb(224, 224, 224, 0.6);
 }
 .center{
   position: fixed;

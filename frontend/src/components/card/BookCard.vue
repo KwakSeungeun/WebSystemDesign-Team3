@@ -1,7 +1,7 @@
 <template>
     <div id="card">
         <div class="image">
-            <b-img :src="imageUrl"  fluid-grow alt="Responsive image"/>
+            <b-img :src="imageUrl" width="300" height="500" fluid alt="Responsive image"/>
         </div>
         <hr>
         <div class="info-container">
@@ -13,11 +13,10 @@
                             active-color="#E74C3C"
                             v-bind:star-size="30"></star-rating> 
             <div class="p-2">
-                <p>Title : {{trade.title}}</p>
-                <p>Edition : {{trade.edition}}</p>
-                <p>Author: {{trade.author}}</p>
-                <p>price: {{price}}원</p>
-                <p>TAG : </p>
+                <p>제목 : {{trade.title}} / {{trade.edition}}판</p>
+                <p>저자: {{trade.author}}</p>
+                <p>판매자 희망가격: {{price}}원</p>
+                <p>TAG</p>
                 <div class="row-align" >
                     <div v-for="(tag,index) in tagsList" :key="index">
                         <p><b>#</b>{{tag}}&nbsp;&nbsp;&nbsp;</p>
@@ -74,6 +73,7 @@ export default {
     color: #EBF5FB;
 }
 .image{
+    width: 100%;
     height: calc(50% - 20px);
     background: #EBF5FB
 }
