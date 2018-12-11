@@ -122,7 +122,8 @@ export default {
       this.$session.destroy();
       this.$store.commit('setIsLogged',this.$session.exists());
       this.$store.commit('setUser',{});
-      this.$localStorage.remove('loginUser')
+      this.$localStorage.remove('loginUser');
+      this.$localStorage.remove('token')
       this.$refs.logoutModal.show();
       this.$router.push('/');
     },
@@ -134,6 +135,7 @@ export default {
         console.log('res',res)
         if(res.status == 200 && res.data.token != null) {
           this.$session.set('token', res.data.token);
+          this.$localStorage.set('token', res.data.token);
           this.$http.defaults.headers.common['x-access-token'] = res.data.token;
           this.$store.commit('setIsLogged',this.$session.exists());
 
@@ -163,7 +165,6 @@ export default {
     },
     getUser: function(email){
       return new Promise((resolve, reject)=>{
-        console.log("EAMIL:",email)
         this.$http.get(`${this.$config.serverUri}user/${email}`)
         .then(res=>{
           resolve(res.data)
@@ -175,11 +176,16 @@ export default {
       });
     }
   },
-  created: function(){
-    if (this.$session.exists()) {
-      this.$store.commit('setUser',JSON.parse(this.$localStorage.get('loginUser')));
+  created: async function(){
+    if (this.$localStorage.get('loginUser') != null) {
+      console.log("자동 로그인!");
+      let loggedUser = JSON.parse(this.$localStorage.get('loginUser'))
+      let token = this.$localStorage.get('token');
+
+      this.$store.commit('setUser', loggedUser);
+      this.$session.set('token', token);
       this.$store.commit('setIsLogged',this.$session.exists());
-      this.$http.defaults.headers.common['x-access-token'] = this.$session.get('token');
+      this.$http.defaults.headers.common['x-access-token'] = token;
 
       this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
         this.$store.commit('setAlarms', res.data.alarms);
