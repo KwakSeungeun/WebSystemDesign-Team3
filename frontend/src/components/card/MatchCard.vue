@@ -23,7 +23,7 @@
                         제시한 가격 : {{buyer.price}}<br>
                         제시한 장소 : {{buyer.location}}
                     </p>
-                    <button @click="matchBuyer(buyer._id)" class="round-btn blue row-item" style="width: 15%;">MATCH</button>
+                    <button @click="matchBuyer(buyer.buyer_id)" class="round-btn blue row-item" style="width: 15%;">MATCH</button>
                 </div>
             </div>
             <button @click="openModal" class="round-btn float-right bottom-align">장터 종료하기</button>

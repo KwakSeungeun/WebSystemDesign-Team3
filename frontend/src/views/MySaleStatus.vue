@@ -76,7 +76,7 @@ export default {
         }
       );
       this.buyer_trades = tmpBuyer.data;
-
+      console.log('일단 바이어',this.buyer_trades)
       for (var i = 0; i < this.buyer_trades.user.length; i++) {
         this.buyer_trades.user[i].book = this.buyer_trades.book[i];
       }
