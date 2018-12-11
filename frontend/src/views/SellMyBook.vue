@@ -84,7 +84,7 @@
             <h4>로그인 시 이용하실 수 있는 서비스 입니다.</h4>
         </div>
         <!-- modal -->
-        <b-modal no-close-on-backdrop hide-footer @hidden="headerclose"
+        <b-modal no-close-on-backdrop hide-footer @hidden="headerclose" size="lg"
             ref="searchBook" title="찾는 책을 검색해 보세요.">
             <div v-if="step==0">
                 <div class="row-align">
@@ -178,6 +178,10 @@ export default {
     },
     methods:{
         addTags: function(){
+            if(!this.tagInput){
+                alert('태그 내용을 입력 후 추가해 주세요!');
+                return;
+            }
             if(this.tags.length > 2){
                 alert('최대 3개까지 입력할 수 있습니다.');
                 return;

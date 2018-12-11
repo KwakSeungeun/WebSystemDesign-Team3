@@ -19,7 +19,7 @@ var userSchema = new Schema({
   email_token: String, // 이메일 인증 토큰
   auth: Boolean, // 허가 여부
   alarms: [alarmSchema], // 사용자가 진행중인 거래의 상태에 따른 알람
-  trade_id: [String]
+  // trade_id: [String]
 });
 
 // find one user by using username

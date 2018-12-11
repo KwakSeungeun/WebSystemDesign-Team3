@@ -4,6 +4,7 @@
         <div class="top">
             <b style="font-size: 24px; margin-right: 20px;">
                 장터 마감까지 <span style="color: #E74C3C">{{dueDate}}</span> 일 남았습니다!</b>
+            <b>현재 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여중!</b>
             <br><br>
             <div class="row-align">
                 <div style="margin-right: 5%;">판매자 희망가격 : <b>{{price}}원</b></div>
@@ -67,6 +68,9 @@
         <b-modal hide-footer ref="notLoggedModal" centered>
             <p>로그인시 이용가능한 서비스 입니다.</p>
         </b-modal>
+        <b-modal hide-footer ref="errModal" centered>
+            <p>{{errMsg}}</p>
+        </b-modal>
     </div>
 </template>
 
@@ -93,6 +97,8 @@ export default {
                 {text: '이메일', value:'email'},
                 {text: '핸드폰', value:'phone'}
             ],
+            checkSelf: false,
+            errMsg: ''
         }
     },
     computed: {
@@ -129,7 +135,35 @@ export default {
         updateFilter: function(filterName) {
             this.galleryFilter = filterName;
         },
-        openModal: function(){
+        openErrModal: function(){
+            this.errMsg = '본인의 장터에는 자신이 참가 할 수 없습니다!'
+            this.$refs.errModal.show();
+        },
+        openModal: async function(){
+            let isMine;
+            let err = null;
+            await this.$http.get(`${this.$config.serverUri}trade/my_trade_list`)
+            .then(res=>{
+                isMine = _.forEach(res.data.trade_list, (value, index)=>{
+                    return value._id == this.trade._id;
+                });
+                console.log("isMINE :",isMine);
+            })
+            .catch(err=>{
+                console.log("call my trade error\n",err);
+            });   
+            if(err){
+                alert("서버에 에러가 생겼습니다. 다시 시도해 주세요!")
+                return;
+            }    
+            if (isMine.length != 0){
+                this.openErrModal();
+                this.checkSelf = true;
+                return;
+            } else {
+                this.checkSelf = false;
+            }
+
             if(!this.isLogged){
                 this.$refs.notLoggedModal.show();
                 return;
@@ -145,6 +179,7 @@ export default {
             if(!this.buyer.price || !this.buyer.location){
                 return;
             }
+
             let selectedContact = '';
             if(this.selected=='eamil') selectedContact = this.$store.state.user.email;
             else selectedContact = this.$store.state.user.phone;
@@ -169,6 +204,7 @@ export default {
     },
     created: function(){
         this.trade = _.find(this.tradeList, {'_id': this.trade_id});
+        this.checkSelf = false;
     }
 }
 </script>

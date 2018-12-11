@@ -139,7 +139,7 @@ export default {
 /* smart phone */
  @media only screen and (max-width : 320px){
      .card-container{
-        width: calc(100%/2 - 20px);
+        width: calc(100% - 20px);
         height: 800px;
     }
  }
