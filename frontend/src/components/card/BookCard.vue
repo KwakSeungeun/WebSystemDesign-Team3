@@ -73,6 +73,7 @@ export default {
     color: #EBF5FB;
 }
 .image{
+    width: 100%;
     height: calc(50% - 20px);
     background: #EBF5FB
 }

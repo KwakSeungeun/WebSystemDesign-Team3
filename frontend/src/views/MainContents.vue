@@ -10,11 +10,11 @@
                     <b-button @click="onSearch">검색</b-button>
                 </div>
                 <div class="row-item">
-                    <b-dropdown id="filter" text="필터">
+                    <b-dropdown id="filter" text="필터" style="width: 150px;">
                         <b-dropdown-item-button @click="filtering('update','업데이트 순')">업데이트 순</b-dropdown-item-button>
                         <b-dropdown-item-button @click="filtering('state','책 상태 순')">책 상태 순</b-dropdown-item-button>
                         <b-dropdown-item-button @click="filtering('price', '최저가 순')">최저가 순</b-dropdown-item-button>
-                        <b-dropdown-item-button @click="filtering('priceDesc','최고가 순')">가격 높은 순</b-dropdown-item-button>
+                        <b-dropdown-item-button @click="filtering('priceDesc','최고가 순')">최고가 순</b-dropdown-item-button>
                     </b-dropdown>
                 </div>
                 <div v-if="filterMode" class="row-item" style="color: #1B4F72; padding-top: 10px;">
@@ -139,14 +139,14 @@ export default {
 /* smart phone */
  @media only screen and (max-width : 320px){
      .card-container{
-        width: calc(100% - 20px);
+        width: calc(100%/2 - 20px);
         height: 800px;
     }
  }
 /* pad and desktop */
  @media only screen and (min-device-width : 768px){
      .card-container{
-        width: calc(100%/2 - 20px);
+        width: calc(100%/3 - 20px);
         height: 700px;
     }
  }

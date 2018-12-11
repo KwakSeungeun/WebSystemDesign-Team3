@@ -38,7 +38,7 @@
                         dragText=""
                         browseText="">
                     </vue-upload-multiple-image>
-                    <div class="mt-3 mb-3">Selected file: {{form.img_url && form.img_url.name}}</div>
+                    <!-- <div class="mt-3 mb-3">Selected file: {{form.img_url && form.img_url.name}}</div> -->
                     <div class="row-align">         
                         <b-input-group class="row-item" style="width: 5%;" prepend="상태" required></b-input-group> 
                         <star-rating v-model="form.state" :show-rating=false

@@ -16,7 +16,13 @@
         </div>
         <div class="contents">
             <div class="images">
-                Image
+                <Photoswipe auto class="border mb-3">
+                <p style="font-size: 20px;">이미지를 클릭하시면 확대해 볼 수 있습니다.</p>
+                    <b-img v-for="(src, index) in imageUrlList" :key="index" 
+                        :src="src"
+                        class="border image-width"
+                        fluid alt="Responsive image"/>
+                </Photoswipe>
             </div>
             <div class="info">
                 <b>장터 종료일</b> : {{expireDate}}<br>
@@ -86,7 +92,7 @@ export default {
             contactOptions:[
                 {text: '이메일', value:'email'},
                 {text: '핸드폰', value:'phone'}
-            ]
+            ],
         }
     },
     computed: {
@@ -100,7 +106,7 @@ export default {
             return this.$moment(this.trade.time_stamp).add(7, 'days').format('YYYY-MM-DD');
         },
         dueDate: function(){
-            return this.$moment(this.expireDate).diff(new Date(), 'days');
+            return this.$moment(this.expireDate).diff(new Date(), 'days')+1;
         },
         price: function(){
             let toArrayPrice = _.split(this.trade.price, '',this.trade.price.length);
@@ -110,9 +116,19 @@ export default {
                 else result += value;
             });
             return result;
+        },
+        imageUrlList: function(){
+            let result = []
+            _.forEach(this.trade.img_url, (value, key)=>{
+                result[key] = this.$config.image + value;
+            });
+            return result;
         }
     },
-    methods:{
+    methods:{   
+        updateFilter: function(filterName) {
+            this.galleryFilter = filterName;
+        },
         openModal: function(){
             if(!this.isLogged){
                 this.$refs.notLoggedModal.show();
@@ -163,7 +179,9 @@ export default {
 }
 .round-btn.float-btn{
     position: absolute;
-    top: 250px;
+    padding: 20px;
+    font-size: 20px;
+    bottom: 50px;
     right: 50px;
 }
 .top {
@@ -175,8 +193,8 @@ export default {
     flex-direction: row;
 }
 .images{
-    background: bisque;
-    flex: 1;
+    /* background: bisque; */
+    flex: 2;
 }
 .info{
     color: black;
@@ -188,8 +206,25 @@ export default {
     flex-direction: row;
 }
 .border{
-    border: 2px solid gray;
+    border: 2px solid #808080;
     border-radius: 5px;
     padding: 5px;
 }
+.image-width{
+    margin: 15px;
+}
+
+/* smart phone */
+ @media only screen and (max-width : 320px){
+     .image-width{
+        width: calc(100% - 30px);
+    }
+ }
+/* pad and desktop */
+ @media only screen and (min-device-width : 768px){
+     .image-width{
+        width: calc(100%/3 - 30px);
+    }
+}
+ 
 </style>
