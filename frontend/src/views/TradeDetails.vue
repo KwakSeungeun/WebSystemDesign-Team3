@@ -140,30 +140,6 @@ export default {
             this.$refs.errModal.show();
         },
         openModal: async function(){
-            let isMine;
-            let err = null;
-            await this.$http.get(`${this.$config.serverUri}trade/my_trade_list`)
-            .then(res=>{
-                isMine = _.forEach(res.data.trade_list, (value, index)=>{
-                    return value._id == this.trade._id;
-                });
-                console.log("isMINE :",isMine);
-            })
-            .catch(err=>{
-                console.log("call my trade error\n",err);
-            });   
-            if(err){
-                alert("서버에 에러가 생겼습니다. 다시 시도해 주세요!")
-                return;
-            }    
-            if (isMine.length != 0){
-                this.openErrModal();
-                this.checkSelf = true;
-                return;
-            } else {
-                this.checkSelf = false;
-            }
-
             if(!this.isLogged){
                 this.$refs.notLoggedModal.show();
                 return;
@@ -173,6 +149,31 @@ export default {
                 this.selected = 'email'
                 this.$refs.buyModal.show();
             }
+            let err = null;
+            await this.$http.get(`${this.$config.serverUri}trade/my_trade_list`)
+            .then(res=>{
+                _.forEach(res.data.trade_list, (value, index)=>{
+                    if(value._id === this.trade._id){
+                        this.checkSelf = true;
+                        return;
+                    }
+                });
+            })
+            .catch(err=>{
+                console.log("call my trade error\n",err);
+            });   
+            if(err){
+                alert("서버에 에러가 생겼습니다. 다시 시도해 주세요!")
+                return;
+            }    
+            if (this.checkSelf){
+                this.openErrModal();
+                return;
+            } else {
+                this.checkSelf = false;
+            }
+
+            
         },
         tradeSubmit: function(){
             let User = this.$store.state.user;

@@ -178,7 +178,6 @@ export default {
   },
   created: async function(){
     if (this.$localStorage.get('loginUser') != null) {
-      console.log("자동 로그인!");
       let loggedUser = JSON.parse(this.$localStorage.get('loginUser'))
       let token = this.$localStorage.get('token');
 
@@ -290,7 +289,7 @@ export default {
   top: 50%;
   z-index: 1000000;
 }
-router-link{
+b-nav-item{
   color: #E74C3C;
 }
 </style>
