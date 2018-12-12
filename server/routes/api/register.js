@@ -88,7 +88,7 @@ router.post('/', function(req, res, next) {
             }
             else {
                 if (result[0].auth) {
-                    res.send({success: "already"});
+                    res.status(400).send({success: "already"});
                 }
                 else {
                     var query = {email: req.body.email};
