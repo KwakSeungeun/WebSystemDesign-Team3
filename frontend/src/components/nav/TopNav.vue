@@ -252,7 +252,11 @@ export default {
             });
         }
       }).catch(err => {
-        console.log("error alarm");
+        console.log("error alarm",err.response);
+        if(err.response.data.message === "login_expired"){
+          this.$http.defaults.headers.common['x-access-token'] = null;
+          this.onLogout();
+        }
       });
     }, 10000);
 
