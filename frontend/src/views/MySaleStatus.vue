@@ -47,7 +47,7 @@ export default {
       buyer_trades: [],
       buyers:[],
       selected: 0,
-      options: [{ text: "구매자", value: 0 }, { text: "판매자", value: 1 }]
+      options: [{ text: "판매자", value: 0 }, { text: "구매자", value: 1 }]
     };
   },
   components: {
@@ -80,32 +80,32 @@ export default {
       
       _.forEach(tmpBuyer.data.trade,(value,index)=>{
         this.seller_trades.push(_.filter(this.$store.state.trades,{_id:value}))
-        console.log('발루',value)
+        console.log('구매자 발루',value)
       })
       _.forEach(tmpBuyer.data.user,async (value,index)=>{
-        console.log('유저!!',await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value}))
+        console.log('구매자 유저!!',await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value}))
         var temp=await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value})
         this.sellers.push(temp.data)
       })
       
 
-      
+
       //셀러 입장s
-      console.log("유저", user);
+      console.log("셀러 유저", user);
       var tmpBuyer = await this.$http.post(
         `${this.$config.serverUri}match/seller`,
         {
           seller_id: user._id
         }
       );
-      console.log('템바',tmpBuyer.data)
+      console.log('셀러 템바',tmpBuyer.data)
       
       _.forEach(tmpBuyer.data.trade,(value,index)=>{
         this.buyer_trades.push(_.filter(this.$store.state.trades,{_id:value}))
-        console.log('발루',value)
+        console.log('판매자 발루',value)
       })
       _.forEach(tmpBuyer.data.user,async (value,index)=>{
-        console.log('유저',await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value}))
+        console.log('판매자 유저',await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value}))
         var temp=await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value})
         this.buyers.push(temp.data)
       })
