@@ -24,7 +24,7 @@ funct = function() {
         setTimeout(function () {
             Trade.find({}).then(function(result) {
                 async.each(result, function (i, callback) {
-                    if(i.status == 1) callback(null);
+                    if(i.status != 0) callback(null);
                     else if(i.time_stamp != undefined) {
                         if(Date.now() - i.time_stamp >= 604800000) {
                             console.log(i._id);
