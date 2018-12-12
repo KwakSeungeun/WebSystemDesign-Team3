@@ -27,7 +27,7 @@
       no-close-on-backdrop
       centered
       ref="authModal"
-      size="md"
+      size="lg"
       title="이메일 인증 필요"
       hide-footer
       id="authModal">
@@ -183,8 +183,7 @@ export default {
         this.$store.commit('setIsLogged',this.$session.exists());
         this.loading = false;
       });
-      if(this.$session.exists()){
-        console.log("자동 로그인")
+      if(this.$localStorage.get('loginUser')!=null){
         let user_obj = await this.getUser(uemail);
         this.$localStorage.set('loginUser', JSON.stringify(user_obj));
         this.$store.commit('setUser',user_obj);
@@ -192,7 +191,7 @@ export default {
     },
     getUser: function(email){
       return new Promise((resolve, reject)=>{
-        this.$http.get(`${this.$config.serverUri}user/${email}`)
+        this.$http.get(`${this.$config.serverUri}user`)
         .then(res=>{
           resolve(res.data)
         })
@@ -201,9 +200,6 @@ export default {
           reject(err)
           });
       });
-    },
-    sendAuthMail: function(){
-      console.log("이메일 인증 다시 보내기!");
     }
   },
   created: async function(){
