@@ -63,7 +63,7 @@ router.get('/', (req,res)=>{
         let phone = user.phone
         let preference = user.preference
         let alarms = user.alarms
-        res.send({_id, trade_id, name, email, phone, preference, alarms});
+        res.send({_id: _id, trade_id: trade_id, name: name, email: email, phone: phone, preference: preference, alarms: alarms});
     }).catch(function(err) {
         console.log(err);
         if(!flag) res.status(500).send("server error");
