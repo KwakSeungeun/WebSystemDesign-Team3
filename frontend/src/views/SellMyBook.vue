@@ -71,6 +71,9 @@
                             </button>
                         </div>
                     </div>
+                    <b-input-group class="row-100" prepend="선호 장소">
+                        <b-form-input required type="text" v-model="form.location"></b-form-input>
+                    </b-input-group>
                     <b-input-group class="row-100" prepend="Comment">
                         <b-form-textarea :rows="2" :max-rows="2" placeholder="구매자에게 알리고 싶은 정보를 입력 해 주세요!" 
                                     v-model="form.comment"></b-form-textarea >
@@ -172,6 +175,12 @@ export default {
     computed: {
         isLogged: function(){
             return this.$store.state.isLogged;
+        },
+        preference: function() {
+            if(this.$store.state.isLogged) {
+                return this.$store.state.user.preference;
+            }
+            else return '';
         }
     },
     created: function(){
@@ -208,6 +217,7 @@ export default {
             this.selected='email';
             this.tags = [];
             this.tagInput = '';
+            this.form.location = this.preference;
             this.clearSearch();
         },
         clearSearch: function(){
@@ -250,7 +260,7 @@ export default {
             this.clearSearch();
         },
         createTrade: function(event){
-            this.submit();
+            this.submit_trade();
             event.preventDefault();
         },
         uploadImageSuccess(formData, index, fileList) {
@@ -273,7 +283,7 @@ export default {
             this.form.images.splice(index, 1, formData.get('file'));
             console.log(this.form.images);
         },
-        submit: async function() {
+        submit_trade: async function() {
             if(this.selected == 'email') this.form.seller_contact = 0;
             else this.form.seller_contact = 1;
 
@@ -281,10 +291,6 @@ export default {
                 if(index == this.tags.length-1) this.form.tag += value;
                 else this.form.tag += `${value},`;
             });
-
-            if(this.$store.state.user)  this.form.location = this.$store.state.user;
-            else this.form.location = null;
-            console.log('form.location', this.form.location);
 
             let formData = new FormData();
             for(let key of Object.keys(this.form)) {

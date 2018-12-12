@@ -78,7 +78,8 @@
 
                     this.$http.put(`${this.$config.serverUri}user/update`, this.form).then((res) => {
                         console.log("업데이트 성공", res);
-                        this.$store.commit('setUserUpdate', this.form);
+                        this.$store.commit('setUserUpdate', this.form)
+                        this.$localStorage.set('loginUser', JSON.stringify(this.$store.state.user));
                         alert("정보 업데이트 성공");
                     }).catch(err => {
                         if (err.response.data == 'password_error') {

@@ -100,7 +100,11 @@ export default {
     },
     computed: {
         isLogged: function(){
-        return this.$store.state.isLogged;
+            return this.$store.state.isLogged;
+        },
+        preference: function() {
+            if(this.$store.state.isLogged) return this.$store.state.user.preference;
+            else return '';
         },
         tagsList: function(){
             return _.split(this.trade.tag,',');
@@ -151,7 +155,7 @@ export default {
                 return;
             } else {
                 // clear
-                this.buyer = { price:'', location: '' };
+                this.buyer = { price:'', location: this.preference };
                 this.selected = 'email'
                 this.$refs.buyModal.show();
             }
@@ -215,7 +219,7 @@ export default {
         }
     },
     created: function(){
-        this.checkSelf = false;
+        this.checkSelf = false
     }
 }
 </script>
