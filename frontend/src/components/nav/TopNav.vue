@@ -31,10 +31,12 @@
       title="이메일 인증 필요"
       hide-footer
       id="authModal">
-      <p>아직 이메일 인증을 완료하지 못했습니다. 아주메일로 계정을 인증하세요!</p>
+      <p>아직 이메일 인증을 완료하지 못했습니다. 아주메일로 계정을 인증하세요!<br>
+      <b>인증메일이 도착하지 않았다면 다시 회원가입을 진행 해 주세요!</b>
+      </p>
       <div class="row-align">
-        <a href="https://www.google.com/gmail/">이메일 인증하기</a> 
-        <button class="round-btn" @click="sendAuthMail">인증메일 다시 받기</button> 
+        <a style="flex:1" href="https://www.google.com/gmail/">이메일 인증하기</a> 
+        <!-- <button style="flex:1" class="round-btn" @click="sendAuthMail">인증메일 다시 받기</button>  -->
       </div>
     </b-modal>
     <b-modal
@@ -169,9 +171,11 @@ export default {
         this.$refs.loginRef.hide();
         this.loading = false;
       }).catch((err)=>{
-        if(err.response.data.includes('auth')){
+        let msg = err.response.data.message;
+        if(msg.includes('auth')){
           console.log('이메일 인증 실패');
           this.$refs.authModal.show();
+          this.loading = false;
           return;
         }
         console.log("catch",err.response);
