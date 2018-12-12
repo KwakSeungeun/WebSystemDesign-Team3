@@ -6,7 +6,7 @@ var buyerSchema = new Schema({
     buyer_id: String,
     price: Number, //구매자가 원하는 가격
     location: String, //구매자가 원하는 희망 장소
-    buyer_contact:Number // 공개할 구매자 연락처 0: email, 1: phone
+    buyer_contact:String // 공개할 구매자 연락처 0: email, 1: phone
 });
 var tradeSchema = new Schema({
     title: String,
