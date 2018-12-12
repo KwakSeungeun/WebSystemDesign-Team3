@@ -25,7 +25,8 @@ router.post('/',function(req,res,next){
       if(user.verify(pw)){
         const p = new Promise((resolve,reject)=>{
           jwt.sign({
-            _id: user._id
+            _id: user._id,
+            publish_day: Date.now()
           },
           secret,
           {

@@ -61,7 +61,8 @@ router.post('/', function(req, res, next) {
             preference: req.body.preference,
             email_token: etoken,
             auth: false,
-            alarms: [ ] // empty array
+            alarms: [ ], // empty array
+            trade_id: []
         });
 
 
