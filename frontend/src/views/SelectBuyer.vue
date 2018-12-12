@@ -52,7 +52,7 @@ export default {
             console.log(this.myTrades);
             let tmpArr = [];
             tmpArr = tmpArr.concat(_.filter(this.myTrades, { 'status': 1 })); //expire 된 거 보여주기
-            tmpArr = tmpArr.concat(_.filter(this.myTrades, { 'status': 0 })); //expire 된 거 보여주기
+            tmpArr = tmpArr.concat(_.filter(this.myTrades, { 'status': 0 })); //거래중인 거 보여주기
             this.myMatcingList = tmpArr;
             console.log(this.myMatcingList);
 
