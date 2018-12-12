@@ -24,10 +24,11 @@ funct = function() {
         setTimeout(function () {
             Trade.find({}).then(function(result) {
                 async.each(result, function (i, callback) {
-                    if(i.time_stamp != undefined) {
+                    if(i.status == 1) callback(null);
+                    else if(i.time_stamp != undefined) {
                         if(Date.now() - i.time_stamp >= 604800000) {
                             console.log(i._id);
-                            Trade.update({_id: ObjectId(i._id.toString())}, {$set: {status: 2}}).then(function(result) { // 나중에 update로 고치기
+                            Trade.update({_id: ObjectId(i._id.toString())}, {$set: {status: 1}}).then(function(result) { // 나중에 update로 고치기
                                 console.log(result);
                                 User.update({_id: ObjectId(i.seller_id)}, {$push: { alarms: {
                                             trade_id: i._id,

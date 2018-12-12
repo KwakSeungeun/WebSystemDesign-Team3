@@ -143,20 +143,21 @@ export default {
       this.$store.commit('setIsLogged',this.$session.exists());
       this.$store.commit('setUser',{});
       this.$localStorage.remove('loginUser');
-      this.$localStorage.remove('token')
+      this.$localStorage.remove('token');
       this.$refs.logoutModal.show();
       this.$router.push('/');
     },
     login: async function(uemail, upw){
+      let checkLogin = false;
       await this.$http.post(`${this.$config.serverUri}auth/login`,{
         email: uemail,
         pw : upw
       }).then(async(res)=>{
         console.log('res',res)
         if(res.status == 200 && res.data.token != null) {
+          this.$http.defaults.headers.common['x-access-token'] = res.data.token;
           this.$session.set('token', res.data.token);
           this.$localStorage.set('token', res.data.token);
-          this.$http.defaults.headers.common['x-access-token'] = res.data.token;
           this.$store.commit('setIsLogged',this.$session.exists());
 
           this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
@@ -183,7 +184,8 @@ export default {
         this.$store.commit('setIsLogged',this.$session.exists());
         this.loading = false;
       });
-      if(this.$localStorage.get('loginUser')!=null){
+      if(true){
+        console.log("유저정보 저장하는거")
         let user_obj = await this.getUser(uemail);
         this.$localStorage.set('loginUser', JSON.stringify(user_obj));
         this.$store.commit('setUser',user_obj);
@@ -191,7 +193,7 @@ export default {
     },
     getUser: function(email){
       return new Promise((resolve, reject)=>{
-        this.$http.get(`${this.$config.serverUri}user`)
+        this.$http.get(`${this.$config.serverUri}user/`)
         .then(res=>{
           resolve(res.data)
         })
@@ -206,12 +208,11 @@ export default {
     if (this.$localStorage.get('loginUser') != null) {
       let loggedUser = JSON.parse(this.$localStorage.get('loginUser'))
       let token = this.$localStorage.get('token');
-      console.log("자동로그인:",token);
 
+      this.$http.defaults.headers.common['x-access-token'] = token;
       this.$store.commit('setUser', loggedUser);
       this.$session.set('token', token);
       this.$store.commit('setIsLogged',this.$session.exists());
-      this.$http.defaults.headers.common['x-access-token'] = token;
 
       this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
         this.$store.commit('setAlarms', res.data.alarms);
@@ -252,7 +253,10 @@ export default {
             });
         }
       }).catch(err => {
-        console.log("error alarm");
+        if(err.response.data.message === "login_expired"){
+          this.$http.defaults.headers.common['x-access-token'] = null;
+          this.onLogout();
+        }
       });
     }, 10000);
 
@@ -265,7 +269,7 @@ export default {
       }
     }).catch(err => {
         this.$store.commit('setNoticeZero');
-      console.log(err, " ", "alarm fail");
+        console.log(err.response, " ", "alarm fail");
     });
 
     this.$EventBus.$on("login", async(data) => {
