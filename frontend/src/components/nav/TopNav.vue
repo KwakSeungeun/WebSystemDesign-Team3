@@ -143,11 +143,12 @@ export default {
       this.$store.commit('setIsLogged',this.$session.exists());
       this.$store.commit('setUser',{});
       this.$localStorage.remove('loginUser');
-      this.$localStorage.remove('token')
+      this.$localStorage.remove('token');
       this.$refs.logoutModal.show();
       this.$router.push('/');
     },
     login: async function(uemail, upw){
+      let checkLogin = false;
       await this.$http.post(`${this.$config.serverUri}auth/login`,{
         email: uemail,
         pw : upw
@@ -158,6 +159,7 @@ export default {
           this.$localStorage.set('token', res.data.token);
           this.$http.defaults.headers.common['x-access-token'] = res.data.token;
           this.$store.commit('setIsLogged',this.$session.exists());
+          console.log(this.$http.defaults.headers.common['x-access-token'])
 
           this.$http.get(`${this.$config.serverUri}user/alarms`).then(res => {
             this.$store.commit('setAlarms', res.data.alarms);
@@ -183,7 +185,8 @@ export default {
         this.$store.commit('setIsLogged',this.$session.exists());
         this.loading = false;
       });
-      if(this.$localStorage.get('loginUser')!=null){
+      if(true){
+        console.log("유저정보 저장하는거")
         let user_obj = await this.getUser(uemail);
         this.$localStorage.set('loginUser', JSON.stringify(user_obj));
         this.$store.commit('setUser',user_obj);
@@ -191,11 +194,12 @@ export default {
     },
     getUser: function(email){
       return new Promise((resolve, reject)=>{
-        this.$http.get(`${this.$config.serverUri}user`)
+        this.$http.get(`${this.$config.serverUri}user/`)
         .then(res=>{
           resolve(res.data)
         })
         .catch(err=>{
+          console.log(this.$http.defaults.headers.common['x-access-token']);
           console.log("유저 받아오는데 오류",err.response)
           reject(err)
           });
@@ -252,7 +256,6 @@ export default {
             });
         }
       }).catch(err => {
-        console.log("error alarm",err.response);
         if(err.response.data.message === "login_expired"){
           this.$http.defaults.headers.common['x-access-token'] = null;
           this.onLogout();
