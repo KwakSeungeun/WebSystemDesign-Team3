@@ -458,23 +458,23 @@ router.get('/matched/:id/:who', function(req, res, next) {
 
 // close trade
 router.post('/close',function(req,res){
-    Trade.findById(req.body.trade_id, function(err, trade){
-        if(err) return res.status(500).json({ error: 'database failure' });
-        if(!trade) return res.status(404).json({ error: 'trade not found' });
+    let flag = false;
+    Trade.findById(req.body.trade_id).then(function(trade) {
+        if(!trade) {
+            flag = true;
+            res.status(404).json({ error: 'trade not found' });
+            throw new Error('trade not found');
+        }
 
-        trade.status = 3 // 실패로 상태 변경
-        trade.save(function(err){
-            if(err) res.status(500).json({error: 'failed to update trade'});
-            // res.json({success: 'trade updated'});
-        })
-    })
-    .then(()=>{
+        trade.status = 3; // 실패로 상태 변경
+        return trade.save();
+    }).then(()=>{
         let pushAlarms = {
             trade_id: req.body.trade_id,
             contents: "판매자가 책 장터를 종료했습니다. 다른 장터에서 책을 구해보세요!",
             read: false
-        }
-        let updateBuyers = []
+        };
+        let updateBuyers = [];
         _.forEach(req.body.buyers, (value, index)=>{
             updateBuyers.push(ObjectId(value.buyer_id));
         });
@@ -485,7 +485,12 @@ router.post('/close',function(req,res){
             res.json({success: 'trade updated and push alarms'});
         }).catch(err=>{
             res.status(500).json({error: 'failed to push alarms'});
+            flag = true;
+            throw new Error("failed to push alarms");
         })
+    }).catch(function(err) {
+        console.log(err);
+        if(!flag) res.status(500).json({error: 'database failure'});
     });
 });
 

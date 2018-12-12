@@ -85,9 +85,6 @@ export default {
     },
     data: function(){
         return{
-            trade_id: this.$route.params.id,
-            tradeList: this.$store.state.trades,
-            trade: {},
             buyer:{
                 price:'',
                 location: '',
@@ -129,6 +126,15 @@ export default {
                 result[key] = this.$config.image + value;
             });
             return result;
+        },
+        tradeList: function() {
+            return this.$store.state.trades;
+        },
+        trade_id: function() {
+            return this.$route.params.id;
+        },
+        trade: function() {
+            return _.find(this.tradeList, {'_id': this.trade_id});
         }
     },
     methods:{   
@@ -198,13 +204,17 @@ export default {
                 console.log("가격제시 성공",res);
                 alert("판매자에게 제시한 가격 정보가 갔습니다!");
             }).catch(err=>{
-                console.log("에러\n",err);
+                if(err.response.data != undefined) {
+                    if (err.response.data.success == "there_is_already_end_trade") alert('이미 종료된 장터입니다..');
+                    if (err.response.data.success == "there_is_already_end_success") alert('이미 매칭이 성사된 장터입니다..');
+                    if (err.response.data.success == "expired") alert('이미 매칭이 성사된 장터입니다..');
+                }
+                else alert('가격 제시에 실패했습니다.')
             });
             this.$refs.buyModal.hide();
         }
     },
     created: function(){
-        this.trade = _.find(this.tradeList, {'_id': this.trade_id});
         this.checkSelf = false;
     }
 }

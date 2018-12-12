@@ -49,7 +49,14 @@ export default {
             .catch(err=>{
                 console.log("Call my trade error\n",err.response);
             });
-            this.myMatcingList = _.filter(this.myTrades, { 'status': 1 }); //expire 된 거 보여주기
+            console.log(this.myTrades);
+            let tmpArr = [];
+            tmpArr = tmpArr.concat(_.filter(this.myTrades, { 'status': 1 })); //expire 된 거 보여주기
+            tmpArr = tmpArr.concat(_.filter(this.myTrades, { 'status': 0 })); //expire 된 거 보여주기
+            this.myMatcingList = tmpArr;
+            console.log(this.myMatcingList);
+
+            console.log(this.myTrades);
             this.myMatcingList = _.orderBy(this.myMatcingList, ['time_stamp'], ['desc']);
         } else {
             this.myTrades = [];
