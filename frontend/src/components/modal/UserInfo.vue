@@ -74,12 +74,16 @@
                 this.form.b_pw=crypto.createHash('sha512').update(`${this.previous_Pw}`).digest('base64');
                 console.log("pwcheck put1");
 
-                this.$http.put(`${this.$config.serverUri}user/update`,this.form)
-                    .then((res)=>{
-                        console.log("업데이트 성공",res);
-                        alert("정보 업데이트 성공");
-                    }).catch(err=>{
-
+                this.$http.put(`${this.$config.serverUri}user/update`,this.form).then((res)=>{
+                    console.log("업데이트 성공",res);
+                    alert("정보 업데이트 성공");
+                }).catch(err=>{
+                    if(err.response.data == 'password_error') {
+                        alert('기존 패스워드와 다릅니다!');
+                    }
+                    else {
+                        alert('정보 수정에 실패했습니다. 다시 시도해주세요.');
+                    }
                 });
                 event.preventDefault(); //prevent reload page
             },
