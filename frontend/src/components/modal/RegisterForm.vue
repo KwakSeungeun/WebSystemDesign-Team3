@@ -7,6 +7,7 @@
                 <b-form-input v-model="form.email" type="text" required style="width: 60%; flex: 3" 
                         placeholder="ex) bookTrade@ajou.ac.kr"></b-form-input>
             </div>
+            <p v-if="errMsg" style="color: #E74C3C;">{{errMsg}}</p>
             <div class="d-flex flex-row mb-3">
                 <label class="pt-2">비밀번호</label>
                 <b-form-input v-model="inputPw" type="password" required style="width: 60%; flex: 3" 
@@ -48,6 +49,7 @@ import crypto from 'crypto'
 import _ from 'lodash'
 
 export default {
+    props:['errMsg'],
     data:()=>({
         pwCheckText: '',
         inputPw: '',

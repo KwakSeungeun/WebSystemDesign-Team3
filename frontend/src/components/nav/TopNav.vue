@@ -26,6 +26,20 @@
     <b-modal
       no-close-on-backdrop
       centered
+      ref="authModal"
+      size="md"
+      title="이메일 인증 필요"
+      hide-footer
+      id="authModal">
+      <p>아직 이메일 인증을 완료하지 못했습니다. 아주메일로 계정을 인증하세요!</p>
+      <div class="row-align">
+        <a href="https://www.google.com/gmail/">이메일 인증하기</a> 
+        <button class="round-btn" @click="sendAuthMail">인증메일 다시 받기</button> 
+      </div>
+    </b-modal>
+    <b-modal
+      no-close-on-backdrop
+      centered
       ref="loginRef"
       size="md"
       title="로그인"
@@ -41,7 +55,7 @@
       title="회원가입"
       hide-footer
       id="registerModal">
-      <register-form></register-form>
+      <register-form v-bind:errMsg="errMsg"></register-form>
     </b-modal>
     <b-modal hide-footer ref="logoutModal" centered>
       <p>로그아웃 되었습니다.</p>
@@ -84,6 +98,7 @@ export default {
   data : ()=>({
     searchText: '',
     loading: false,
+    errMsg : ''
   }),
   components:{
     LoginForm,
@@ -118,6 +133,9 @@ export default {
     hideAlarmModal: function() {
       this.$refs.alarmDetailsRef.hide();
     },
+    openErrModal: function(value){
+      this.errMsg = value;
+    },
     onLogout: function(){
       this.$session.destroy();
       this.$store.commit('setIsLogged',this.$session.exists());
@@ -151,13 +169,18 @@ export default {
         this.$refs.loginRef.hide();
         this.loading = false;
       }).catch((err)=>{
-        // 이메일 인증 실패 처리 다르게 하기
+        if(err.response.data.includes('auth')){
+          console.log('이메일 인증 실패');
+          this.$refs.authModal.show();
+          return;
+        }
         console.log("catch",err.response);
         alert("로그인에 실패했습니다. 다시 한 번 해주세요!")
         this.$store.commit('setIsLogged',this.$session.exists());
         this.loading = false;
       });
       if(this.$session.exists()){
+        console.log("자동 로그인")
         let user_obj = await this.getUser(uemail);
         this.$localStorage.set('loginUser', JSON.stringify(user_obj));
         this.$store.commit('setUser',user_obj);
@@ -174,12 +197,16 @@ export default {
           reject(err)
           });
       });
+    },
+    sendAuthMail: function(){
+      console.log("이메일 인증 다시 보내기!");
     }
   },
   created: async function(){
     if (this.$localStorage.get('loginUser') != null) {
       let loggedUser = JSON.parse(this.$localStorage.get('loginUser'))
       let token = this.$localStorage.get('token');
+      console.log("자동로그인:",token);
 
       this.$store.commit('setUser', loggedUser);
       this.$session.set('token', token);
@@ -265,6 +292,19 @@ export default {
         this.$refs.registerRef.hide(); 
         this.loading = false;
       }).catch((err)=>{
+        if(err.response.data && err.response.data.success.includes("already")){
+          console.log('이미 존재하는 이메일');
+          this.openErrModal('이미 존재하는 계정입니다!')
+          this.loading = false;
+          return;
+        }
+        if(err.response.data && err.response.data.success.includes("email_valid_fail")){
+          console.log('이메일 형식');
+          this.openErrModal('@ajou.ac.kr 형식을 맞춰 주세요!');
+          this.loading = false;;
+          return;
+        }
+        this.errMsg = '';
         console.log("catch",err.response);
         alert("회원가입에 실패했습니다. 다시 한 번 해주세요!")
         this.loading = false;
