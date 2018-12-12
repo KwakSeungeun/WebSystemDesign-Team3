@@ -28,9 +28,9 @@
         <tbody v-if="selected==0">  
           <tr v-for="(list,index) in computedList" :key="index">
             <td>{{list.title}}</td>
-            <td>{{getBuyers[index].location}}</td>
-            <td >{{getBuyers[index].price}}</td>
-            <td>{{getBuyers[index].buyer_contact}}</td>
+            <td>{{list.location}}</td>
+            <td >{{list.price}}</td>
+            <td><b-button @click="openBuyerContactModal(list, 0)">보기</b-button></td>
           </tr>
         </tbody>
         <tbody v-else-if="selected==1">
@@ -38,8 +38,7 @@
             <td>{{list.title}}</td>
             <td>{{list.location}}</td>
             <td>{{list.price}}</td>
-            <td v-if="list.seller_contact==0">{{getSellers[index].phone}}1</td>
-            <td v-else>{{getSellers[index].email}}2</td>
+            <td><b-button @click="openSellerContactModal(list, 1)">보기</b-button></td>
           </tr>
         </tbody>
       </table>
@@ -47,6 +46,29 @@
     <div v-else-if="!isLogged" class="outline">
       <h4>로그인 시 이용하실 수 있는 서비스 입니다.</h4>
     </div>
+
+    <b-modal
+            no-close-on-backdrop
+            centered
+            ref="sellerContactModal"
+            size="md"
+            title="판매자 연락처 정보"
+            hide-footer
+            id="sellerContactModal">
+      <p>{{contact_info}}</p>
+    </b-modal>
+
+    <b-modal
+            no-close-on-backdrop
+            centered
+            ref="buyerContactModal"
+            size="md"
+            title="구매자 연락처 정보"
+            hide-footer
+            id="buyerContactModal">
+      <p>{{contact_info}}</p>
+    </b-modal>
+
   </div>
 </template>
 
@@ -61,8 +83,8 @@ export default {
       seller_trades: [],
       getSellers:[],
       buyer_trades: [],
-      getBuyers:[],
       selected: 0,
+      contact_info: '',
       options: [{ text: "판매자", value: 0 }, { text: "구매자", value: 1 }]
     };
   },
@@ -72,102 +94,50 @@ export default {
   computed: {
     computedList() {
       if (this.selected == 0) {
-        return this.buyer_trades;
-      } else {
         return this.seller_trades;
-      }
-    },
-    computedUser() {
-      if (this.selected == 0) {
-        return this.buyers;
       } else {
-        return this.sellers;
+        return this.buyer_trades;
       }
     },
     isLogged: function() {
       return this.$store.state.isLogged;
     }
   },
+  methods: {
+    openSellerContactModal: function(v, who){
+        console.log(v);
+      this.$http.get(`${this.$config.serverUri}trade/matched/` + v.trade_id + '/' + who).then(res => {
+          this.contact_info = res.data;
+      }).catch(err => {
+          this.contact_info = "";
+      });
+      this.$refs.sellerContactModal.show();
+    },
+    openBuyerContactModal: function(v, who){
+        console.log(v);
+      this.$http.get(`${this.$config.serverUri}trade/matched/` + v.trade_id + '/' + who).then(res => {
+        this.contact_info = res.data;
+      }).catch(err => {
+        this.contact_info = "";
+      });
+      this.$refs.buyerContactModal.show();
+    }
+  },
   async created() {
-    let user = this.$store.state.user;
-    if (user) {
-      //바이어 입장
-      console.log("유저", user);
-      var tmpBuyer = await this.$http.post(
-        `${this.$config.serverUri}match/buyer`,  //내가 바이어  -> 셀러 구하는 것
-        {
-          buyer_id: user._id
-        }
-      );
-      console.log(tmpBuyer.data)
-      this.seller_trades=tmpBuyer.data.trade
-      this.getSellers=tmpBuyer.data.seller
+    if (this.$store.state.isLogged) {
+        this.$http.get(`${this.$config.serverUri}match/seller`).then(res => {
+            this.seller_trades = res.data;
+            console.log(res.data);
+        }).catch(err => {
+            alert('내 판매 목록을 불러오는데 실패했습니다.. 새로고침 해주세요.');
+        });
 
-
-
-      var tmpSeller = await this.$http.post(
-        `${this.$config.serverUri}match/seller`,  //내가 바이어  -> 셀러 구하는 것
-        {
-          seller_id: user._id
-        }
-      );
-      console.log('셀러',tmpSeller.data)
-      this.buyer_trades=tmpSeller.data.trade
-      this.getBuyers=tmpSeller.data.buyer
-
-
-    
-
-      // console.log('템바',tmpBuyer.data)
-      // _.forEach(tmpBuyer.data.trade,(value,index)=>{
-      //   this.seller_trades.push(_.filter(this.$store.state.trades,{_id:value}))
-      //   console.log('구매자 발루',value)
-      // })
-
-      // _.forEach(tmpBuyer.data.user,async (value,index)=>{
-      //   console.log('구매자 유저!!',await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value}))
-      //   var temp=await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value})
-      //   this.sellers.push(temp.data)
-      // })
-      
-      //셀러 입장s
-      // console.log("셀러 유저", user);
-      // var tmpSeller = await this.$http.post(
-      //   `${this.$config.serverUri}match/seller`,
-      //   {
-      //     seller_id: user._id
-      //   }
-      // );
-      // var tmpSeller = this.$store.state.user;
-
-
-      // let totalbuyers = [];
-      // _.forEach(myTrades,(value,index)=>{
-      //   totalbuyers.push(value.buyers);
-      // })
-      
-      // _.forEach(tmpSeller.data.trade,(value,index)=>{
-      //   this.buyer_trades.push(_.filter(this.$store.state.trades,{_id:value}))
-      //   console.log('판매자 발루',value)
-      // })
-      // _.forEach(tmpSeller.data.user,async (value,index)=>{
-      //   console.log('판매자 유저',await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value}))
-      //   var temp=await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value})
-      //   this.buyers.push(temp.data)
-      // })
-
-      // let tmpSeller = await this.$http.post(
-      //   `${this.$config.serverUri}match/seller`,
-      //   {
-      //     seller_id: user._id
-      //   }
-      // );
-      // this.seller_trades = tmpSeller.data;
-
-      // for (var i = 0; i < this.seller_trades.user.length; i++) {
-      //   this.seller_trades.user[i].book = this.seller_trades.book[i];
-      // }
-      // console.log("바이어", this.seller_trades.user);
+        this.$http.get(`${this.$config.serverUri}match/buyer`).then(res => {
+            this.buyer_trades = res.data;
+            console.log(res.data);
+        }).catch(err => {
+           alert('내 구매 목록을 불러오는데 실패했습니다.. 새로고침 해주세요.')
+        });
     }
   }
 };

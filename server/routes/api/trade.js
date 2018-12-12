@@ -103,7 +103,8 @@ router.post('/upload_trade', function(req, res, next) {
                 price: req.body.price, // 판매자가 설정한 가격
                 buyers: [], // 최초 생성이니 빈 array
                 status: 0,
-                time_stamp: Date.now()
+                time_stamp: Date.now(),
+                location: req.body.location
             });
 
             trade_info.save(function (err) {
