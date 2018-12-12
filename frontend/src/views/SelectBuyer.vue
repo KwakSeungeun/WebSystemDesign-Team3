@@ -6,7 +6,7 @@
             </div>
             <div v-if="myMatcingList.length==0">
                 <div class="outline">
-                    <h4>종료된 책 장터가 없습니다.<br> 책을 장터에 등록해 쓰지 않는 책을 팔아보세요!</h4>
+                    <h4>등록된 책 장터가 없습니다.<br> 책을 장터에 등록해 쓰지 않는 책을 팔아보세요!</h4>
                     <router-link to="/sell">책 등록하기</router-link>
                 </div>
             </div>
