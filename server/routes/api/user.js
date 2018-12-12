@@ -67,24 +67,6 @@ router.get('/', (req,res)=>{
     });
 })
 
-router.post('/getInfo',async (req,res)=>{
-    let id=req.body.id
-    let user=await User.findOne({_id:id})
-    // if(req.decoded._id != user._id) {
-    //     res.status(403).send("please log in");
-    // }
-    // else {
-        let _id = user._id
-        let trade_id = user.trade_id
-        let name = user.name
-        let email = user.email
-        let phone = user.phone
-        let preference = user.preference
-        let alarms = user.alarms
-        res.send({_id, trade_id, name, email, phone, preference, alarms})
-    // }
-})
-
 router.put('/update',(req,res)=>{
     console.log('들어왔당')
     console.log(req.body)
