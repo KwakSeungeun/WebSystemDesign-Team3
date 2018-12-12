@@ -20,7 +20,7 @@
                         <b-form-input ref="authorInput" class="row-item w-10" type="text" placeholder="저자" readonly required
                                     v-model="form.author">
                         </b-form-input>
-                        <b-form-input ref="editionInput" class="row-item w-10" type="number" placeholder="판" required
+                        <b-form-input ref="editionInput" class="row-item w-10" type="number" placeholder="판"
                                     v-model="form.edition">
                         </b-form-input>
                         <button class="round-btn blue row-item" @click="openSearchModal">찾기</button>
@@ -303,7 +303,10 @@ export default {
                 alert("이미지 등록은 반드시 필요합니다!")
             } else if(this.form.price < 1000 || !this.form.price){
                 alert("1000원 이상의 가격으로 등록해 주세요!")
-            } else {
+            } else if(this.form.edition == 0){
+                alert("책의 판 수를 입력해 주세요!")
+            } 
+            else {
                 this.$http.post(`${this.$config.serverUri}trade/upload_trade`, formData).then(res => {
                     console.log(res.data);
                     alert('등록 되었습니다!');
