@@ -7,7 +7,7 @@
         <b-navbar-nav>
           <b-nav-item><router-link to="/">책 장터</router-link></b-nav-item>
           <b-nav-item><router-link to="/sell">내 책 팔기</router-link></b-nav-item>
-          <b-nav-item><router-link to="/select/buyer">종료된 장터(구매자 선택)</router-link></b-nav-item>
+          <b-nav-item><router-link to="/select/buyer">구매자 선택</router-link></b-nav-item>
           <b-nav-item><router-link to="/mysale">내 장터 현황</router-link></b-nav-item>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
