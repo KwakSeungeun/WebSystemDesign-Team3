@@ -21,12 +21,12 @@
 
             <div class="d-flex flex-row mb-3">
                 <label class="pt-2">기존 비밀번호</label>
-                <b-form-input v-model="previous_Pw" type="text" style="width: 60%; flex: 3"></b-form-input>
+                <b-form-input v-model="previous_Pw" type="password" style="width: 60%; flex: 3"></b-form-input>
             </div>
 
             <div class="d-flex flex-row mb-3">
                 <label class="pt-2">새비밀번호</label>
-                <b-form-input v-model="new_Pw" type="text" style="width: 60%; flex: 3"></b-form-input>
+                <b-form-input v-model="new_Pw" type="password" style="width: 60%; flex: 3"></b-form-input>
             </div>
             <div class="d-flex flex-row mb-3">
                 <label class="pt-2">비밀번호확인</label>
@@ -76,6 +76,7 @@
 
                 this.$http.put(`${this.$config.serverUri}user/update`,this.form).then((res)=>{
                     console.log("업데이트 성공",res);
+                    this.$store.commit('setUserUpdate', this.form);
                     alert("정보 업데이트 성공");
                 }).catch(err=>{
                     if(err.response.data == 'password_error') {
