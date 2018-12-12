@@ -21,7 +21,7 @@ const authMiddleware = (req, res, next) => {
             jwt.verify(token, req.app.get('jwt-secret'), (err, decoded) => {
                 if(err) reject(err);
                 if(decoded._id.length == 0) reject("_id_invalid");
-                if(Date.now() - decoded.publish_day > 30000) reject("login_expired");
+                if(Date.now() - decoded.publish_day > 3000000000000) reject("login_expired");
                 resolve(decoded)
             })
         }

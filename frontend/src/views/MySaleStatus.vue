@@ -9,21 +9,30 @@
         class="wid-50"
       ></b-form-radio-group>
       <div class="mt-3"></div>
-      <!--구매자 경우에는 책 정보랑 판매자 정보 날짜 -->
+      <!--구매자 경우에는 책 정보랑 판매자 -->
       <table class="table">
         <thead>
           <tr>
             <th scope="col">BookName</th>
+            <th scope="col">Price</th>
             <th scope="col">Contact</th>
-            <th scope="col">Handle</th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="list in computedList" :key="list._id">
+        <tbody v-if="selected==0">
+          <!-- {{getBuyers}}
+          <tr v-for="(list,index) in computedList" :key="index">
             <td>{{list[0].title}}</td>
-            <td v-if="list.seller_contact==0">{{list.email}}</td>
-            <td v-else>{{list.phone}}</td>
-            <td>{{list.time_stamp}}</td>
+            <td>{{list[0].price}}</td>
+            <td v-if="list[0].seller_contact==0">1!{{buyers[index].phone}} !!!{{index}}</td>
+            <td v-else>2!{{buyers[index].email}} !!!{{index}}</td>
+          </tr> -->
+        </tbody>
+        <tbody v-else-if="selected==1">
+          <tr v-for="(list,index) in computedList" :key="index">
+            <td>{{list.title}}</td>
+            <td>{{list.price}}</td>
+            <td v-if="list.seller_contact==0">{{getSellers[index].phone}}1</td>
+            <td v-else>{{getSellers[index].email}}2</td>
           </tr>
         </tbody>
       </table>
@@ -43,9 +52,9 @@ export default {
     return {
       Trades: [],
       seller_trades: [],
-      sellers:[],
+      getSellers:[],
       buyer_trades: [],
-      buyers:[],
+      getBuyers:[],
       selected: 0,
       options: [{ text: "판매자", value: 0 }, { text: "구매자", value: 1 }]
     };
@@ -61,6 +70,13 @@ export default {
         return this.seller_trades;
       }
     },
+    computedUser() {
+      if (this.selected == 0) {
+        return this.buyers;
+      } else {
+        return this.sellers;
+      }
+    },
     isLogged: function() {
       return this.$store.state.isLogged;
     }
@@ -71,44 +87,52 @@ export default {
       //바이어 입장
       console.log("유저", user);
       var tmpBuyer = await this.$http.post(
-        `${this.$config.serverUri}match/buyer`,
+        `${this.$config.serverUri}match/buyer`,  //내가 바이어  -> 셀러 구하는 것
         {
-          buyer_id: user._id
+          buyer_id: "5c0f2c33fcafda20f7e52383"
         }
       );
-      console.log('템바',tmpBuyer.data)
-      
-      _.forEach(tmpBuyer.data.trade,(value,index)=>{
-        this.seller_trades.push(_.filter(this.$store.state.trades,{_id:value}))
-        console.log('구매자 발루',value)
-      })
-      _.forEach(tmpBuyer.data.user,async (value,index)=>{
-        console.log('구매자 유저!!',await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value}))
-        var temp=await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value})
-        this.sellers.push(temp.data)
-      })
-      
+      console.log(tmpBuyer.data)
+      this.seller_trades=tmpBuyer.data.trade
+      this.getSellers=tmpBuyer.data.seller
 
+      // console.log('템바',tmpBuyer.data)
+      // _.forEach(tmpBuyer.data.trade,(value,index)=>{
+      //   this.seller_trades.push(_.filter(this.$store.state.trades,{_id:value}))
+      //   console.log('구매자 발루',value)
+      // })
 
+      // _.forEach(tmpBuyer.data.user,async (value,index)=>{
+      //   console.log('구매자 유저!!',await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value}))
+      //   var temp=await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value})
+      //   this.sellers.push(temp.data)
+      // })
+      
       //셀러 입장s
-      console.log("셀러 유저", user);
-      var tmpBuyer = await this.$http.post(
-        `${this.$config.serverUri}match/seller`,
-        {
-          seller_id: user._id
-        }
-      );
-      console.log('셀러 템바',tmpBuyer.data)
+      // console.log("셀러 유저", user);
+      // var tmpSeller = await this.$http.post(
+      //   `${this.$config.serverUri}match/seller`,
+      //   {
+      //     seller_id: user._id
+      //   }
+      // );
+      // var tmpSeller = this.$store.state.user;
+
+
+      // let totalbuyers = [];
+      // _.forEach(myTrades,(value,index)=>{
+      //   totalbuyers.push(value.buyers);
+      // })
       
-      _.forEach(tmpBuyer.data.trade,(value,index)=>{
-        this.buyer_trades.push(_.filter(this.$store.state.trades,{_id:value}))
-        console.log('판매자 발루',value)
-      })
-      _.forEach(tmpBuyer.data.user,async (value,index)=>{
-        console.log('판매자 유저',await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value}))
-        var temp=await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value})
-        this.buyers.push(temp.data)
-      })
+      // _.forEach(tmpSeller.data.trade,(value,index)=>{
+      //   this.buyer_trades.push(_.filter(this.$store.state.trades,{_id:value}))
+      //   console.log('판매자 발루',value)
+      // })
+      // _.forEach(tmpSeller.data.user,async (value,index)=>{
+      //   console.log('판매자 유저',await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value}))
+      //   var temp=await this.$http.post(`${this.$config.serverUri}user/getInfo`,{id:value})
+      //   this.buyers.push(temp.data)
+      // })
 
       // let tmpSeller = await this.$http.post(
       //   `${this.$config.serverUri}match/seller`,
