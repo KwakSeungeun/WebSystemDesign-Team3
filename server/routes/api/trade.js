@@ -240,6 +240,8 @@ router.post('/suggest_price', function(req, res, next) {
             }
         });
     }).then(function(result) {
+        return Users.update({_id: req.decoded._id}, { $push: { trade_id: req.body.trade_id }});
+    }).then(function(result) {
         Users.update({_id: ObjectId(tmp)}, {$push: { alarms: {
                     trade_id: req.body.trade_id,
                     contents: "누군가가 새로운 가격을 제시했습니다!",
