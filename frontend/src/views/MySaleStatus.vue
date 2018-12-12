@@ -19,13 +19,12 @@
           </tr>
         </thead>
         <tbody v-if="selected==0">
-          <!-- {{getBuyers}}
           <tr v-for="(list,index) in computedList" :key="index">
-            <td>{{list[0].title}}</td>
-            <td>{{list[0].price}}</td>
-            <td v-if="list[0].seller_contact==0">1!{{buyers[index].phone}} !!!{{index}}</td>
-            <td v-else>2!{{buyers[index].email}} !!!{{index}}</td>
-          </tr> -->
+            <td>{{list.title}}</td>
+            <td>{{list.price}}</td>
+            <td v-if="list.seller_contact==0">1!{{getBuyers[index].phone}} !!!{{index}}</td>
+            <td v-else>2!{{getBuyers[index].email}} !!!{{index}}</td>
+          </tr>
         </tbody>
         <tbody v-else-if="selected==1">
           <tr v-for="(list,index) in computedList" :key="index">
@@ -89,12 +88,24 @@ export default {
       var tmpBuyer = await this.$http.post(
         `${this.$config.serverUri}match/buyer`,  //내가 바이어  -> 셀러 구하는 것
         {
-          buyer_id: "5c0f2c33fcafda20f7e52383"
+          buyer_id: user._id
         }
       );
       console.log(tmpBuyer.data)
       this.seller_trades=tmpBuyer.data.trade
       this.getSellers=tmpBuyer.data.seller
+
+
+
+      var tmpSeller = await this.$http.post(
+        `${this.$config.serverUri}match/seller`,  //내가 바이어  -> 셀러 구하는 것
+        {
+          seller_id: user._id
+        }
+      );
+      console.log('셀러',tmpSeller.data)
+      this.buyer_trades=tmpSeller.data.trade
+      this.getBuyers=tmpSeller.data.buyer
 
       // console.log('템바',tmpBuyer.data)
       // _.forEach(tmpBuyer.data.trade,(value,index)=>{
