@@ -47,20 +47,17 @@ router.post('/alarms/delete', function(req, res, next) {
 });
 
 router.get('/', (req,res)=>{
-    User.find({_id: req.decoded._id}).then(function(user) {
-        if (req.decoded._id != user._id) {
-            res.status(403).send("please log in");
-        }
-        else {
-            let _id = user._id
-            let trade_id = user.trade_id
-            let name = user.name
-            let email = user.email
-            let phone = user.phone
-            let preference = user.preference
-            let alarms = user.alarms
-            res.send({_id, trade_id, name, email, phone, preference, alarms})
-        }
+    const objectId = mongoose.Types.ObjectId;
+    User.find({_id: objectId(req.decoded._id)}).then(function(result) {
+        user = result[0];
+        let _id = user._id
+        let trade_id = user.trade_id
+        let name = user.name
+        let email = user.email
+        let phone = user.phone
+        let preference = user.preference
+        let alarms = user.alarms
+        res.send({_id, trade_id, name, email, phone, preference, alarms});
     }).catch(function(err) {
         console.log(err);
         res.status(500).send("server error");
