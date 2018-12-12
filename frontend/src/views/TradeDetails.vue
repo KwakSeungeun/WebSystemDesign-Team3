@@ -188,8 +188,8 @@ export default {
             }
 
             let selectedContact = '';
-            if(this.selected=='eamil') selectedContact = this.$store.state.user.email;
-            else selectedContact = this.$store.state.user.phone;
+            if(this.selected=='eamil') selectedContact = 0;
+            else selectedContact = 1;
 
             let createBuyerObj = {
                 trade_id: this.trade._id,

@@ -16,7 +16,7 @@ router.get('/buyer',(req,res)=>{
     const objectId = mongoose.Types.ObjectId;
     Match.find({buyer_id: req.decoded._id}).then(result=>{
         async.each(result, function(info, callback) {
-            let obj = { trade_id: info.trade_id, preference: '', price: 0, title: '' };
+            let obj = { trade_id: info.trade_id, location: '', price: 0, title: '' };
             Trade.find({_id: objectId(info.trade_id)}).then(result=>{
                 if(result.length == 0) {
                     callback(new Error("500 error"));
@@ -24,7 +24,7 @@ router.get('/buyer',(req,res)=>{
                 else {
                     obj.title = result[0].title;
                     obj.price = result[0].price;
-                    obj.preference = result[0].location;
+                    obj.location = result[0].location;
                     send_info.push(obj);
                     callback(null);
                 }
@@ -44,7 +44,7 @@ router.get('/seller',async (req,res)=>{
     const objectId = mongoose.Types.ObjectId;
     Match.find({seller_id: req.decoded._id}).then(result=>{
         async.each(result, function(info, callback) {
-            let obj = { trade_id: info.trade_id, preference: '', price: 0, title: '' };
+            let obj = { trade_id: info.trade_id, location: '', price: 0, title: '' };
             Trade.find({_id: objectId(info.trade_id)}).then(result=>{
                 if(result.length == 0) {
                     callback(new Error("500 error"));
@@ -54,7 +54,7 @@ router.get('/seller',async (req,res)=>{
                         if (result[0].buyers[i].buyer_id == info.buyer_id) {
                             obj.title = result[0].title;
                             obj.price = result[0].buyers[i].price;
-                            obj.preference = result[0].buyers[i].location;
+                            obj.location = result[0].buyers[i].location;
                             break;
                         }
                     }
