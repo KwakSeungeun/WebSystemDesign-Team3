@@ -47,8 +47,14 @@ router.post('/alarms/delete', function(req, res, next) {
 });
 
 router.get('/', (req,res)=>{
+    let flag = false;
     const objectId = mongoose.Types.ObjectId;
     User.find({_id: objectId(req.decoded._id)}).then(function(result) {
+        if(result.length == 0) {
+            flag = true;
+            res.status(404).send("there is no user");
+            throw Error("404 error");
+        }
         user = result[0];
         let _id = user._id
         let trade_id = user.trade_id
@@ -60,38 +66,47 @@ router.get('/', (req,res)=>{
         res.send({_id, trade_id, name, email, phone, preference, alarms});
     }).catch(function(err) {
         console.log(err);
-        res.status(500).send("server error");
+        if(!flag) res.status(500).send("server error");
     });
 })
 
 router.put('/update',(req,res)=>{
-    console.log('들어왔당')
-    console.log(req.body)
+    //console.log('들어왔당')
+    //console.log(req.body)
 
-    User.findOne({email:req.body.email},(err,user)=>{
-        if(user._id != req.decoded._id) {
-            res.status(403).send({message:"user id and login id are different"});
-        }
-        else if(err){
-            return res.status(500).json({message:"cannot find email"})
-        }else{
-            console.log(user)
-            user.pw=req.body.pw,
-            user.phone=req.body.phone,
-            user.preference=req.body.preference, // 선호하는 판매장소
-        
-            user.save(err=>{
-                console.log('여기당')
-                if(err){
-                    res.status(500).json({message:"update failed"})
-                }
-                else{
-                    res.json({message:"userInfo updated"})
-                }
-            })
+    const objectId = mongoose.Types.ObjectId;
+    let flag = false;
+
+    User.find({_id:objectId(req.decoded._id)}).then(result=>{
+        if(result.length == 0) {
+            flag = true;
+            res.status(404).send("there is no user");
+            throw new Error("404 error");
         }
 
-    })
+        if(result[0].pw != req.body.b_pw) {
+            flag = true;
+            res.status(403).send("password_error");
+            throw new Error("403 error");
+        }
+
+        let user = {
+            pw: req.body.a_pw,
+            phone: req.body.phone,
+            preference:req.body.preference
+        };
+
+        User.update({_id: objectId(req.decoded._id)}, {$set: user}).then(result => {
+            console.log(result);
+            res.send("success");
+        }).catch(err => {
+            console.log(err);
+            res.status(500).send("server_error");
+        })
+    }).catch(err => {
+        console.log(err);
+        if(!flag) res.status(500).send("server_error");
+    });
 })
 
 

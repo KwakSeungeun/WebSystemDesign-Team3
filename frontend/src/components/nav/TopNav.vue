@@ -71,6 +71,7 @@
       hide-footer
       id="userInfoModal">
       <p>유저 정보</p>
+      <user-info />
     </b-modal>
     <b-modal
       no-close-on-backdrop
@@ -91,6 +92,7 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 import LoginForm from "../modal/LoginForm"
 import RegisterForm from "../modal/RegisterForm";
 import AlarmDetails from "../modal/AlarmDetails";
+import UserInfo from "../modal/UserInfo"
 import Vue from 'vue'
 
 const Push = require('push.js');
@@ -103,6 +105,7 @@ export default {
     errMsg : ''
   }),
   components:{
+      UserInfo,
     LoginForm,
     RegisterForm,
     AlarmDetails,
@@ -127,6 +130,7 @@ export default {
       this.$refs.registerRef.show();
     },
     openUpdateModal: function(){
+      this.$EventBus.$emit('user_info_update');
       this.$refs.userInfoModal.show();
     },
     openAlarmModal: function(){

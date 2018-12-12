@@ -12,6 +12,12 @@ export const store = new Vuex.Store({
       notice: 0
   },
   mutations:{
+    setUserUpdate: function(state, value) {
+      for(let key of Object.keys(value)) {
+        if(key == 'a_pw' || key == 'b_pw') continue;
+        this.state.user[key] = value[key];
+      }
+    },
     setNoticeZero: function(state) {
       this.state.notice = 0;
     },

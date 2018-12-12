@@ -50,7 +50,7 @@ router.post('/', function(req, res, next) {
             from: 'AjouBookTrade <no-reply@gmail.com>',
             to: req.body.email,
             subject: '아주 북 트레이드 이메일 인증입니다.',
-            text: 'http://localhost:3000/auth/register/authorization/' + etoken
+            text: `${config.serverUrl}/auth/register/authorization/`+ etoken
         };
 
         var user_obj = new User({
@@ -88,7 +88,7 @@ router.post('/', function(req, res, next) {
             }
             else {
                 if (result[0].auth) {
-                    res.send({success: "already"});
+                    res.status(400).send({success: "already"});
                 }
                 else {
                     var query = {email: req.body.email};

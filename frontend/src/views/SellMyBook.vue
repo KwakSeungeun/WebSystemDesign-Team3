@@ -154,7 +154,8 @@ export default {
                 comment: '',
                 state: 0, //0(상태 나쁨)~5(상태좋음)
                 price: 0,
-                time_stamp: ''
+                time_stamp: '',
+                location: ''
             },
             step: 0, // 책 기본 정보 검색 , 0: 초기 검색, 1: 검색 성공, 2: 검색 실패(직접 입력)
             searchText: '',
@@ -281,6 +282,10 @@ export default {
                 if(index == this.tags.length-1) this.form.tag += value;
                 else this.form.tag += `${value},`;
             });
+
+            if(this.$store.state.user)  this.form.location = this.$store.state.user;
+            else this.form.location = null;
+            console.log('form.location', this.form.location);
 
             let formData = new FormData();
             for(let key of Object.keys(this.form)) {
