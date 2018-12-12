@@ -46,22 +46,25 @@ router.post('/alarms/delete', function(req, res, next) {
     });
 });
 
-router.get('/:email',async (req,res)=>{
-    let uemail=req.params.email
-    let user=await User.findOneByEmail(uemail)
-    if(req.decoded._id != user._id) {
-        res.status(403).send("please log in");
-    }
-    else {
-        let _id = user._id
-        let trade_id = user.trade_id
-        let name = user.name
-        let email = user.email
-        let phone = user.phone
-        let preference = user.preference
-        let alarms = user.alarms
-        res.send({_id, trade_id, name, email, phone, preference, alarms})
-    }
+router.get('/', (req,res)=>{
+    User.find({_id: req.decoded._id}).then(function(user) {
+        if (req.decoded._id != user._id) {
+            res.status(403).send("please log in");
+        }
+        else {
+            let _id = user._id
+            let trade_id = user.trade_id
+            let name = user.name
+            let email = user.email
+            let phone = user.phone
+            let preference = user.preference
+            let alarms = user.alarms
+            res.send({_id, trade_id, name, email, phone, preference, alarms})
+        }
+    }.catch(function(err) {
+        console.log(err);
+        res.status(500).send("server error");
+    });
 })
 
 router.post('/getInfo',async (req,res)=>{
