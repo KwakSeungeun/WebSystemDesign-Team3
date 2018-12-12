@@ -90,11 +90,20 @@ router.put('/update',(req,res)=>{
             throw new Error("403 error");
         }
 
-        let user = {
-            pw: req.body.a_pw,
-            phone: req.body.phone,
-            preference:req.body.preference
-        };
+        let user;
+        if(req.body.a_pw != ''){
+            user = {
+                pw: req.body.a_pw,
+                phone: req.body.phone,
+                preference:req.body.preference
+            };
+        }
+        else {
+            user = {
+                phone: req.body.phone,
+                preference:req.body.preference
+            };
+        }
 
         User.update({_id: objectId(req.decoded._id)}, {$set: user}).then(result => {
             console.log(result);

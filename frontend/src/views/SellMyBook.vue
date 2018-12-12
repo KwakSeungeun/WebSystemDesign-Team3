@@ -77,7 +77,7 @@
                     </b-input-group>
                 </b-form-group>
                 <hr>
-                <button style="width: 100%; height: 50px;" class="round-btn" type="submit" @click="submit">내 책 장터 열기</button>
+                <button style="width: 100%; height: 50px;" class="round-btn" type="submit">내 책 장터 열기</button>
             </b-form>
         </div>
         <div v-if="!isLogged" class="outline"> 
@@ -250,8 +250,7 @@ export default {
             this.clearSearch();
         },
         createTrade: function(event){
-            // 판매자 연락처 check를 통해 
-            console.log("FORM: ",this.form);
+            this.submit();
             event.preventDefault();
         },
         uploadImageSuccess(formData, index, fileList) {
