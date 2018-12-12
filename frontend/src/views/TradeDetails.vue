@@ -192,7 +192,7 @@ export default {
             }
 
             let selectedContact = '';
-            if(this.selected=='eamil') selectedContact = 0;
+            if(this.selected == 'email') selectedContact = 0;
             else selectedContact = 1;
 
             let createBuyerObj = {
