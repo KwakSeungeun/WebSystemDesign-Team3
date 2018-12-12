@@ -77,7 +77,7 @@ router.put('/update',(req,res)=>{
     const objectId = mongoose.Types.ObjectId;
     let flag = false;
 
-    User.findOne({_id:objectId(req.decoded._id)}).then(result=>{
+    User.find({_id:objectId(req.decoded._id)}).then(result=>{
         if(result.length == 0) {
             flag = true;
             res.status(404).send("there is no user");
@@ -96,8 +96,8 @@ router.put('/update',(req,res)=>{
             preference:req.body.preference
         };
 
-        User.update({_id: objectId(req.decoded._id)}, {$set: user}).then(res => {
-            console.log(res);
+        User.update({_id: objectId(req.decoded._id)}, {$set: user}).then(result => {
+            console.log(result);
             res.send("success");
         }).catch(err => {
             console.log(err);
