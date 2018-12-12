@@ -47,8 +47,14 @@ router.post('/alarms/delete', function(req, res, next) {
 });
 
 router.get('/', (req,res)=>{
+    let flag = false;
     const objectId = mongoose.Types.ObjectId;
     User.find({_id: objectId(req.decoded._id)}).then(function(result) {
+        if(result.length == 0) {
+            flag = true;
+            res.status(404).send("there is no user");
+            throw Error("404 error");
+        }
         user = result[0];
         let _id = user._id
         let trade_id = user.trade_id
@@ -60,7 +66,7 @@ router.get('/', (req,res)=>{
         res.send({_id, trade_id, name, email, phone, preference, alarms});
     }).catch(function(err) {
         console.log(err);
-        res.status(500).send("server error");
+        if(!flag) res.status(500).send("server error");
     });
 })
 
@@ -84,7 +90,7 @@ router.put('/update',(req,res)=>{
             throw new Error("403 error");
         }
 
-        user = {
+        let user = {
             pw: req.body.a_pw,
             phone: req.body.phone,
             preference:req.body.preference
