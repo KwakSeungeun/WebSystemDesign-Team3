@@ -32,3 +32,10 @@ cd ./server
 npm install
 npm start
 ```
+
+#### daemon
+```
+cd ./daemon
+npm install
+node expire_checker.js
+```
