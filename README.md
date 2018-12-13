@@ -8,12 +8,6 @@
 
 ## Follow this section
 
-### css framework
-
-https://vue-material-old.netlify.com/#/components/dialog
-
----
-
 ### how to untrack config.js
 
 ```
