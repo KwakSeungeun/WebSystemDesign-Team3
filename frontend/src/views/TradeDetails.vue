@@ -5,7 +5,7 @@
             <b v-if="checkSelf" style="color: #E74C3C; margin-top: 10px; margin-bottom: 10px;">자신이 등록한 중고 장터 입니다!</b><br>
             <b v-if="trade.status==0" style="font-size: 24px; margin-right: 20px;">
                 장터 마감까지 <span style="color: #E74C3C">{{dueDate}}</span> 일 남았습니다!</b>
-            <b v-if="trade.status==0">현재 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여중!</b>
+            <b v-if="trade.status==0">현재 <span style="color: #E74C3C">{{buyers_length}}</span>명 장터에 참여중!</b>
             <b v-if="trade.status==1||trade.status==2||trade.status==3" style="font-size: 24px; margin-right: 20px;">
                 마감된 장터 입니다.</b>
             <b v-if="trade.status==1||trade.status==2||trade.status==3">총 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여 했음</b>
@@ -100,6 +100,7 @@ export default {
             ],
             checkSelf: false,
             errMsg: '',
+            buyers_length: 0
         }
     },
     computed: {
@@ -209,6 +210,13 @@ export default {
             .then((res)=>{
                 console.log("가격제시 성공",res);
                 alert("판매자에게 제시한 가격 정보가 갔습니다!");
+
+                this.$http.get(`${this.$config.serverUri}trade/buyers_length/` + this.trade_id).then(res => {
+                    this.buyers_length = parseInt(res.data.buyers_length);
+                }).catch(err=>{
+                    this.buyers_length = 0;
+                    alert('구매자들을 불러오는데 실패했습니다!');
+                });
             }).catch(err=>{
                 if(err.response.data != undefined) {
                     if (err.response.data.success == "there_is_already_end_trade") alert('이미 종료된 장터입니다..');
@@ -240,6 +248,13 @@ export default {
             alert("서버에 에러가 생겼습니다. 다시 시도해 주세요!")
             return;
         }
+
+        this.$http.get(`${this.$config.serverUri}trade/buyers_length/` + this.trade_id).then(res => {
+            this.buyers_length = parseInt(res.data.buyers_length);
+        }).catch(err=>{
+            this.buyers_length = 0;
+            alert('구매자들을 불러오는데 실패했습니다!');
+        });
     }
 }
 </script>
