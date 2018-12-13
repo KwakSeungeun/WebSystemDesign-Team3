@@ -169,6 +169,7 @@ router.post('/delete', function(req, res, next) {
         }
     });
 });
+
 router.use('/suggest_price',function(req,res,next){
     if(req.body.trade_id==null || req.body.trade_id==undefined)
         res.status(400).send("trade_id error");
@@ -492,6 +493,23 @@ router.post('/close',function(req,res){
     }).catch(function(err) {
         console.log(err);
         if(!flag) res.status(500).json({error: 'database failure'});
+    });
+});
+
+
+router.get('/buyers_length/:trade_id', function(req, res, next) {
+    const ObjectId = mongoose.Types.ObjectId;
+    let flag = false;
+    Trade.findOne({_id: ObjectId(req.params.trade_id)}).then(result=>{
+        if(result.buyers == undefined) {
+            flag = true;
+            res.status(404).send("not found");
+            throw new Error("404 Error");
+        }
+        res.send({buyers_length: result.buyers.length});
+    }).catch(err => {
+        console.log(err);
+        if(!flag) res.status(500).send("server error");
     });
 });
 
