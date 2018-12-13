@@ -80,7 +80,7 @@ funct = function() {
                 console.log(err);
                 return resolve(err);
             });
-        }, 3000);
+        }, 86400000);
     });
 }
 
