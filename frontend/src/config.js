@@ -1,4 +1,3 @@
-// local environment
 export default {
     // local
     // 'serverUri' : 'http://localhost:3000/',

@@ -1,4 +1,4 @@
 // local environment
 module.exports = {
-    'mongodbUri' : 'mongodb://localhost:27017/WebTests'
+    'mongodbUri' : 'mongodb://127.0.0.1:27017/WebTests'
 };
