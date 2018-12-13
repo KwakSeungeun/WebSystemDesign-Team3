@@ -2,7 +2,7 @@
     <div id="details">
         <b-button class="round-btn float-btn" @click="openModal">중고 거래장터 참여하기</b-button>
         <div class="top">
-            <b v-if="checkSelf">자신이 등록한 중고 장터 입니다!</b><br>
+            <b v-if="checkSelf" style="color: #E74C3C; margin-top: 10px; margin-bottom: 10px;">자신이 등록한 중고 장터 입니다!</b><br>
             <b style="font-size: 24px; margin-right: 20px;">
                 장터 마감까지 <span style="color: #E74C3C">{{dueDate}}</span> 일 남았습니다!</b>
             <b>현재 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여중!</b>

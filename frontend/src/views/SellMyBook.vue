@@ -50,7 +50,7 @@
                             v-bind:star-size="50"></star-rating> 
                     </div>
                         <b-input-group class="row-item" prepend="가격" append="원">
-                            <b-form-input  required type="number" v-model="form.price"></b-form-input>
+                            <b-form-input ref="priceInput" required type="number" v-model="form.price"></b-form-input>
                         </b-input-group>
                     </b-form-group>
                 <hr>
@@ -64,7 +64,7 @@
                         </b-input-group>
                     </div>
                     <div class="row-align" style="margin-bottom: 20px;">
-                        <div v-for="(tag,index) in tags" :key="index" class="tag-container row-item">
+                        <div style="overflow: hidden;" v-for="(tag,index) in tags" :key="index" class="tag-container row-item">
                             <div class="hidden-overflow-text">{{tag}}</div>
                             <button class="no-bg-btn float-right" type="button" @click="removeTags(index)">
                                 <i class="fa fa-close"></i>
@@ -200,8 +200,10 @@ export default {
             this.tagInput = '';
         },
         removeTags: function(index){
+            console.log('tag 삭제전:',this.tags)
             this.tags.splice(index,1);
             this.tags = this.tags;
+            console.log('tag 삭제 후:',this.tags)
         },
         onSellectBook: function(book) {
             this.$refs.searchBook.hide();
@@ -287,10 +289,14 @@ export default {
             if(this.selected == 'email') this.form.seller_contact = 0;
             else this.form.seller_contact = 1;
 
-            await _.forEach(this.tags,(value, index)=>{
+            console.log("form data 보내기 전 : ",this.tags)
+            _.forEach(this.tags,(value, index)=>{
                 if(index == this.tags.length-1) this.form.tag += value;
                 else this.form.tag += `${value},`;
             });
+            console.log('tage들:',this.form.tag);
+
+            console.log('form 데이터 만들기 전:',this.form);
 
             let formData = new FormData();
             for(let key of Object.keys(this.form)) {
@@ -307,16 +313,17 @@ export default {
                 this.$refs.titleInput.focus();
             } else if(!this.form.author){
                 this.$refs.authorInput.focus();
-            } else if(!this.form.edition){
+            } else if(!this.form.edition > 0){
+                alert("책의 판 수를 정확히 입력해 주세요!(음수, 0 판 불가!)")
                 this.$refs.editionInput.focus();
             } else if(this.form.images.length == 0){
                 alert("이미지 등록은 반드시 필요합니다!")
             } else if(this.form.price < 1000 || !this.form.price){
                 alert("1000원 이상의 가격으로 등록해 주세요!")
-            } else if(this.form.edition == 0){
-                alert("책의 판 수를 입력해 주세요!")
-            } 
+                this.$refs.priceInput.focus();
+            }
             else {
+                console.log('등록 직전 form : ',this.form)
                 this.$http.post(`${this.$config.serverUri}trade/upload_trade`, formData).then(res => {
                     console.log(res.data);
                     alert('등록 되었습니다!');
