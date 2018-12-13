@@ -1,14 +1,14 @@
 <template>
     <div id="details">
-        <b-button class="round-btn float-btn" @click="openModal">중고 거래장터 참여하기</b-button>
+        <b-button class="round-btn float-btn" @click="openModal" v-if="trade.status==0">중고 거래장터 참여하기</b-button>
         <div class="top">
             <b v-if="checkSelf" style="color: #E74C3C; margin-top: 10px; margin-bottom: 10px;">자신이 등록한 중고 장터 입니다!</b><br>
-            <b style="font-size: 24px; margin-right: 20px;">
+            <b v-if="trade.status==0" style="font-size: 24px; margin-right: 20px;">
                 장터 마감까지 <span style="color: #E74C3C">{{dueDate}}</span> 일 남았습니다!</b>
-            <b>현재 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여중!</b>
-            <b v-if="duDate<0" style="font-size: 24px; margin-right: 20px;">
+            <b v-if="trade.status==0">현재 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여중!</b>
+            <b v-if="trade.status==1||trade.status==2||trade.status==3" style="font-size: 24px; margin-right: 20px;">
                 마감된 장터 입니다.</b>
-            <b v-if="duDate<0">총 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여 했음</b>
+            <b v-if="trade.status==1||trade.status==2||trade.status==3">총 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여 했음</b>
             <br><br>
             <div class="row-align">
                 <div style="margin-right: 5%;">판매자 희망가격 : <b>{{price}}원</b></div>
@@ -99,7 +99,7 @@ export default {
                 {text: '핸드폰', value:'phone'}
             ],
             checkSelf: false,
-            errMsg: ''
+            errMsg: '',
         }
     },
     computed: {
