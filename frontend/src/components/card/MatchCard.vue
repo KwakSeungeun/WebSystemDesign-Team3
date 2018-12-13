@@ -35,6 +35,9 @@
                 <button @click="closeTrade" style="width: 50%; margin: 5px;" class="round-btn">장터 종료하기</button>
             </div>
         </b-modal>
+        <b-modal id="successModal" ref="successModal" title="판" hide-footer centerd>
+            <p>지금 장터를 종료하면 이 책을 선택한 다른 사용자들과의 거래가 불가능 합니다.</p>
+        </b-modal>
     </div>
 </template>
 

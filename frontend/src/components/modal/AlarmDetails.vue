@@ -39,7 +39,7 @@
                     return 0;
                 }
 
-                return this.$store.state.alarmList.sort(compare);
+                return this.$store.state.alarmList.reverse().sort(compare);
             },
             alarmList: function() {
                 return this.$store.state.alarmList;
