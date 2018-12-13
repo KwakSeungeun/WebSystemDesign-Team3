@@ -5,5 +5,5 @@ export default {
     
     // server
     'image' : 'http://127.0.0.1:3000/Image/',
-    'serverUri' : 'http://127.0.0.1:3000'
+    'serverUri' : 'http://127.0.0.1:3000/'
 }
