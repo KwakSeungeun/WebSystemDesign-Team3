@@ -2,6 +2,7 @@
     <div id="details">
         <b-button class="round-btn float-btn" @click="openModal">중고 거래장터 참여하기</b-button>
         <div class="top">
+            <b v-if="checkSelf">자신이 등록한 중고 장터 입니다!</b><br>
             <b style="font-size: 24px; margin-right: 20px;">
                 장터 마감까지 <span style="color: #E74C3C">{{dueDate}}</span> 일 남았습니다!</b>
             <b>현재 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여중!</b>
@@ -160,22 +161,22 @@ export default {
                 this.$refs.buyModal.show();
             }
             let err = null;
-            await this.$http.get(`${this.$config.serverUri}trade/my_trade_list`)
-            .then(res=>{
-                _.forEach(res.data.trade_list, (value, index)=>{
-                    if(value._id === this.trade._id){
-                        this.checkSelf = true;
-                        return;
-                    }
-                });
-            })
-            .catch(err=>{
-                console.log("call my trade error\n",err);
-            });   
-            if(err){
-                alert("서버에 에러가 생겼습니다. 다시 시도해 주세요!")
-                return;
-            }    
+            // await this.$http.get(`${this.$config.serverUri}trade/my_trade_list`)
+            // .then(res=>{
+            //     _.forEach(res.data.trade_list, (value, index)=>{
+            //         if(value._id === this.trade._id){
+            //             this.checkSelf = true;
+            //             return;
+            //         }
+            //     });
+            // })
+            // .catch(err=>{
+            //     console.log("call my trade error\n",err);
+            // });   
+            // if(err){
+            //     alert("서버에 에러가 생겼습니다. 다시 시도해 주세요!")
+            //     return;
+            // }    
             if (this.checkSelf){
                 this.openErrModal();
                 return;
@@ -218,21 +219,40 @@ export default {
             this.$refs.buyModal.hide();
         }
     },
-    created: function(){
+    created: async function(){
+        let User = this.$store.state.user;
         this.checkSelf = false
+        let err = null;
+        await this.$http.get(`${this.$config.serverUri}trade/my_trade_list`)
+            .then(res=>{
+                _.forEach(res.data.trade_list, (value, index)=>{
+                    if(value._id === this.trade._id){
+                        this.checkSelf = true;
+                    return;
+                } else this.checkSelf = false;
+            });
+        })
+        .catch(err=>{
+            console.log("call my trade error\n",err);
+        });   
+        if(err){
+            alert("서버에 에러가 생겼습니다. 다시 시도해 주세요!")
+            return;
+        }
     }
 }
 </script>
 
 <style>
 #details{
-    margin: 0% 2% 0% 2%;
+    /* background: blue; */
+    margin: 0% 2% 70px 2%;
 }
 .round-btn.float-btn{
     position: absolute;
     padding: 20px;
     font-size: 20px;
-    bottom: 50px;
+    bottom: 20px;
     right: 50px;
 }
 .top {
