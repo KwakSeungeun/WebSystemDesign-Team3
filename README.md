@@ -7,9 +7,12 @@
 201620902 - 서병찬
 
 ## Follow this section
+
 ### css framework
 
 https://vue-material-old.netlify.com/#/components/dialog
+
+---
 
 ### how to untrack config.js
 
@@ -17,6 +20,8 @@ https://vue-material-old.netlify.com/#/components/dialog
 git update-index --assume-unchanged ./front/src/config.js
 git update-index --assume-unchanged ./server/config.js
 ```
+
+---
 
 ### get started
 
