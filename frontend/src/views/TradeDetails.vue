@@ -6,6 +6,9 @@
             <b style="font-size: 24px; margin-right: 20px;">
                 장터 마감까지 <span style="color: #E74C3C">{{dueDate}}</span> 일 남았습니다!</b>
             <b>현재 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여중!</b>
+            <b v-if="duDate<0" style="font-size: 24px; margin-right: 20px;">
+                마감된 장터 입니다.</b>
+            <b v-if="duDate<0">총 <span style="color: #E74C3C">{{trade.buyers.length}}</span>명 장터에 참여 했음</b>
             <br><br>
             <div class="row-align">
                 <div style="margin-right: 5%;">판매자 희망가격 : <b>{{price}}원</b></div>
@@ -13,8 +16,8 @@
                 <star-rating v-model="trade.state" :show-rating=false :read-only=true
                     v-bind:max-rating="5" v-bind:rounded-corners=true inactive-color="#808080" active-color="#E74C3C"
                     v-bind:star-size="30" style="height: 18px;"></star-rating>
-            </div>
-            <hr>
+        </div>
+        <hr>
         </div>
         <div class="contents">
             <div class="images">
@@ -151,6 +154,12 @@ export default {
             this.$refs.errModal.show();
         },
         openModal: async function(){
+            if (this.checkSelf){
+                this.openErrModal();
+                return;
+            } else {
+                this.checkSelf = false;
+            }
             if(!this.isLogged){
                 this.$refs.notLoggedModal.show();
                 return;
@@ -177,14 +186,6 @@ export default {
             //     alert("서버에 에러가 생겼습니다. 다시 시도해 주세요!")
             //     return;
             // }    
-            if (this.checkSelf){
-                this.openErrModal();
-                return;
-            } else {
-                this.checkSelf = false;
-            }
-
-            
         },
         tradeSubmit: function(){
             let User = this.$store.state.user;

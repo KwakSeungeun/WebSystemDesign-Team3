@@ -78,7 +78,7 @@ export default {
                         || trade.author.includes(this.searchText)   
                         || trade.tag.includes(this.searchText);
             });
-            if(!this.filteringTrades) this.noResult = true;
+            if(this.filteringTrades.length == 0) this.noResult = true;
         },
         filtering: function(mode, value){
             this.filterMode = value;
