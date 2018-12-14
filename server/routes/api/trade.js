@@ -45,6 +45,25 @@ router.get('/trade_list', function(req, res, next) {
     });
 });
 
+router.get('/buyers_length/:trade_id', function(req, res, next) {
+    const ObjectId = mongoose.Types.ObjectId;
+    let flag = false;
+    Trade.findOne({_id: ObjectId(req.params.trade_id)}).then(result=>{
+        if(result.buyers == undefined) {
+            flag = true;
+            res.status(404).send("not found");
+            throw new Error("404 Error");
+        }
+        res.send({buyers_length: result.buyers.length});
+    }).catch(err => {
+        console.log(err);
+        if(!flag) res.status(500).send("server error");
+    });
+});
+
+
+
+
 router.use(auth); // trade 하는 모든 과정은 반드시 로그인 확인 여부가 필요하므로 middleware 를 가져다 씀
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -497,20 +516,5 @@ router.post('/close',function(req,res){
 });
 
 
-router.get('/buyers_length/:trade_id', function(req, res, next) {
-    const ObjectId = mongoose.Types.ObjectId;
-    let flag = false;
-    Trade.findOne({_id: ObjectId(req.params.trade_id)}).then(result=>{
-        if(result.buyers == undefined) {
-            flag = true;
-            res.status(404).send("not found");
-            throw new Error("404 Error");
-        }
-        res.send({buyers_length: result.buyers.length});
-    }).catch(err => {
-        console.log(err);
-        if(!flag) res.status(500).send("server error");
-    });
-});
 
 module.exports = router;
