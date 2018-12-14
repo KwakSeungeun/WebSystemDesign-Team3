@@ -1,7 +1,7 @@
 <template>
     <div id="card">
         <div class="image">
-            <b-img-lazy :src="imageUrl" class="imageShow" fluid alt="Responsive image"/>
+            <b-img :src="imageUrl" class="imageShow" fluid alt="Responsive image"/>
         </div>
         <hr>
         <div class="info-container">
