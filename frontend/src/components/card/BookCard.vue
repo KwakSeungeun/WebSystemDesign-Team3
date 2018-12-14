@@ -1,7 +1,7 @@
 <template>
     <div id="card">
         <div class="image">
-            <b-img :src="imageUrl" width="300" height="500" fluid alt="Responsive image"/>
+            <b-img-lazy :src="imageUrl" class="imageShow" fluid alt="Responsive image"/>
         </div>
         <hr>
         <div class="info-container">
@@ -85,5 +85,8 @@ export default {
 }
 p{
     text-align: left;
+}
+.imageShow {
+    height: 100%
 }
 </style>

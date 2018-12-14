@@ -91,6 +91,7 @@ router.put('/update',(req,res)=>{
         let user;
         if(req.body.a_pw != ''){
             user = {
+                name: req.body.name,
                 pw: req.body.a_pw,
                 phone: req.body.phone,
                 preference:req.body.preference
@@ -98,6 +99,7 @@ router.put('/update',(req,res)=>{
         }
         else {
             user = {
+                name: req.body.name,
                 phone: req.body.phone,
                 preference:req.body.preference
             };
